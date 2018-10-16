@@ -1,0 +1,50 @@
+{
+  "name": "markocupic/frankfurter-partner-bundle",
+  "description": "Frankfurter Partner Bundle",
+  "keywords": [
+    "contao",
+    "Custom Catalog",
+    "Contao",
+    "Leif Braun"
+  ],
+  "type": "contao-module",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Marko Cupic",
+      "email": "m.cupic@gmx.ch",
+      "homepage": "https://github.com/markocupic/frankfurter-partner-bundle",
+      "role": "Developer"
+    }
+  ],
+  "support": {
+    "issues": "https://github.com/markocupic/frankfurter-partner-bundle/issues",
+    "source": "https://github.com/markocupic/frankfurter-partner-bundle"
+  },
+  "require": {
+    "php": ">=7.0",
+    "contao/core-bundle": ">=4.4",
+    "codefog/contao-haste": "^4.20",
+    "terminal42/contao-fineuploader": "^2.1"
+  },
+  "conflict": {
+    "contao/core": "3.*"
+  },
+  "autoload": {
+    "psr-4": {
+      "Markocupic\\FrankfurterPartnerBundle\\": "src/"
+    },
+    "classmap": [
+      "src/Resources/contao"
+    ],
+    "exclude-from-classmap": [
+      "src/Resources/contao/config/",
+      "src/Resources/contao/dca/",
+      "src/Resources/contao/languages/",
+      "src/Resources/contao/templates/"
+    ]
+  },
+  "extra": {
+    "contao-manager-plugin": "Markocupic\\FrankfurterPartnerBundle\\ContaoManager\\Plugin"
+  }
+}
