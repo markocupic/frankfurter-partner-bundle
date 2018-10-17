@@ -1,6 +1,39 @@
 <!-- indexer::stop -->
 <div class="<?= $this->class ?> block"<?= $this->cssID ?><?php if ($this->style): ?> style="<?= $this->style ?>"<?php endif; ?>>
-
+<script type="text/javascript" src="assets/tinymce4/js/tinymce.min.js"></script >
+<script>
+    setTimeout(function() {
+        window.tinymce && tinymce.init({
+            skin: 'contao',
+            selector: '#ctrl_ffm_partner_text',
+            language: 'de',
+            importcss_groups: [{title: 'files/cto_layout/css/tinymce.css'}],
+            content_css: '/files/cto_layout/css/tinymce.css',
+            element_format: 'html',
+            document_base_url: 'https://the-frankfurter.com/',
+            entities: '160,nbsp,60,lt,62,gt,173,shy',
+            setup: function(editor) {
+                editor.getElement().removeAttribute('required');
+            },
+            init_instance_callback: function(editor) {
+                if (document.activeElement && document.activeElement.id && document.activeElement.id == editor.id) {
+                    editor.editorManager.get(editor.id).focus();
+                }
+                editor.on('focus', function(){ Backend.getScrollOffset(); });
+            },
+            file_browser_callback: function(field_name, url, type, win) {
+                Backend.openModalBrowser(field_name, url, type, win);
+            },
+            plugins: 'autosave charmap fullscreen link lists paste searchreplace tabfocus table visualblocks',
+            browser_spellcheck: true,
+            tabfocus_elements: ':prev,:next',
+            importcss_append: true,
+            extended_valid_elements: 'q[cite|class|title],article,section,hgroup,figure,figcaption',
+            menubar: 'file edit insert view format table',
+            toolbar: 'link unlink | image | bold italic | alignleft aligncenter alignright | bullist numlist outdent indent | undo redo | code'
+        });
+    }, 0);
+</script>
     <?php if ($this->headline): ?>
     <<?= $this->hl ?>><?= $this->headline ?></<?= $this->hl ?>>
     <?php endif; ?>
@@ -12,7 +45,152 @@
     <?php endif; ?>
 
     <?php if($this->form): ?>
-    <?= $this->form ?>
+<div class="hasteform_form-partner block">
+    <form action="<?= $this->form->getFormAction() ?>" method="<?= $this->form->getMethod() ?>" enctype="<?= $this->form->getEnctype() ?>">
+        <div class="formbody">
+            <?php if ($this->form->hasFormField('FORM_SUBMIT')): ?>
+            <?= $this->form->getWidget('FORM_SUBMIT')->parse(); ?>
+            <?php endif; ?>
+
+            <?php if ($this->form->hasFormField('REQUEST_TOKEN')): ?>
+            <?= $this->form->getWidget('REQUEST_TOKEN')->parse(); ?>
+            <?php endif; ?>
+
+            <?php $field = 'name'; ?>
+            <?php if ($this->form->hasFormField($field)): ?>
+            <div class="widget-<?= $field ?>">
+                <?= $this->form->getWidget($field)->parse(); ?>
+            </div>
+            <?php endif; ?>
+
+            <?php $field = 'alias'; ?>
+            <?php if ($this->form->hasFormField($field)): ?>
+            <div class="widget-<?= $field ?>">
+                <?= $this->form->getWidget($field)->parse(); ?>
+            </div>
+            <?php endif; ?>
+
+            <?php $field = 'ffm_partner_cat'; ?>
+            <?php if ($this->form->hasFormField($field)): ?>
+            <div class="widget-<?= $field ?>">
+                <?= $this->form->getWidget($field)->parse(); ?>
+            </div>
+            <?php endif; ?>
+
+            <?php $field = 'ffm_partner_filiale'; ?>
+            <?php if ($this->form->hasFormField($field)): ?>
+            <div class="widget-<?= $field ?>">
+                <?= $this->form->getWidget($field)->parse(); ?>
+            </div>
+            <?php endif; ?>
+
+            <?php $field = 'ffm_partner_strasse'; ?>
+            <?php if ($this->form->hasFormField($field)): ?>
+            <div class="widget-<?= $field ?>">
+                <?= $this->form->getWidget($field)->parse(); ?>
+            </div>
+            <?php endif; ?>
+
+            <?php $field = 'ffm_partner_plz'; ?>
+            <?php if ($this->form->hasFormField($field)): ?>
+            <div class="widget-<?= $field ?>">
+                <?= $this->form->getWidget($field)->parse(); ?>
+            </div>
+            <?php endif; ?>
+
+            <?php $field = 'ffm_partner_ort'; ?>
+            <?php if ($this->form->hasFormField($field)): ?>
+            <div class="widget-<?= $field ?>">
+                <?= $this->form->getWidget($field)->parse(); ?>
+            </div>
+            <?php endif; ?>
+
+            <?php $field = 'ffm_partner_open'; ?>
+            <?php if ($this->form->hasFormField($field)): ?>
+            <div class="widget-<?= $field ?>">
+                <?= $this->form->getWidget($field)->parse(); ?>
+            </div>
+            <?php endif; ?>
+
+            <?php $field = 'ffm_partner_tel'; ?>
+            <?php if ($this->form->hasFormField($field)): ?>
+            <div class="widget-<?= $field ?>">
+                <?= $this->form->getWidget($field)->parse(); ?>
+            </div>
+            <?php endif; ?>
+
+            <?php $field = 'ffm_partner_mail'; ?>
+            <?php if ($this->form->hasFormField($field)): ?>
+            <div class="widget-<?= $field ?>">
+                <?= $this->form->getWidget($field)->parse(); ?>
+            </div>
+            <?php endif; ?>
+
+            <?php $field = 'ffm_partner_www'; ?>
+            <?php if ($this->form->hasFormField($field)): ?>
+            <div class="widget-<?= $field ?>">
+                <?= $this->form->getWidget($field)->parse(); ?>
+            </div>
+            <?php endif; ?>
+
+            <?php $field = 'ffm_partner_www_linkText'; ?>
+            <?php if ($this->form->hasFormField($field)): ?>
+            <div class="widget-<?= $field ?>">
+                <?= $this->form->getWidget($field)->parse(); ?>
+            </div>
+            <?php endif; ?>
+
+            <?php $field = 'ffm_partner_facebook'; ?>
+            <?php if ($this->form->hasFormField($field)): ?>
+            <div class="widget-<?= $field ?>">
+                <?= $this->form->getWidget($field)->parse(); ?>
+            </div>
+            <?php endif; ?>
+
+            <?php $field = 'ffm_partner_twitter'; ?>
+            <?php if ($this->form->hasFormField($field)): ?>
+            <div class="widget-<?= $field ?>">
+                <?= $this->form->getWidget($field)->parse(); ?>
+            </div>
+            <?php endif; ?>
+
+            <?php $field = 'ffm_partner_instagram'; ?>
+            <?php if ($this->form->hasFormField($field)): ?>
+            <div class="widget-<?= $field ?>">
+                <?= $this->form->getWidget($field)->parse(); ?>
+            </div>
+            <?php endif; ?>
+
+            <?php $field = 'ffm_partner_google'; ?>
+            <?php if ($this->form->hasFormField($field)): ?>
+            <div class="widget-<?= $field ?>">
+                <?= $this->form->getWidget($field)->parse(); ?>
+            </div>
+            <?php endif; ?>
+
+            <?php $field = 'ffm_partner_youtubeid'; ?>
+            <?php if ($this->form->hasFormField($field)): ?>
+            <div class="widget-<?= $field ?>">
+                <?= $this->form->getWidget($field)->parse(); ?>
+            </div>
+            <?php endif; ?>
+
+            <?php $field = 'ffm_partner_text'; ?>
+            <?php if ($this->form->hasFormField($field)): ?>
+            <div class="widget-<?= $field ?>">
+                <?= $this->form->getWidget($field)->parse(); ?>
+            </div>
+            <?php endif; ?>
+
+
+
+
+            <?php if ($this->form->hasFormField('submit')): ?>
+            <?= $this->form->getWidget('submit')->parse(); ?>
+            <?php endif; ?>
+        </div>
+    </form>
+</div>
     <?php endif; ?>
 
 
