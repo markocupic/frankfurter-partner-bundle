@@ -55,7 +55,12 @@ class PartnerFrontendForm extends Module
     /**
      * @var
      */
-    protected $objForm;
+    protected $textForm;
+
+    /**
+     * @var array
+     */
+    protected $productUploadForms = array();
 
     /**
      * @var
@@ -117,29 +122,149 @@ class PartnerFrontendForm extends Module
 
     protected function compile()
     {
-        $this->generateTestForm();
-        $this->Template->form = $this->objForm;
+        $this->generateTextForm();
+        $this->Template->textForm = $this->textForm;
+
+        $this->generateProductUploadForms();
+        $this->Template->productUploadForms = $this->productUploadForms;
     }
 
-    protected function generateTestForm()
+    /**
+     * Generate the product upload forms
+     */
+    protected function generateProductUploadForms()
     {
-        $objForm = new Form('form-member-picture-feed-upload', 'POST', function ($objHaste) {
-            return Input::post('FORM_SUBMIT') === $objHaste->getFormId();
-        });
+        $allowedItems = 12;
+
+        // Get the upload dir object
+        if (false === $objUploadDir = $this->getUploadDirObject('product_images'))
+        {
+            $this->arrMessages[] = 'Error! No valid upload folder for the product images defined.';
+            return;
+        }
 
 
-        $url = Environment::get('uri');
-        $objForm->setFormActionFromUri($url);
+        for ($intItem = 1; $intItem <= $allowedItems; $intItem++)
+        {
+
+            // Add leading zero: 01, 02, .... 12
+            $strItem = str_pad($intItem, 2, '0', STR_PAD_LEFT);
+
+            // Create the form
+            $objForm = $this->createForm('form-member-product-upload-' . $strItem, 'multipart/form-data');
+
+            // Get model
+            $objModel = $this->getPartnerModel();
+
+
+            // Add some fields
+            $strInputFileupload = 'ffm_partner_pro' . $strItem . '_img';
+            $objForm->addFormField($strInputFileupload, array(
+                'label'     => 'Bild zu Produkt ' . $strItem,
+                'inputType' => 'upload',
+                'eval'      => array(
+                    'uploadFolder' => $objUploadDir->uuid,
+                    'storeFile'    => true,
+                    'extensions'   => 'jpg,png,gif,jpeg'
+                    //'value'     => $objModel->{$fieldname}
+                )
+            ));
+            // !!!Put this right after the widget dca settings
+            // Rename the uploaded file in $_FILES before the validation process
+            $hasUpload = false;
+            if (Input::post('FORM_SUBMIT') === $objForm->getFormId())
+            {
+                $hasUpload = $this->renameFileInGlobals($objForm, $strInputFileupload, 'product-image-' . $strItem . '.%s');
+            }
+
+            $fieldname = 'ffm_partner_pro' . $strItem . '_hl';
+            $objForm->addFormField($fieldname, array(
+                'label'     => 'Produkt ' . $strItem . ' Titel',
+                'inputType' => 'text',
+                'value'     => $objModel->{$fieldname}
+            ));
+
+            $fieldname = 'ffm_partner_pro' . $strItem . '_lab';
+            $objForm->addFormField($fieldname, array(
+                'label'     => 'Produkt ' . $strItem . ' Label',
+                'inputType' => 'text',
+                'value'     => $objModel->{$fieldname}
+            ));
+
+            $fieldname = 'ffm_partner_pro' . $strItem . '_link';
+            $objForm->addFormField($fieldname, array(
+                'label'     => 'Produkt ' . $strItem . ' Link',
+                'inputType' => 'text',
+                'value'     => $objModel->{$fieldname}
+            ));
+
+            // Let's add  a submit button
+            $fieldname = 'submit';
+            $objForm->addFormField($fieldname, array(
+                'label'     => $GLOBALS['TL_LANG']['MSC']['memberPictureFeedUploadBtnlLabel'],
+                'inputType' => 'submit',
+            ));
+
+            // Bind model to the form
+            $objForm->bindModel($objModel);
+
+
+            // Validate
+            if (Input::post('FORM_SUBMIT') === $objForm->getFormId())
+            {
+                if ($objForm->validate())
+                {
+                    if ($hasUpload)
+                    {
+                        if (is_array($_SESSION['FILES'][$strInputFileupload]) && !empty($_SESSION['FILES'][$strInputFileupload]))
+                        {
+                            $strUuid = $_SESSION['FILES'][$strInputFileupload]['uuid'];
+                            if (Validator::isStringUuid($strUuid))
+                            {
+                                $uuid = StringUtil::uuidToBin($strUuid);
+                                $objFile = FilesModel::findByUuid($uuid);
+                                if ($objFile !== null)
+                                {
+                                    if (is_file(TL_ROOT . '/' . $objFile->path))
+                                    {
+                                        $set = array(
+                                            $strInputFileupload                        => $objFile->uuid,
+                                            sprintf('produkt_%s_aktivieren', $strItem) => '1'
+                                        );
+                                        Database::getInstance()->prepare('UPDATE cc_cardealer %s WHERE id=?')->set($set)->execute($objModel->id);
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+
+                    $this->reload();
+                }
+            }
+
+
+            $this->productUploadForms[] = $objForm;
+
+
+        } // end for
+    }
+
+    /**
+     *
+     */
+    protected function generateTextForm()
+    {
+
+        // Create the form
+        $objForm = $this->createForm('form-member-text-form');
+
 
         // Add hidden fields REQUEST_TOKEN & FORM_SUBMIT
         $objForm->addContaoHiddenFields();
 
-        $objDb = Database::getInstance()->prepare('SELECT * FROM cc_cardealer WHERE memberid=?')->limit(1)->execute($this->objUser->id);
-        if (!$objDb->numRows)
-        {
-            throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
-        }
-        $objModel = CcCardealerModel::findById($objDb->id);
+        // Get model
+        $objModel = $this->getPartnerModel();
 
 
         // Add some fields
@@ -255,9 +380,6 @@ class PartnerFrontendForm extends Module
         ));
 
 
-        //die(print_r($objModel->row(),true));
-
-
         // Let's add  a submit button
         $objForm->addFormField('submit', array(
             'label'     => $GLOBALS['TL_LANG']['MSC']['memberPictureFeedUploadBtnlLabel'],
@@ -272,23 +394,121 @@ class PartnerFrontendForm extends Module
         //$objWidgetFileupload->addAttribute('accept', '.jpg, .jpeg');
         //$objWidgetFileupload->storeFile = true;
 
-        if (Input::post('FORM_SUBMIT') != '')
+        if ($objForm->validate())
         {
-            if ($objForm->validate())
-            {
-                // Beschreibung use tinyMce
-                // $objModel->ffm_partner_text = Input::postRaw('ffm_partner_text');
-                $objModel->save();
-                $this->reload();
-            }
-            else
-            {
 
+            // Beschreibung use tinyMce
+            // $objModel->ffm_partner_text = Input::postRaw('ffm_partner_text');
+            $objModel->save();
+            $this->reload();
+        }
+        else
+        {
+
+        }
+
+        $this->textForm = $objForm;
+    }
+
+    /**
+     * @param $strId
+     * @return Form
+     */
+    protected function createForm($strId)
+    {
+
+        $objForm = new Form($strId, 'POST', function ($objHaste) {
+            return Input::post('FORM_SUBMIT') === $objHaste->getFormId();
+        });
+
+
+        $url = Environment::get('uri');
+        $objForm->setFormActionFromUri($url);
+
+        // Add hidden fields REQUEST_TOKEN & FORM_SUBMIT
+        $objForm->addContaoHiddenFields();
+
+        return $objForm;
+    }
+
+    /**
+     * @return mixed
+     */
+    protected function getPartnerModel()
+    {
+        $objDb = Database::getInstance()->prepare('SELECT * FROM cc_cardealer WHERE memberid=?')->limit(1)->execute($this->objUser->id);
+        if (!$objDb->numRows)
+        {
+            throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
+        }
+        return CcCardealerModel::findById($objDb->id);
+    }
+
+    /**
+     * @param $strSubDir
+     * @return bool|FilesModel|null
+     * @throws \Exception
+     */
+    protected function getUploadDirObject($strSubDir)
+    {
+
+        if ($this->objUser->assignDir)
+        {
+            if ($this->objUser->homeDir !== '')
+            {
+                if (Validator::isBinaryUuid($this->objUser->homeDir))
+                {
+                    $objFile = FilesModel::findByUuid($this->objUser->homeDir);
+                    if ($objFile->type === 'folder')
+                    {
+                        if (is_dir(TL_ROOT . '/' . $objFile->path))
+                        {
+                            new Folder($objFile->path . '/' . $strSubDir);
+                            Dbafs::addResource($objFile->path . '/' . $strSubDir);
+                            $objUploadDir = FilesModel::findByPath($objFile->path . '/' . $strSubDir);
+                            if (is_dir(TL_ROOT . '/' . $objFile->path . '/' . $strSubDir) && $objUploadDir !== null)
+                            {
+                                return $objUploadDir;
+                            }
+                        }
+                    }
+                }
             }
         }
 
-        $this->objForm = $objForm;
+        return false;
     }
 
+    /**
+     * Rename uploaded file before the validation
+     * @param $objForm
+     * @param $strFieldname
+     * @param $strNewName
+     * @return bool
+     * @throws \Exception
+     */
+    protected function renameFileInGlobals($objForm, $strFieldname, $strNewName)
+    {
+        if (Input::post('FORM_SUBMIT') === $objForm->getFormId())
+        {
+            if (is_array($_FILES) && !empty($_FILES))
+            {
+
+                if (is_array($_FILES[$strFieldname]))
+                {
+                    if ($_FILES[$strFieldname]['name'] !== '')
+                    {
+                        $objFile = new File($_FILES[$strFieldname]['name']);
+                        if ($objFile !== null)
+                        {
+                            $_FILES[$strFieldname]['name'] = sprintf($strNewName, $objFile->extension);
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+    }
 
 }
