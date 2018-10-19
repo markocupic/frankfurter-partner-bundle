@@ -1,0 +1,17 @@
+.form-parts-selector-area {
+    display: flex;
+    margin-bottom: 40px;
+}
+
+.form-parts-selector-item {
+    width: 200px;
+    padding: 10px 20px;
+    border: 1px solid #666;
+    margin-right: 10px;
+    text-align: center;
+}
+
+.form-parts-selector-item.active {
+    background-color: #0e0e0e;
+    color: #fff;
+}
