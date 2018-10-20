@@ -17,7 +17,9 @@ if (TL_MODE == 'BE')
 if (TL_MODE == 'FE')
 {
     $GLOBALS['TL_CSS'][] = 'bundles/markocupicfrankfurterpartner/css/stylesheet.css';
+    $GLOBALS['TL_JAVASCRIPT'][] = 'bundles/markocupicfrankfurterpartner/js/sessiontabs.js';
 }
+
 
 // Front end form fields
 $GLOBALS['TL_FFL']['formMultiText'] = 'FormMultiText';

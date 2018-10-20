@@ -1,0 +1,7 @@
+<div class="col-6 col-md-4 col-xl-3 gallery-item" data-file-id="<?= $this->fileId ?>">
+    {{image::<?= $this->uuid ?>?mode=crop&width=300&height=300}}
+    <div class="partner-gallery-thumb-buttons-container">
+        <button class="btn btn-danger remove-image" title="Bild löschen"><i class="fa fa-trash"></i></button>
+        <button class="btn btn-danger rotate-image" title="Bild 90° im GUZG drehen"><i class="fa fa-history"></i></button>
+    </div>
+</div>

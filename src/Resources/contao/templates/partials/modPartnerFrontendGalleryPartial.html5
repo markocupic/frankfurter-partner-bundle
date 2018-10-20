@@ -1,0 +1,88 @@
+<div class="partner-gallery row">
+    <?= $this->items ?>
+</div>
+
+
+
+
+
+
+<script>
+    (function ($) {
+        $(document).ready(function () {
+            "use strict";
+            $('.partner-gallery-thumb-buttons-container .remove-image').on('click touchmove', function (e) {
+                e.preventDefault();
+                var elImage = $(this).closest('[data-file-id]');
+                if (elImage.length) {
+                    var fileId = $(elImage).data('file-id');
+                    if (fileId !== undefined) {
+                        var jqxhr = $.post(window.location.href, {
+                            'REQUEST_TOKEN': '{{request_token}}',
+                            'xhr': 'true',
+                            'action': 'removeImage',
+                            'fileId': fileId
+                        }).done(function (json) {
+                            $(elImage).fadeOut();
+                            window.setTimeout(function(){
+                                $(elImage).remove();
+                            },1000);
+                        });
+                    }
+                }
+            });
+
+            $('.partner-gallery-thumb-buttons-container .rotate-image').on('click touchmove', function (e) {
+                e.preventDefault();
+                var elImage = $(this).closest('[data-file-id]');
+                if (elImage.length) {
+                    var fileId = $(elImage).data('file-id');
+                    if (fileId !== undefined) {
+                        var jqxhr = $.post(window.location.href, {
+                            'REQUEST_TOKEN': '{{request_token}}',
+                            'xhr': 'true',
+                            'action': 'rotateImage',
+                            'fileId': fileId
+                        }).done(function (json) {
+                            json = $.parseJSON(json);
+                            if (json.status === 'success') {
+                                window.location.reload();
+                            }else{
+                                alert('Es ist ein Fehler aufgetreten. Bitte kontrollieren SIe die Verbidnung.')
+                            }
+                        });
+                    }
+                }
+            });
+
+
+
+            // Save caption to the server
+            $('#saveCaptionButton').click(function () {
+                var modal = $(this).closest('.modal');
+                var fileId = $(modal).data('fileId');
+                var imageLink = $('[data-file-id="' + fileId + '"').find('a');
+                $(modal).modal('hide');
+                var caption = $(modal).find('#imageCaptionInput').val();
+                var photographer = $(modal).find('#imagePhotographerInput').val();
+                $(modal).modal('hide');
+
+                var jqxhr = $.post(window.location.href, {
+                    'REQUEST_TOKEN': '{{request_token}}',
+                    'action': 'setCaption',
+                    'fileId': fileId,
+                    'caption': caption,
+                    'photographer': photographer
+                }).done(function (json) {
+                    if (json.status != 'success') {
+                        //console.log(json);
+                    }
+                }).always(function () {
+                    window.location.reload();
+                });
+            });
+        });
+
+    })(jQuery);
+
+</script>

@@ -13,44 +13,13 @@
     <?php endif; ?>
 
     <div id="formPartsSelectorArea" class="form-parts-selector-area">
-        <a data-filter="textupload" class="form-parts-selector-item" href="#">Basis-Einstellungen</a>
-        <a data-filter="logoupload" class="form-parts-selector-item" href="#">Logo-Upload</a>
-        <a data-filter="mainimageupload" class="form-parts-selector-item" href="#">Hauptbild-Upload</a>
-        <a data-filter="galleryupload" class="form-parts-selector-item" href="#">Galerie-Upload</a>
-        <a data-filter="productupload" class="form-parts-selector-item" href="#">Produkt-Upload</a>
-        <a data-filter="brandupload" class="form-parts-selector-item" href="#">Marken-Upload</a>
+        <a data-filter="textupload" id="formPartsSelectorArea_1" class="form-parts-selector-item" href="#">Basis-Einstellungen</a>
+        <a data-filter="logoupload" id="formPartsSelectorArea_2" class="form-parts-selector-item" href="#">Logo-Upload</a>
+        <a data-filter="mainimageupload" id="formPartsSelectorArea_3" class="form-parts-selector-item" href="#">Hauptbild-Upload</a>
+        <a data-filter="galleryupload" id="formPartsSelectorArea_4" class="form-parts-selector-item" href="#">Galerie-Upload</a>
+        <a data-filter="productupload" id="formPartsSelectorArea_5" class="form-parts-selector-item" href="#">Produkt-Upload</a>
+        <a data-filter="brandupload" id="formPartsSelectorArea_6" class="form-parts-selector-item" href="#">Marken-Upload</a>
     </div>
-<script>
-    jQuery(document).ready(function()
-    {
-        reset();
-        jQuery('.form-parts-selector-area .form-parts-selector-item').click(function(e){
-            e.preventDefault();
-            hideAll();
-            var dataSelector = jQuery(this).data('filter');
-            jQuery(this).addClass('active');
-            jQuery('.form-part[data-formpartname="' + dataSelector + '"]').show();
-        });
-
-
-
-        function hideAll()
-        {
-            jQuery('.form-parts .form-part').hide();
-            jQuery('.form-parts-selector-area .form-parts-selector-item').removeClass('active');
-        }
-
-        function reset(){
-            hideAll();
-            jQuery('.form-parts .form-part').first().show();
-            jQuery('.form-parts-selector-area .form-parts-selector-item').first().addClass('active');
-        }
-
-    });
-
-    /* ]]> */
-</script>
-
 
 
 <div id="formParts" class="form-parts">
@@ -269,7 +238,8 @@
 
         <?php if($this->galleryUploadForm): ?>
         <div class="form-part" data-formpartname="galleryupload">
-        <?= $this->galleryUploadForm ?>
+            <?= $this->Helper->generateGallery() ?>
+            <?= $this->galleryUploadForm ?>
         </div>
         <?php endif; ?>
 

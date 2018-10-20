@@ -20,10 +20,13 @@ $GLOBALS['TL_LANG']['MSC']['partnerSaveBtnLabel'] = 'Änderungen speichern';
 
 // Input field labels
 $GLOBALS['TL_LANG']['MSC']['gallery-lbl'] = 'Bildergalerie';
-$GLOBALS['TL_LANG']['MSC']['gallery-fineuploader-submit-btn'] = 'Bilder hochladen';
+$GLOBALS['TL_LANG']['MSC']['gallery-fineuploader-submit-btn'] = 'Bilder zum Hochladen auswählen';
+$GLOBALS['TL_LANG']['MSC']['gallery-submit-btn'] = 'Bilder Hochladen';
 
 
 
 // Messages
 $GLOBALS['TL_LANG']['MSC']['partnerUploadPictureUploadLimitReachedDuringUploadProcess'] = "Du hast bereits das Upload Maximum erreicht. Um weitere Bilder hochzuladen, musst du zuerst mindestens ein Bild löschen.";
+
+
 
