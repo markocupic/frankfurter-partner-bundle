@@ -15,22 +15,24 @@
     background-color: #0e0e0e;
     color: #fff;
 }
-.partner-gallery {
-    position:relative;
+
+.partner-gallery, .partner-product-image {
+    position: relative !important;
 }
 
-.partner-gallery.row > div > img{
+.partner-gallery.row > div > img {
     max-width: 100% !important;
-height: auto;
+    height: auto;
 }
-.partner-gallery-thumb-buttons-container{
+
+.partner-gallery-thumb-buttons-container, .partner-product-image-buttons-container {
     position: absolute;
     bottom: 10px;
     right: 10px;
     display: flex;
 }
 
-.partner-gallery-thumb-buttons-container > *{
+.partner-gallery-thumb-buttons-container > *, .partner-product-image-buttons-container > * {
     margin-right: 5px;
     font-size: 16px;
 }

@@ -96,6 +96,34 @@ class PartnerFrontendFormHelper
         return Controller::replaceInsertTags($objTemplate->parse());
 
     }
+    /**
+     * Display a wildcard in the back end
+     *
+     * @return string
+     */
+    public function generateProductImage($fieldname)
+    {
+        $objTemplate = new FrontendTemplate('modPartnerFrontendProductImagePartial');
+
+        $uuid = $this->objModule->{$fieldname};
+        if (Validator::isBinaryUuid($uuid))
+        {
+            $objFile = FilesModel::findByUuid($uuid);
+            if ($objFile !== null)
+            {
+                if (is_file(TL_ROOT . '/' . $objFile->path))
+                {
+                    $objTemplate->uuid = StringUtil::binToUuid($uuid);
+                    $objTemplate->fileId = $objFile->id;
+                    $objTemplate->fieldname = $fieldname;
+                    $objTemplate->hasImage = true;
+                }
+            }
+        }
+
+        return Controller::replaceInsertTags($objTemplate->parse());
+
+    }
 
 
     /**

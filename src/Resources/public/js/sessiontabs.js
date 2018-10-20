@@ -1,7 +1,65 @@
-// Always open last used bootstrap tab, when reloading the page
-// Add session-tabs class to the nav tag
-// Add data-sessiontabs="someId" to the nav tag
 
+(function ($) {
+    $(document).ready(function () {
+        "use strict";
+        $('.partner-product-image-buttons-container .remove-image').on('click', function (e) {
+
+            e.preventDefault();
+            e.stopPropagation();
+            $(this).off();
+            var elImage = $(this).closest('[data-file-id]');
+            if (elImage.length) {
+                var fileId = $(elImage).data('file-id');
+                var fieldname =  $(elImage).data('fieldname');
+                var request_token = $(elImage).data('requesttoken');
+                if (fileId !== undefined) {
+                    var jqxhr = $.post(window.location.href, {
+                        'REQUEST_TOKEN': '{{request_token}}',
+                        'xhr': 'true',
+                        'action': 'removeProductImage',
+                        'fileId': fileId,
+                        'fieldname': fieldname
+                    }).done(function (json) {
+                        $(elImage).fadeOut();
+                        window.setTimeout(function(){
+                            $(elImage).remove();
+                        },1000);
+                    });
+                }
+            }
+        });
+
+        $('.partner-product-image-buttons-container .rotate-image').on('click touchmove', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            $(this).off();
+            var elImage = $(this).closest('[data-file-id]');
+            if (elImage.length) {
+                var fileId = $(elImage).data('file-id');
+                var request_token = $(elImage).data('requesttoken');
+                if (fileId !== undefined) {
+                    var jqxhr = $.post(window.location.href, {
+                        'REQUEST_TOKEN': request_token,
+                        'xhr': 'true',
+                        'action': 'rotateImage',
+                        'fileId': fileId
+                    }).done(function (json) {
+                        json = $.parseJSON(json);
+                        if (json.status === 'success') {
+                            window.location.reload();
+                        }else{
+                            alert('Es ist ein Fehler aufgetreten. Bitte kontrollieren SIe die Verbidnung.')
+                        }
+                    });
+                }
+            }
+        });
+
+    });
+
+})(jQuery);
+
+// Sessiontabs
 jQuery(document).ready(function () {
     jQuery('.form-parts-selector-area .form-parts-selector-item').click(function (e) {
         e.preventDefault();
