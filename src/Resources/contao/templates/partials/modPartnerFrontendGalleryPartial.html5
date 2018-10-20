@@ -1,17 +1,13 @@
-<div class="partner-gallery row">
+<div class="partner-gallery image-section row">
+    <div class="row">
     <?= $this->items ?>
+    </div>
 </div>
-
-
-
-
-
-
 <script>
     (function ($) {
         $(document).ready(function () {
             "use strict";
-            $('.partner-gallery-thumb-buttons-container .remove-image').on('click touchmove', function (e) {
+            $('.partner-gallery .remove-image').on('click touchmove', function (e) {
                 e.preventDefault();
                 var elImage = $(this).closest('[data-file-id]');
                 if (elImage.length) {
@@ -20,7 +16,7 @@
                         var jqxhr = $.post(window.location.href, {
                             'REQUEST_TOKEN': '{{request_token}}',
                             'xhr': 'true',
-                            'action': 'removeImage',
+                            'action': 'removeGalleryImage',
                             'fileId': fileId
                         }).done(function (json) {
                             $(elImage).fadeOut();
@@ -32,7 +28,7 @@
                 }
             });
 
-            $('.partner-gallery-thumb-buttons-container .rotate-image').on('click touchmove', function (e) {
+            $('.partner-gallery .rotate-image').on('click touchmove', function (e) {
                 e.preventDefault();
                 var elImage = $(this).closest('[data-file-id]');
                 if (elImage.length) {
@@ -54,35 +50,7 @@
                     }
                 }
             });
-
-
-
-            // Save caption to the server
-            $('#saveCaptionButton').click(function () {
-                var modal = $(this).closest('.modal');
-                var fileId = $(modal).data('fileId');
-                var imageLink = $('[data-file-id="' + fileId + '"').find('a');
-                $(modal).modal('hide');
-                var caption = $(modal).find('#imageCaptionInput').val();
-                var photographer = $(modal).find('#imagePhotographerInput').val();
-                $(modal).modal('hide');
-
-                var jqxhr = $.post(window.location.href, {
-                    'REQUEST_TOKEN': '{{request_token}}',
-                    'action': 'setCaption',
-                    'fileId': fileId,
-                    'caption': caption,
-                    'photographer': photographer
-                }).done(function (json) {
-                    if (json.status != 'success') {
-                        //console.log(json);
-                    }
-                }).always(function () {
-                    window.location.reload();
-                });
-            });
         });
-
     })(jQuery);
 
 </script>

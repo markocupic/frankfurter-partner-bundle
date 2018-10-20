@@ -2,7 +2,7 @@
 (function ($) {
     $(document).ready(function () {
         "use strict";
-        $('.partner-product-image-buttons-container .remove-image').on('click', function (e) {
+        $('.partner-main-image, .partner-logo-image, .partner-product-image, .partner-brand-image').find('.remove-image').on('click', function (e) {
 
             e.preventDefault();
             e.stopPropagation();
@@ -11,12 +11,12 @@
             if (elImage.length) {
                 var fileId = $(elImage).data('file-id');
                 var fieldname =  $(elImage).data('fieldname');
-                var request_token = $(elImage).data('requesttoken');
+                var requesttoken = $(elImage).data('requesttoken');
                 if (fileId !== undefined) {
                     var jqxhr = $.post(window.location.href, {
-                        'REQUEST_TOKEN': '{{request_token}}',
+                        'REQUEST_TOKEN': requesttoken,
                         'xhr': 'true',
-                        'action': 'removeProductImage',
+                        'action': 'removeImage',
                         'fileId': fileId,
                         'fieldname': fieldname
                     }).done(function (json) {
@@ -29,17 +29,17 @@
             }
         });
 
-        $('.partner-product-image-buttons-container .rotate-image').on('click touchmove', function (e) {
+        $('.partner-main-image, .partner-logo-image, .partner-product-image, .partner-brand-image').on('click touchmove', function (e) {
             e.preventDefault();
             e.stopPropagation();
             $(this).off();
             var elImage = $(this).closest('[data-file-id]');
             if (elImage.length) {
                 var fileId = $(elImage).data('file-id');
-                var request_token = $(elImage).data('requesttoken');
+                var requesttoken = $(elImage).data('requesttoken');
                 if (fileId !== undefined) {
                     var jqxhr = $.post(window.location.href, {
-                        'REQUEST_TOKEN': request_token,
+                        'REQUEST_TOKEN': requesttoken,
                         'xhr': 'true',
                         'action': 'rotateImage',
                         'fileId': fileId
@@ -48,7 +48,7 @@
                         if (json.status === 'success') {
                             window.location.reload();
                         }else{
-                            alert('Es ist ein Fehler aufgetreten. Bitte kontrollieren SIe die Verbidnung.')
+                            alert('Es ist ein Fehler aufgetreten. Bitte kontrollieren Sie die Verbidnung.')
                         }
                     });
                 }

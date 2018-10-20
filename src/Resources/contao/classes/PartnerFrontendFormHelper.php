@@ -84,8 +84,10 @@ class PartnerFrontendFormHelper
                     if (is_file(TL_ROOT . '/' . $objFile->path))
                     {
                         $objPartial = new FrontendTemplate('partnerFrontendGalleryPartial');
+                        $objPartial->class = 'partner-gallery-item';
                         $objPartial->uuid = StringUtil::binToUuid($uuid);
                         $objPartial->fileId = $objFile->id;
+                        $objPartial->hasImage = true;
                         $strItems .= $objPartial->parse();
                     }
                 }
@@ -96,6 +98,7 @@ class PartnerFrontendFormHelper
         return Controller::replaceInsertTags($objTemplate->parse());
 
     }
+
     /**
      * Display a wildcard in the back end
      *
@@ -104,7 +107,51 @@ class PartnerFrontendFormHelper
     public function generateProductImage($fieldname)
     {
         $objTemplate = new FrontendTemplate('modPartnerFrontendProductImagePartial');
+        $objTemplate->class = 'partner-logo-image';
+        return $this->generateImage($objTemplate, $fieldname);
+    }
 
+    /**
+     * Display a wildcard in the back end
+     *
+     * @return string
+     */
+    public function generateLogoImage($fieldname)
+    {
+        $objTemplate = new FrontendTemplate('modPartnerFrontendLogoImagePartial');
+        $objTemplate->class = 'partner-logo-image';
+        return $this->generateImage($objTemplate, $fieldname);
+    }
+
+    /**
+     * @param $fieldname
+     * @return string
+     */
+    public function generateBrandImage($fieldname)
+    {
+        $objTemplate = new FrontendTemplate('modPartnerFrontendBrandImagePartial');
+        $objTemplate->class = 'partner-brand-image';
+        return $this->generateImage($objTemplate, $fieldname);
+    }
+
+    /**
+     * @param $fieldname
+     * @return string
+     */
+    public function generateMainImage($fieldname)
+    {
+        $objTemplate = new FrontendTemplate('modPartnerFrontendMainImagePartial');
+        $objTemplate->class = 'partner-main-image';
+        return $this->generateImage($objTemplate, $fieldname);
+    }
+
+    /**
+     * @param $objTemplate
+     * @param $fieldname
+     * @return string
+     */
+    protected function generateImage($objTemplate, $fieldname)
+    {
         $uuid = $this->objModule->{$fieldname};
         if (Validator::isBinaryUuid($uuid))
         {
@@ -122,7 +169,6 @@ class PartnerFrontendFormHelper
         }
 
         return Controller::replaceInsertTags($objTemplate->parse());
-
     }
 
 
@@ -177,4 +223,30 @@ class PartnerFrontendFormHelper
         return true;
     }
 
+    /**
+     * @return array
+     */
+    public function getCatTags()
+    {
+        $opt = array();
+        $pids = Config::get('partnerCatPid');
+        if ($pids != '')
+        {
+            if (is_array($pids))
+            {
+                $objDb = Database::getInstance()->execute("SELECT * FROM tl_pct_customelement_tags WHERE pid IN (" . implode(',', $pids) . ") ORDER BY sorting");
+            }
+            else
+            {
+                $objDb = Database::getInstance()->prepare('SELECT * FROM tl_pct_customelement_tags WHERE pid=? ORDER BY sorting')->execute($pids);
+            }
+
+            while ($objDb->next())
+            {
+                $opt[$objDb->id] = $objDb->title;
+            }
+        }
+
+        return $opt;
+    }
 }

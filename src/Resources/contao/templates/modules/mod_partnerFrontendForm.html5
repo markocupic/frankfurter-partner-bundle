@@ -189,6 +189,7 @@
                         <?php endif; ?>
 
                         <?php $field = 'ffm_partner_logo'; ?>
+                        <?= $this->Helper->generateLogoImage($field); ?>
                         <?php if ($this->logoUploadForm->hasFormField($field)): ?>
                         <div class="widget-<?= $field ?>">
                             <?= $this->logoUploadForm->getWidget($field)->parse(); ?>
@@ -217,7 +218,8 @@
                         <?= $this->mainImageUploadForm->getWidget('REQUEST_TOKEN')->parse(); ?>
                         <?php endif; ?>
 
-                        <?php $field = 'ffm_partner_main_image'; ?>
+                        <?php $field = 'image'; ?>
+                        <?= $this->Helper->generateMainImage($field); ?>
                         <?php if ($this->mainImageUploadForm->hasFormField($field)): ?>
                         <div class="widget-<?= $field ?>">
                             <?= $this->mainImageUploadForm->getWidget($field)->parse(); ?>
@@ -252,6 +254,7 @@
                 <div class="hasteform_form-partner-product-upload-<?= $strItem ?> block">
                     <form action="<?= $productUploadForm->getFormAction() ?>" method="<?= $productUploadForm->getMethod() ?>" enctype="multipart/form-data">
                         <div class="formbody">
+
                             <?php if ($productUploadForm->hasFormField('FORM_SUBMIT')): ?>
                             <?= $productUploadForm->getWidget('FORM_SUBMIT')->parse(); ?>
                             <?php endif; ?>
@@ -261,32 +264,39 @@
                             <?php endif; ?>
 
                             <?php $field = 'ffm_partner_pro' . $strItem . '_img'; ?>
-                            <?php if ($productUploadForm->hasFormField($field)): ?>
-                            <div class="widget-<?= $field ?>">
+                            <div class="row">
+                            <?= $this->Helper->generateProductImage($field) ?>
+                                <div class="col-12 col-md-6 col-xl-8">
+                                <?php if ($productUploadForm->hasFormField($field)): ?>
+                                <div class="widget-<?= $field ?>">
                                 <?= $productUploadForm->getWidget($field)->parse(); ?>
+                                </div>
+                                <?php endif; ?>
+                                </div>
                             </div>
-                            <?php endif; ?>
 
-                            <?php $field = 'ffm_partner_pro' . $strItem . '_hl'; ?>
-                            <?php if ($productUploadForm->hasFormField($field)): ?>
-                            <div class="widget-<?= $field ?>">
-                                <?= $productUploadForm->getWidget($field)->parse(); ?>
-                            </div>
-                            <?php endif; ?>
+                            <div class="row">
+                                <?php $field = 'ffm_partner_pro' . $strItem . '_hl'; ?>
+                                <?php if ($productUploadForm->hasFormField($field)): ?>
+                                <div class="col-xl-4 widget-<?= $field ?>">
+                                    <?= $productUploadForm->getWidget($field)->parse(); ?>
+                                </div>
+                                <?php endif; ?>
 
-                            <?php $field = 'ffm_partner_pro' . $strItem . '_lab'; ?>
-                            <?php if ($productUploadForm->hasFormField($field)): ?>
-                            <div class="widget-<?= $field ?>">
-                                <?= $productUploadForm->getWidget($field)->parse(); ?>
-                            </div>
-                            <?php endif; ?>
+                                <?php $field = 'ffm_partner_pro' . $strItem . '_lab'; ?>
+                                <?php if ($productUploadForm->hasFormField($field)): ?>
+                                <div class="col-xl-4 widget-<?= $field ?>">
+                                    <?= $productUploadForm->getWidget($field)->parse(); ?>
+                                </div>
+                                <?php endif; ?>
 
-                            <?php $field = 'ffm_partner_pro' . $strItem . '_link'; ?>
-                            <?php if ($productUploadForm->hasFormField($field)): ?>
-                            <div class="widget-<?= $field ?>">
-                                <?= $productUploadForm->getWidget($field)->parse(); ?>
+                                <?php $field = 'ffm_partner_pro' . $strItem . '_link'; ?>
+                                <?php if ($productUploadForm->hasFormField($field)): ?>
+                                <div class="col-xl-4 widget-<?= $field ?>">
+                                    <?= $productUploadForm->getWidget($field)->parse(); ?>
+                                </div>
+                                <?php endif; ?>
                             </div>
-                            <?php endif; ?>
 
                             <?php if ($productUploadForm->hasFormField('submit')): ?>
                             <?= $productUploadForm->getWidget('submit')->parse(); ?>
@@ -314,6 +324,7 @@
                         <?php endif; ?>
 
                         <?php $field = 'ffm_partner_lab' . $strItem . '_img'; ?>
+                        <?= $this->Helper->generateBrandImage($field); ?>
                         <?php if ($brandUploadForm->hasFormField($field)): ?>
                         <div class="widget-<?= $field ?>">
                             <?= $brandUploadForm->getWidget($field)->parse(); ?>

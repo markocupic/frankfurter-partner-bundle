@@ -134,7 +134,6 @@ class PartnerFrontendForm extends Module
             return $objTemplate->parse();
         }
 
-
         if (FE_USER_LOGGED_IN)
         {
             $this->objUser = FrontendUser::getInstance();
@@ -193,10 +192,11 @@ class PartnerFrontendForm extends Module
     protected function handleAjaxRequest()
     {
         // Ajax request: action=removeImage
-        if (Input::post('action') === 'removeImage' && Input::post('fileId') != '')
+        if (Input::post('action') === 'removeGalleryImage' && Input::post('fileId') != '')
         {
             $blnSuccess = 'error';
             $objModel = $this->getPartnerModel();
+
             if ($objModel !== null)
             {
                 $objFile = FilesModel::findByPk(Input::post('fileId'));
@@ -217,8 +217,41 @@ class PartnerFrontendForm extends Module
                             unset($arrGallery[$key]);
                             $arrGallery = array_filter($arrGallery);
                             $objModel->gallery = serialize($arrGallery);
+                            $objModel->fetstamp = time();
+                            $objModel->tstamp = time();
                             $objModel->save();
                         }
+                        $blnSuccess = 'success';
+                    }
+                }
+            }
+
+            $arrJson = array('status' => $blnSuccess, 'fileId' => Input::post('fileId'));
+            echo \GuzzleHttp\json_encode($arrJson);
+            exit();
+        }
+
+        if (Input::post('action') === 'removeImage' && Input::post('fileId') != '' && Input::post('fieldname') != '')
+        {
+            $blnSuccess = 'error';
+            $objModel = $this->getPartnerModel();
+            $fieldname = Input::post('fieldname');
+            if ($objModel !== null)
+            {
+                $objFile = FilesModel::findByPk(Input::post('fileId'));
+                if ($objFile !== null)
+                {
+                    $oFile = new File($objFile->path);
+                    if (is_file(TL_ROOT . '/' . $objFile->path))
+                    {
+                        $strPath = $objFile->path;
+                        $oFile->delete();
+                        Dbafs::deleteResource($strPath);
+                        Dbafs::updateFolderHashes(dirname($strPath));
+                        $objModel->{$fieldname} = '';
+                        $objModel->fetstamp = time();
+                        $objModel->tstamp = time();
+                        $objModel->save();
                         $blnSuccess = 'success';
                     }
                 }
@@ -242,6 +275,9 @@ class PartnerFrontendForm extends Module
                     if (true === $this->Helper->rotateImage($objFile->id))
                     {
                         $blnSuccess = 'success';
+                        $objModel->fetstamp = time();
+                        $objModel->tstamp = time();
+                        $objModel->save();
                     }
                 }
             }
@@ -251,96 +287,7 @@ class PartnerFrontendForm extends Module
         }
 
 
-        // Ajax request: action=getCaption
-        if (Input::post('action') === 'getCaption' && Input::post('fileId') != '')
-        {
-
-            $objFile = FilesModel::findByPk(Input::post('fileId'));
-            if ($objFile !== null)
-            {
-                if ($objFile->memberPictureFeedUserId === $this->objUser->id)
-                {
-
-                    // get meta data
-                    global $objPage;
-                    $arrMeta = Frontend::getMetaData($objFile->meta, $objPage->language);
-                    if (empty($arrMeta) && $objPage->rootFallbackLanguage !== null)
-                    {
-                        $arrMeta = Frontend::getMetaData($objFile->meta, $objPage->rootFallbackLanguage);
-                    }
-
-                    if (!isset($arrMeta['caption']))
-                    {
-                        $caption = '';
-                    }
-                    else
-                    {
-                        $caption = $arrMeta['caption'];
-                    }
-
-                    if (!isset($arrMeta['photographer']))
-                    {
-                        $photographer = $this->objUser->firstname . ' ' . $this->objUser->lastname;
-                    }
-                    else
-                    {
-                        $photographer = $arrMeta['photographer'];
-                        if ($photographer === '')
-                        {
-                            $photographer = $this->objUser->firstname . ' ' . $this->objUser->lastname;
-                        }
-                    }
-                    $response = array(
-                        'status'       => 'success',
-                        'caption'      => html_entity_decode($caption),
-                        'photographer' => $photographer,
-                    );
-                    echo \GuzzleHttp\json_encode($response);
-                    exit();
-                }
-            }
-            echo \GuzzleHttp\json_encode(array('status' => 'error'));
-            exit();
-        }
-
-        // Ajax request: action=setCaption
-        if (Input::post('action') === 'setCaption' && Input::post('fileId') != '')
-        {
-            $objUser = FrontendUser::getInstance();
-            if ($objUser === null)
-            {
-                echo \GuzzleHttp\json_encode(array('status' => 'error'));
-                exit;
-            }
-
-            $objFile = FilesModel::findByPk(Input::post('fileId'));
-            if ($objFile !== null)
-            {
-                if ($objFile->memberPictureFeedUserId === $this->objUser->id)
-                {
-                    // get meta data
-                    global $objPage;
-                    if (!isset($arrMeta[$objPage->language]))
-                    {
-                        $arrMeta[$objPage->language] = array(
-                            'title'        => '',
-                            'alt'          => '',
-                            'link'         => '',
-                            'caption'      => '',
-                            'photographer' => '',
-                        );
-                    }
-                    $arrMeta[$objPage->language]['caption'] = Input::post('caption');
-                    $arrMeta[$objPage->language]['photographer'] = Input::post('photographer') ?: $objUser->firstname . ' ' . $objUser->lastname;
-
-                    $objFile->meta = serialize($arrMeta);
-                    $objFile->save();
-                    echo \GuzzleHttp\json_encode(array('status' => 'success'));
-                    exit;
-                }
-            }
-        }
-        echo \GuzzleHttp\json_encode(array('status' => 'error'));
+        exit();
     }
 
 
@@ -367,13 +314,12 @@ class PartnerFrontendForm extends Module
      */
     protected function generateMainImageUploadForm()
     {
-
         $settings = array(
             'form'            => 'mainImageUploadForm',
             'uploadDir'       => 'main_image',
             'uploadDirErrMsg' => 'Error! No valid upload folder for the main image defined.',
             'formId'          => 'form-member-main-image-upload',
-            'uploadInputName' => 'ffm_partner_main_image',
+            'uploadInputName' => 'image',
             'inputLabel'      => 'Hauptbild',
             'filename'        => 'main-image.%s',
         );
@@ -398,6 +344,7 @@ class PartnerFrontendForm extends Module
 
         // Get model
         $objModel = $this->getPartnerModel();
+
 
         // Add some fields
         $objForm->addFormField('gallery', array(
@@ -481,8 +428,9 @@ class PartnerFrontendForm extends Module
                                     $arrGallery[] = $objFilesModel->uuid;
 
                                     $set = array(
-                                        'gallery' => serialize($arrGallery),
-                                        'tstamp'  => time()
+                                        'gallery'  => serialize($arrGallery),
+                                        'fetstamp' => time(),
+                                        'tstamp'   => time()
                                     );
                                     Database::getInstance()->prepare("UPDATE cc_cardealer %s WHERE id=?")->set($set)->execute($objModel->id);
                                 }
@@ -600,6 +548,10 @@ class PartnerFrontendForm extends Module
             {
                 if ($objForm->validate())
                 {
+                    $objModel->fetstamp = time();
+                    $objModel->tstamp = time();
+                    $objModel->save();
+
                     if ($hasUpload)
                     {
                         if ($hasUpload)
@@ -610,6 +562,7 @@ class PartnerFrontendForm extends Module
 
                     $this->reload();
                 }
+
             }
 
             $this->productUploadForms[] = $objForm;
@@ -730,13 +683,13 @@ class PartnerFrontendForm extends Module
             'value'     => $objModel->alias
         ));
 
-        /**
-         * $objForm->addFormField('ffm_partner_cat', array(
-         * 'label'     => 'Kategorie',
-         * 'inputType' => 'text',
-         * 'value'     => $objModel->ffm_partner_cat
-         * ));
-         **/
+        $objForm->addFormField('ffm_partner_cat', array(
+            'label'     => 'Kategorie',
+            'inputType' => 'checkbox',
+            'options'   => $this->Helper->getCatTags(),
+            'eval'      => array('multiple' => true),
+            'value'     => $objModel->ffm_partner_cat
+        ));
 
         $objForm->addFormField('ffm_partner_filiale', array(
             'label'     => 'Filiale',
@@ -1029,6 +982,8 @@ class PartnerFrontendForm extends Module
                     {
                         $set = array(
                             $strInputFileupload => $objFile->uuid,
+                            'fetstamp'          => time(),
+                            'tstamp'            => time()
                         );
                         Database::getInstance()->prepare('UPDATE cc_cardealer %s WHERE id=?')->set($set)->execute($objModel->id);
                     }

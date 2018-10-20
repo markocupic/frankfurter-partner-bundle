@@ -16,23 +16,28 @@
     color: #fff;
 }
 
-.partner-gallery, .partner-product-image {
-    position: relative !important;
+.image-section {
+    margin-bottom: 20px;
 }
 
-.partner-gallery.row > div > img {
+.partner-gallery .row  .image_container img {
     max-width: 100% !important;
     height: auto;
 }
 
-.partner-gallery-thumb-buttons-container, .partner-product-image-buttons-container {
+.has-button-overlay {
+    position: relative !important;
+    border: 1px solid #b3b3b3;
+}
+
+.has-button-overlay .button-overlay {
     position: absolute;
-    bottom: 10px;
-    right: 10px;
+    bottom: 20px;
+    left: 20px;
     display: flex;
 }
 
-.partner-gallery-thumb-buttons-container > *, .partner-product-image-buttons-container > * {
+.has-button-overlay .button-overlay > * {
     margin-right: 5px;
     font-size: 16px;
 }

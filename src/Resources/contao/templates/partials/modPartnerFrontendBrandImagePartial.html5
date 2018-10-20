@@ -1,0 +1,12 @@
+<div class="col-12 col-md-6 col-xl-4 image-section <?= $this->class ?>"<?php if($this->hasImage): ?> data-requesttoken="<?= REQUEST_TOKEN ?>" data-fieldname="<?= $this->fieldname ?>" data-file-id="<?= $this->fileId ?>"<?php endif; ?>>
+    <?php if($this->hasImage): ?>
+    <div class="image_container has-button-overlay">
+        {{image::<?= $this->uuid ?>?mode=proportional&width=300}}
+        <div class="button-overlay">
+            <button class="btn btn-danger remove-image" title="Bild löschen"><i class="fa fa-trash"></i></button>
+            <button class="btn btn-danger rotate-image" title="Bild 90° im GUZG drehen"><i class="fa fa-history"></i></button>
+        </div>
+    </div>
+    <?php endif; ?>
+</div>
+
