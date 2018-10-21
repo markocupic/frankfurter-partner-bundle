@@ -8,5 +8,6 @@
  */
 
 $GLOBALS['TL_LANG']['FMD']['partner_catalog'] = "Partner Frontend Module";
-$GLOBALS['TL_LANG']['FMD']['partnerFrontendForm'] = array("Partner Frontend Formular","Erstellen Sie ein Partner-Frontend-Formular");
+$GLOBALS['TL_LANG']['FMD']['partnerFrontendForm'] = array("Partner Frontend Formular", "Erstellen Sie ein Partner-Frontend-Formular");
+$GLOBALS['TL_LANG']['FMD']['customcatalogreaderpartnerpreview'] = array("Partner Frontend Formular Vorschau Reader Modul", "Erstellen Sie ein Partner-Frontend-Formular-Vorschau-Reader-Modul");
 

@@ -13,12 +13,15 @@
     <?php endif; ?>
 
     <div id="formPartsSelectorArea" class="form-parts-selector-area">
-        <a data-filter="textupload" id="formPartsSelectorArea_1" class="form-parts-selector-item" href="#">Basis-Einstellungen</a>
-        <a data-filter="logoupload" id="formPartsSelectorArea_2" class="form-parts-selector-item" href="#">Logo-Upload</a>
-        <a data-filter="mainimageupload" id="formPartsSelectorArea_3" class="form-parts-selector-item" href="#">Hauptbild-Upload</a>
-        <a data-filter="galleryupload" id="formPartsSelectorArea_4" class="form-parts-selector-item" href="#">Galerie-Upload</a>
-        <a data-filter="productupload" id="formPartsSelectorArea_5" class="form-parts-selector-item" href="#">Produkt-Upload</a>
-        <a data-filter="brandupload" id="formPartsSelectorArea_6" class="form-parts-selector-item" href="#">Marken-Upload</a>
+        <a data-filter="textupload" id="formPartsSelectorArea_1" class="top-nav-buttons form-parts-selector-item" href="#">Basis-Einstellungen</a>
+        <a data-filter="logoupload" id="formPartsSelectorArea_2" class="top-nav-buttons form-parts-selector-item" href="#">Logo-Upload</a>
+        <a data-filter="mainimageupload" id="formPartsSelectorArea_3" class="top-nav-buttons form-parts-selector-item" href="#">Hauptbild-Upload</a>
+        <a data-filter="galleryupload" id="formPartsSelectorArea_4" class="top-nav-buttons form-parts-selector-item" href="#">Galerie-Upload</a>
+        <a data-filter="productupload" id="formPartsSelectorArea_5" class="top-nav-buttons form-parts-selector-item" href="#">Produkt-Upload</a>
+        <a data-filter="brandupload" id="formPartsSelectorArea_6" class="top-nav-buttons form-parts-selector-item" href="#">Marken-Upload</a>
+        <?php if($this->addPreviewPageLink): ?>
+        <a id="previewPageBtn" class="top-nav-buttons preview-button" href="<?= $this->objPreviewLinkUrl ?>">Vorschau</a>
+        <?php endif; ?>
     </div>
 
 

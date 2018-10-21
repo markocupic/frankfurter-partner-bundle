@@ -2,7 +2,8 @@
 
 // Frontend Modules
 $GLOBALS['FE_MOD']['partner_catalog'] = array(
-    'partnerFrontendForm' => 'Markocupic\FrankfurterPartnerBundle\Contao\Modules\PartnerFrontendForm',
+    'partnerFrontendForm'               => 'Markocupic\FrankfurterPartnerBundle\Contao\Modules\PartnerFrontendForm',
+    'customcatalogreaderpartnerpreview' => 'PCT\CustomElements\Plugins\CustomCatalog\Frontend\ModuleReaderPartnerPreview'
 );
 
 /**

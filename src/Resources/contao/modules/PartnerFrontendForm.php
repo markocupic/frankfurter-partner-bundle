@@ -9,7 +9,6 @@
 namespace Markocupic\FrankfurterPartnerBundle\Contao\Modules;
 
 use Contao\CcCardealerModel;
-use Contao\Controller;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\Database;
@@ -23,16 +22,15 @@ use Contao\MemberGroupModel;
 use Contao\Module;
 use Contao\BackendTemplate;
 use Contao\FrontendUser;
+use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\Validator;
-use Haste\Util\FileUpload;
 use Markocupic\FrankfurterPartnerBundle\Contao\Classes\PartnerFrontendFormHelper;
 use Patchwork\Utf8;
 use Haste\Form\Form;
 use Contao\Input;
 use Contao\Environment;
 use Contao\System;
-use Contao\Config;
 use Psr\Log\LogLevel;
 
 
@@ -155,8 +153,8 @@ class PartnerFrontendForm extends Module
             exit();
         }
 
-        // Set the previewToken
-        // cc_carreader.vorschau_token for the preview module
+        // Set the preview token
+        // cc_carreader.previewtoken for the preview module
         $this->setPreviewToken();
 
         return parent::generate();
@@ -183,6 +181,18 @@ class PartnerFrontendForm extends Module
         $this->Template->brandUploadForms = $this->brandUploadForms;
 
         $this->Template->Helper = $this->Helper;
+
+        // Add the preview page link
+        if($this->addPreviewPage && $this->previewPage > 0)
+        {
+            $objModel = $this->getPartnerModel();
+            $objPage = PageModel::findByPk($this->previewPage);
+            if($objPage !== null){
+                $this->Template->addPreviewPageLink = true;
+                $this->Template->objPreviewPage =  $objPage;
+                $this->Template->objPreviewLinkUrl = $objPage->getFrontendUrl('/'. $objModel->alias). '?previewtoken=' . $objModel->previewtoken;
+            }
+        }
 
     }
 
@@ -782,7 +792,7 @@ class PartnerFrontendForm extends Module
             'label'     => 'Beschreibung',
             'inputType' => 'textarea',
             'eval'      => array('preserveTags' => true, 'allowHtml' => true, 'decodeEntities' => true),
-            'value'     => StringUtil::decodeEntities($objModel->ffm_partner_text)
+            'value'     => StringUtil::decodeEntities(StringUtil::decodeEntities($objModel->ffm_partner_text))
         ));
 
 
@@ -794,20 +804,20 @@ class PartnerFrontendForm extends Module
 
         $objForm->bindModel($objModel);
 
-
-        // Add attributes
-        //$objWidgetFileupload = $objForm->getWidget('fileupload');
-        //$objWidgetFileupload->addAttribute('accept', '.jpg, .jpeg');
-        //$objWidgetFileupload->storeFile = true;
-
         if ($objForm->validate())
         {
-            // Beschreibung use tinyMce
-            // $objModel->ffm_partner_text = Input::postRaw('ffm_partner_text');
-            //$objModel->save();
+            // Decode entities
+            $objWidget = $objForm->getWidget('ffm_partner_text');
+            $objModel->ffm_partner_text = StringUtil::decodeEntities($objWidget->value);
+            //$objModel->ffm_partner_text = Input::postRaw('ffm_partner_text');
+
+            // Set google maps fields
             $objModel->ffm_partner_map_street = $objModel->ffm_partner_strasse;
             $objModel->ffm_partner_map_city = $objModel->ffm_partner_ort;
             $objModel->ffm_partner_map_zipcode = $objModel->ffm_partner_plz;
+            $objModel->ffm_partner_map = sprintf('%s, %s %s', $objModel->ffm_partner_strasse,$objModel->ffm_partner_plz,$objModel->ffm_partner_ort);
+
+            // Save and reload
             $objModel->save();
 
             $this->reload();
@@ -1084,9 +1094,9 @@ class PartnerFrontendForm extends Module
         $objModel = $this->getPartnerModel();
         if ($objModel !== null)
         {
-            if (trim($objModel->vorschau_token === ''))
+            if (trim($objModel->previewtoken === ''))
             {
-                $objModel->vorschau_token = sha1(rand(435345, 98098908908) . time()) . $objModel->id;
+                $objModel->previewtoken = sha1(rand(435345, 98098908908) . time()) . $objModel->id;
                 $objModel->save();
             }
         }

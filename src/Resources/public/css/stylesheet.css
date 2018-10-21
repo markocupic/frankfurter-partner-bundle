@@ -3,7 +3,7 @@
     margin-bottom: 40px;
 }
 
-.form-parts-selector-item {
+.top-nav-buttons {
     width: 200px;
     padding: 10px 20px;
     border: 1px solid #666;
@@ -11,8 +11,13 @@
     text-align: center;
 }
 
-.form-parts-selector-item.active {
+.top-nav-buttons.active {
     background-color: #0e0e0e;
+    color: #fff;
+}
+
+.top-nav-buttons.preview-button {
+    background-color: #00cc66;
     color: #fff;
 }
 
@@ -20,7 +25,7 @@
     margin-bottom: 20px;
 }
 
-.partner-gallery .row  .image_container img {
+.partner-gallery .row .image_container img {
     max-width: 100% !important;
     height: auto;
 }
