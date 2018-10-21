@@ -1,6 +1,6 @@
+<?php $GLOBALS['TL_JAVASCRIPT'][] ='assets/tinymce4/js/tinymce.min.js'; ?>
 <!-- indexer::stop -->
 <div class="<?= $this->class ?> block"<?= $this->cssID ?><?php if ($this->style): ?> style="<?= $this->style ?>"<?php endif; ?>>
-<script type="text/javascript" src="assets/tinymce4/js/tinymce.min.js"></script >
 
     <?php if ($this->headline): ?>
     <<?= $this->hl ?>><?= $this->headline ?></<?= $this->hl ?>>
@@ -25,158 +25,157 @@
     </div>
 
 
-<div id="formParts" class="form-parts">
+    <div id="formParts" class="form-parts">
 
         <?php if($this->textForm): ?>
         <div class="form-part" data-formpartname="textupload">
-        <div class="hasteform_form-partner-text block">
-            <form action="<?= $this->textForm->getFormAction() ?>" method="<?= $this->textForm->getMethod() ?>" enctype="<?= $this->textForm->getEnctype() ?>">
-                <div class="formbody">
-                    <?php if ($this->textForm->hasFormField('FORM_SUBMIT')): ?>
-                    <?= $this->textForm->getWidget('FORM_SUBMIT')->parse(); ?>
-                    <?php endif; ?>
+            <div class="hasteform_form-partner-text block">
+                <form action="<?= $this->textForm->getFormAction() ?>" method="<?= $this->textForm->getMethod() ?>" enctype="<?= $this->textForm->getEnctype() ?>">
+                    <div class="formbody">
+                        <?php if ($this->textForm->hasFormField('FORM_SUBMIT')): ?>
+                        <?= $this->textForm->getWidget('FORM_SUBMIT')->parse(); ?>
+                        <?php endif; ?>
 
-                    <?php if ($this->textForm->hasFormField('REQUEST_TOKEN')): ?>
-                    <?= $this->textForm->getWidget('REQUEST_TOKEN')->parse(); ?>
-                    <?php endif; ?>
+                        <?php if ($this->textForm->hasFormField('REQUEST_TOKEN')): ?>
+                        <?= $this->textForm->getWidget('REQUEST_TOKEN')->parse(); ?>
+                        <?php endif; ?>
 
-                    <?php $field = 'name'; ?>
-                    <?php if ($this->textForm->hasFormField($field)): ?>
-                    <div class="widget-<?= $field ?>">
-                        <?= $this->textForm->getWidget($field)->parse(); ?>
+                        <?php $field = 'name'; ?>
+                        <?php if ($this->textForm->hasFormField($field)): ?>
+                        <div class="widget-<?= $field ?>">
+                            <?= $this->textForm->getWidget($field)->parse(); ?>
+                        </div>
+                        <?php endif; ?>
+
+                        <?php $field = 'alias'; ?>
+                        <?php if ($this->textForm->hasFormField($field)): ?>
+                        <div class="widget-<?= $field ?>">
+                            <?= $this->textForm->getWidget($field)->parse(); ?>
+                        </div>
+                        <?php endif; ?>
+
+                        <?php $field = 'ffm_partner_cat'; ?>
+                        <?php if ($this->textForm->hasFormField($field)): ?>
+                        <div class="widget-<?= $field ?>">
+                            <?= $this->textForm->getWidget($field)->parse(); ?>
+                        </div>
+                        <?php endif; ?>
+
+                        <?php $field = 'ffm_partner_filiale'; ?>
+                        <?php if ($this->textForm->hasFormField($field)): ?>
+                        <div class="widget-<?= $field ?>">
+                            <?= $this->textForm->getWidget($field)->parse(); ?>
+                        </div>
+                        <?php endif; ?>
+
+                        <?php $field = 'ffm_partner_strasse'; ?>
+                        <?php if ($this->textForm->hasFormField($field)): ?>
+                        <div class="widget-<?= $field ?>">
+                            <?= $this->textForm->getWidget($field)->parse(); ?>
+                        </div>
+                        <?php endif; ?>
+
+                        <?php $field = 'ffm_partner_plz'; ?>
+                        <?php if ($this->textForm->hasFormField($field)): ?>
+                        <div class="widget-<?= $field ?>">
+                            <?= $this->textForm->getWidget($field)->parse(); ?>
+                        </div>
+                        <?php endif; ?>
+
+                        <?php $field = 'ffm_partner_ort'; ?>
+                        <?php if ($this->textForm->hasFormField($field)): ?>
+                        <div class="widget-<?= $field ?>">
+                            <?= $this->textForm->getWidget($field)->parse(); ?>
+                        </div>
+                        <?php endif; ?>
+
+                        <?php $field = 'ffm_partner_open'; ?>
+                        <?php if ($this->textForm->hasFormField($field)): ?>
+                        <div class="widget-<?= $field ?>">
+                            <?= $this->textForm->getWidget($field)->parse(); ?>
+                        </div>
+                        <?php endif; ?>
+
+                        <?php $field = 'ffm_partner_tel'; ?>
+                        <?php if ($this->textForm->hasFormField($field)): ?>
+                        <div class="widget-<?= $field ?>">
+                            <?= $this->textForm->getWidget($field)->parse(); ?>
+                        </div>
+                        <?php endif; ?>
+
+                        <?php $field = 'ffm_partner_mail'; ?>
+                        <?php if ($this->textForm->hasFormField($field)): ?>
+                        <div class="widget-<?= $field ?>">
+                            <?= $this->textForm->getWidget($field)->parse(); ?>
+                        </div>
+                        <?php endif; ?>
+
+                        <?php $field = 'ffm_partner_www'; ?>
+                        <?php if ($this->textForm->hasFormField($field)): ?>
+                        <div class="widget-<?= $field ?>">
+                            <?= $this->textForm->getWidget($field)->parse(); ?>
+                        </div>
+                        <?php endif; ?>
+
+                        <?php $field = 'ffm_partner_www_linkText'; ?>
+                        <?php if ($this->textForm->hasFormField($field)): ?>
+                        <div class="widget-<?= $field ?>">
+                            <?= $this->textForm->getWidget($field)->parse(); ?>
+                        </div>
+                        <?php endif; ?>
+
+                        <?php $field = 'ffm_partner_facebook'; ?>
+                        <?php if ($this->textForm->hasFormField($field)): ?>
+                        <div class="widget-<?= $field ?>">
+                            <?= $this->textForm->getWidget($field)->parse(); ?>
+                        </div>
+                        <?php endif; ?>
+
+                        <?php $field = 'ffm_partner_twitter'; ?>
+                        <?php if ($this->textForm->hasFormField($field)): ?>
+                        <div class="widget-<?= $field ?>">
+                            <?= $this->textForm->getWidget($field)->parse(); ?>
+                        </div>
+                        <?php endif; ?>
+
+                        <?php $field = 'ffm_partner_instagram'; ?>
+                        <?php if ($this->textForm->hasFormField($field)): ?>
+                        <div class="widget-<?= $field ?>">
+                            <?= $this->textForm->getWidget($field)->parse(); ?>
+                        </div>
+                        <?php endif; ?>
+
+                        <?php $field = 'ffm_partner_google'; ?>
+                        <?php if ($this->textForm->hasFormField($field)): ?>
+                        <div class="widget-<?= $field ?>">
+                            <?= $this->textForm->getWidget($field)->parse(); ?>
+                        </div>
+                        <?php endif; ?>
+
+                        <?php $field = 'ffm_partner_youtubeid'; ?>
+                        <?php if ($this->textForm->hasFormField($field)): ?>
+                        <div class="widget-<?= $field ?>">
+                            <?= $this->textForm->getWidget($field)->parse(); ?>
+                        </div>
+                        <?php endif; ?>
+
+                        <?php $field = 'ffm_partner_text'; ?>
+                        <?php if ($this->textForm->hasFormField($field)): ?>
+                        <div class="widget-<?= $field ?>">
+                            <?= $this->textForm->getWidget($field)->parse(); ?>
+                        </div>
+                        <?php endif; ?>
+
+                        <?php if ($this->textForm->hasFormField('submit')): ?>
+                        <?= $this->textForm->getWidget('submit')->parse(); ?>
+                        <?php endif; ?>
                     </div>
-                    <?php endif; ?>
-
-                    <?php $field = 'alias'; ?>
-                    <?php if ($this->textForm->hasFormField($field)): ?>
-                    <div class="widget-<?= $field ?>">
-                        <?= $this->textForm->getWidget($field)->parse(); ?>
-                    </div>
-                    <?php endif; ?>
-
-                    <?php $field = 'ffm_partner_cat'; ?>
-                    <?php if ($this->textForm->hasFormField($field)): ?>
-                    <div class="widget-<?= $field ?>">
-                        <?= $this->textForm->getWidget($field)->parse(); ?>
-                    </div>
-                    <?php endif; ?>
-
-                    <?php $field = 'ffm_partner_filiale'; ?>
-                    <?php if ($this->textForm->hasFormField($field)): ?>
-                    <div class="widget-<?= $field ?>">
-                        <?= $this->textForm->getWidget($field)->parse(); ?>
-                    </div>
-                    <?php endif; ?>
-
-                    <?php $field = 'ffm_partner_strasse'; ?>
-                    <?php if ($this->textForm->hasFormField($field)): ?>
-                    <div class="widget-<?= $field ?>">
-                        <?= $this->textForm->getWidget($field)->parse(); ?>
-                    </div>
-                    <?php endif; ?>
-
-                    <?php $field = 'ffm_partner_plz'; ?>
-                    <?php if ($this->textForm->hasFormField($field)): ?>
-                    <div class="widget-<?= $field ?>">
-                        <?= $this->textForm->getWidget($field)->parse(); ?>
-                    </div>
-                    <?php endif; ?>
-
-                    <?php $field = 'ffm_partner_ort'; ?>
-                    <?php if ($this->textForm->hasFormField($field)): ?>
-                    <div class="widget-<?= $field ?>">
-                        <?= $this->textForm->getWidget($field)->parse(); ?>
-                    </div>
-                    <?php endif; ?>
-
-                    <?php $field = 'ffm_partner_open'; ?>
-                    <?php if ($this->textForm->hasFormField($field)): ?>
-                    <div class="widget-<?= $field ?>">
-                        <?= $this->textForm->getWidget($field)->parse(); ?>
-                    </div>
-                    <?php endif; ?>
-
-                    <?php $field = 'ffm_partner_tel'; ?>
-                    <?php if ($this->textForm->hasFormField($field)): ?>
-                    <div class="widget-<?= $field ?>">
-                        <?= $this->textForm->getWidget($field)->parse(); ?>
-                    </div>
-                    <?php endif; ?>
-
-                    <?php $field = 'ffm_partner_mail'; ?>
-                    <?php if ($this->textForm->hasFormField($field)): ?>
-                    <div class="widget-<?= $field ?>">
-                        <?= $this->textForm->getWidget($field)->parse(); ?>
-                    </div>
-                    <?php endif; ?>
-
-                    <?php $field = 'ffm_partner_www'; ?>
-                    <?php if ($this->textForm->hasFormField($field)): ?>
-                    <div class="widget-<?= $field ?>">
-                        <?= $this->textForm->getWidget($field)->parse(); ?>
-                    </div>
-                    <?php endif; ?>
-
-                    <?php $field = 'ffm_partner_www_linkText'; ?>
-                    <?php if ($this->textForm->hasFormField($field)): ?>
-                    <div class="widget-<?= $field ?>">
-                        <?= $this->textForm->getWidget($field)->parse(); ?>
-                    </div>
-                    <?php endif; ?>
-
-                    <?php $field = 'ffm_partner_facebook'; ?>
-                    <?php if ($this->textForm->hasFormField($field)): ?>
-                    <div class="widget-<?= $field ?>">
-                        <?= $this->textForm->getWidget($field)->parse(); ?>
-                    </div>
-                    <?php endif; ?>
-
-                    <?php $field = 'ffm_partner_twitter'; ?>
-                    <?php if ($this->textForm->hasFormField($field)): ?>
-                    <div class="widget-<?= $field ?>">
-                        <?= $this->textForm->getWidget($field)->parse(); ?>
-                    </div>
-                    <?php endif; ?>
-
-                    <?php $field = 'ffm_partner_instagram'; ?>
-                    <?php if ($this->textForm->hasFormField($field)): ?>
-                    <div class="widget-<?= $field ?>">
-                        <?= $this->textForm->getWidget($field)->parse(); ?>
-                    </div>
-                    <?php endif; ?>
-
-                    <?php $field = 'ffm_partner_google'; ?>
-                    <?php if ($this->textForm->hasFormField($field)): ?>
-                    <div class="widget-<?= $field ?>">
-                        <?= $this->textForm->getWidget($field)->parse(); ?>
-                    </div>
-                    <?php endif; ?>
-
-                    <?php $field = 'ffm_partner_youtubeid'; ?>
-                    <?php if ($this->textForm->hasFormField($field)): ?>
-                    <div class="widget-<?= $field ?>">
-                        <?= $this->textForm->getWidget($field)->parse(); ?>
-                    </div>
-                    <?php endif; ?>
-
-                    <?php $field = 'ffm_partner_text'; ?>
-                    <?php if ($this->textForm->hasFormField($field)): ?>
-                    <div class="widget-<?= $field ?>">
-                        <?= $this->textForm->getWidget($field)->parse(); ?>
-                    </div>
-                    <?php endif; ?>
-
-
-
-
-                    <?php if ($this->textForm->hasFormField('submit')): ?>
-                    <?= $this->textForm->getWidget('submit')->parse(); ?>
-                    <?php endif; ?>
-                </div>
-            </form>
-        </div>
+                </form>
+            </div>
         </div>
         <?php endif; ?>
+
+
 
         <?php if($this->logoUploadForm): ?>
         <div class="form-part" data-formpartname="logoupload">
@@ -207,6 +206,9 @@
             </div>
         </div>
         <?php endif; ?>
+
+
+
 
         <?php if($this->mainImageUploadForm): ?>
         <div class="form-part" data-formpartname="mainimageupload">
@@ -257,7 +259,6 @@
                 <div class="hasteform_form-partner-product-upload-<?= $strItem ?> block">
                     <form action="<?= $productUploadForm->getFormAction() ?>" method="<?= $productUploadForm->getMethod() ?>" enctype="multipart/form-data">
                         <div class="formbody">
-
                             <?php if ($productUploadForm->hasFormField('FORM_SUBMIT')): ?>
                             <?= $productUploadForm->getWidget('FORM_SUBMIT')->parse(); ?>
                             <?php endif; ?>
@@ -343,9 +344,8 @@
             <?php endforeach; ?>
         </div>
         <?php endif; ?>
-
-
     </div> <!--end form parts -->
+</div>
 
 <script>
     setTimeout(function() {
@@ -381,4 +381,3 @@
     }, 0);
 </script>
 <!-- indexer::continue -->
-</div>

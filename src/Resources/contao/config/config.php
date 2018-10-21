@@ -1,19 +1,31 @@
 <?php
 
+/**
+ * Partner Bundle Plugin for Contao
+ * Copyright (c) 2008-2018 Marko Cupic & Leif Braun from kreadea
+ * @package frankfurter-partner-bundle
+ * @author Marko Cupic m.cupic@gmx.ch, 2018
+ * @link https://github.com/markocupic/frankfurter-partner-bundle
+ */
+
+$rootDir = Contao\System::getContainer()->getParameter('kernel.project_dir');
+
+
+// Add notification center configs
+require_once($rootDir . '/src/markocupic/frankfurter-partner-bundle/src/Resources/contao/config/notification_center_config.php');
+
+
 // Frontend Modules
 $GLOBALS['FE_MOD']['partner_catalog'] = array(
     'partnerFrontendForm'               => 'Markocupic\FrankfurterPartnerBundle\Contao\Modules\PartnerFrontendForm',
     'customcatalogreaderpartnerpreview' => 'PCT\CustomElements\Plugins\CustomCatalog\Frontend\ModuleReaderPartnerPreview'
 );
 
-/**
- * Hooks
- */
-if (TL_MODE == 'BE')
-{
+// Cron
+$GLOBALS['TL_CRON']['daily']['adminAdvice'] = array('Markocupic\FrankfurterPartnerBundle\Contao\Notifications\PartnerNotification', 'sendNotification');
 
-
-}
+// Notification id
+$GLOBALS['TL_CONFIG']['notification_advice_admin_on_new_entries'] = 1;
 
 if (TL_MODE == 'FE')
 {

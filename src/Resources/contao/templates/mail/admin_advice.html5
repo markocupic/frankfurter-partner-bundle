@@ -1,0 +1,20 @@
+Hallo Admin
+
+Der Datensatz des Partners "<?= $this->partner_name ?>" wurde geändert.
+
+Veröffentlichungsstatus:  <?= $this->publish_state ?>
+
+
+Hier geht es zu Vorschau im Frontend:
+https://the-frankfurter.com/formpreview/<?= $this->partner_alias ?>.html?previewtoken=<?= $this->preview_token ?>
+
+
+Hier geht es zu Vorschau im Backend:
+https://the-frankfurter.com/contao?do=cc_cardealer_3&act=edit&table=cc_cardealer&id=<?= $this->partner_id ?>
+
+
+Freundliche Grüsse
+
+
+
+Achtung! Dies ist eine automatisch generierte Nachricht. Bitte antworten Sie nicht darauf.

@@ -1,13 +1,10 @@
 <?php
-
 /**
- * Backend Password Reoovery Bundle for Contao CMS
- *
- * Copyright (C) 2005-2018 Marko Cupic
- *
- * @package Backend Password Recovery Bundle
- * @link    https://www.github.com/markocupic/backend-password-recovery-bundle
- *
+ * Partner Bundle Plugin for Contao
+ * Copyright (c) 2008-2018 Marko Cupic & Leif Braun from kreadea
+ * @package frankfurter-partner-bundle
+ * @author Marko Cupic m.cupic@gmx.ch, 2018
+ * @link https://github.com/markocupic/frankfurter-partner-bundle
  */
 
 namespace Markocupic\FrankfurterPartnerBundle;

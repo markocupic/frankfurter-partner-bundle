@@ -1,12 +1,13 @@
 <?php
 /**
- * Contao module: Member Picture Feed Bundle
- * Copyright (c) 2008-2018 Marko Cupic
- * @package member-picture-feed-bundle
+ * Partner Bundle Plugin for Contao
+ * Copyright (c) 2008-2018 Marko Cupic & Leif Braun from kreadea
+ * @package frankfurter-partner-bundle
  * @author Marko Cupic m.cupic@gmx.ch, 2018
- * @link https://github.com/markocupic/member-picture-feed
+ * @link https://github.com/markocupic/frankfurter-partner-bundle
  */
 
+// Frontend modules
 $GLOBALS['TL_LANG']['FMD']['partner_catalog'] = "Partner Frontend Module";
 $GLOBALS['TL_LANG']['FMD']['partnerFrontendForm'] = array("Partner Frontend Formular", "Erstellen Sie ein Partner-Frontend-Formular");
 $GLOBALS['TL_LANG']['FMD']['customcatalogreaderpartnerpreview'] = array("Partner Frontend Formular Vorschau Reader Modul", "Erstellen Sie ein Partner-Frontend-Formular-Vorschau-Reader-Modul");

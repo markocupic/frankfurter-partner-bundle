@@ -1,9 +1,10 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: Marko
- * Date: 16.10.2018
- * Time: 08:34
+ * Partner Bundle Plugin for Contao
+ * Copyright (c) 2008-2018 Marko Cupic & Leif Braun from kreadea
+ * @package frankfurter-partner-bundle
+ * @author Marko Cupic m.cupic@gmx.ch, 2018
+ * @link https://github.com/markocupic/frankfurter-partner-bundle
  */
 
 namespace Markocupic\FrankfurterPartnerBundle\Contao\Modules;
@@ -17,7 +18,6 @@ use Contao\Files;
 use Contao\FilesModel;
 use Contao\Folder;
 use Contao\File;
-use Contao\Frontend;
 use Contao\MemberGroupModel;
 use Contao\Module;
 use Contao\BackendTemplate;
@@ -51,7 +51,6 @@ class PartnerFrontendForm extends Module
      * @var
      */
     protected $objUser;
-
 
     /**
      * @var
@@ -110,14 +109,10 @@ class PartnerFrontendForm extends Module
 
 
     /**
-     * Display a wildcard in the back end
-     *
      * @return string
      */
     public function generate()
     {
-
-
         if (TL_MODE == 'BE')
         {
             /** @var BackendTemplate|object $objTemplate */
@@ -153,15 +148,20 @@ class PartnerFrontendForm extends Module
             exit();
         }
 
-        // Set the preview token
+        // Set the preview token if it wasn't set already
         // cc_carreader.previewtoken for the preview module
         $this->setPreviewToken();
 
         return parent::generate();
     }
 
+
+    /**
+     * compile module
+     */
     protected function compile()
     {
+        // Generate all the forms
         $this->generateTextForm();
         $this->Template->textForm = $this->textForm;
 
@@ -180,21 +180,31 @@ class PartnerFrontendForm extends Module
         $this->generateBrandUploadForms();
         $this->Template->brandUploadForms = $this->brandUploadForms;
 
+        // Assign helper class to the template
         $this->Template->Helper = $this->Helper;
 
         // Add the preview page link
-        if($this->addPreviewPage && $this->previewPage > 0)
+        if ($this->addPreviewPage && $this->previewPage > 0)
         {
             $objModel = $this->getPartnerModel();
             $objPage = PageModel::findByPk($this->previewPage);
-            if($objPage !== null){
+            if ($objPage !== null)
+            {
                 $this->Template->addPreviewPageLink = true;
-                $this->Template->objPreviewPage =  $objPage;
-                $this->Template->objPreviewLinkUrl = $objPage->getFrontendUrl('/'. $objModel->alias). '?previewtoken=' . $objModel->previewtoken;
+                $this->Template->objPreviewPage = $objPage;
+                $this->Template->objPreviewLinkUrl = $objPage->getFrontendUrl('/' . $objModel->alias) . '?previewtoken=' . $objModel->previewtoken;
             }
         }
 
+        // Add messages
+        if (count($this->arrMessages) > 0)
+        {
+            $this->hasMessages = true;
+            $this->Templates->messages = $this->arrMessages;
+        }
+
     }
+
 
     /**
      * @return $this
@@ -296,8 +306,182 @@ class PartnerFrontendForm extends Module
             exit();
         }
 
-
         exit();
+    }
+
+
+    /**
+     *
+     */
+    protected function generateTextForm()
+    {
+
+        // Create the form
+        $objForm = $this->createForm('form-member-text-form');
+
+
+        // Add hidden fields REQUEST_TOKEN & FORM_SUBMIT
+        $objForm->addContaoHiddenFields();
+
+        // Get model
+        $objModel = $this->getPartnerModel();
+
+
+        // Add some fields
+        $objForm->addFormField('name', array(
+            'label'     => 'Name',
+            'inputType' => 'text',
+            'value'     => $objModel->name
+        ));
+
+        $objForm->addFormField('alias', array(
+            'label'     => 'Alias',
+            'inputType' => 'text',
+            'value'     => $objModel->alias
+        ));
+
+        $objForm->addFormField('ffm_partner_cat', array(
+            'label'     => 'Kategorie',
+            'inputType' => 'checkbox',
+            'options'   => $this->Helper->getCatTags(),
+            'eval'      => array('multiple' => true),
+            'value'     => $objModel->ffm_partner_cat
+        ));
+
+        $objForm->addFormField('ffm_partner_filiale', array(
+            'label'     => 'Filiale',
+            'inputType' => 'text',
+            'value'     => $objModel->ffm_partner_filiale
+        ));
+
+        $objForm->addFormField('ffm_partner_strasse', array(
+            'label'     => 'Strasse / Nr',
+            'inputType' => 'text',
+            'value'     => $objModel->ffm_partner_strasse
+        ));
+
+        $objForm->addFormField('ffm_partner_plz', array(
+            'label'     => 'PLZ',
+            'inputType' => 'text',
+            'eval'      => array('rgxp' => 'natural'),
+            'value'     => $objModel->ffm_partner_plz
+        ));
+
+        $objForm->addFormField('ffm_partner_ort', array(
+            'label'     => 'Ort',
+            'inputType' => 'text',
+            'value'     => $objModel->ffm_partner_ort
+        ));
+
+        $objForm->addFormField('ffm_partner_open', array(
+            'label'     => 'Öffnungszeiten',
+            'inputType' => 'formMultiText',
+            'value'     => $objModel->ffm_partner_open
+        ));
+
+        $objForm->addFormField('ffm_partner_tel', array(
+            'label'     => 'Telefon',
+            'inputType' => 'text',
+            'eval'      => array('rgxp' => 'phone'),
+            'value'     => $objModel->ffm_partner_tel
+        ));
+
+        $objForm->addFormField('ffm_partner_mail', array(
+            'label'     => 'E-Mail',
+            'inputType' => 'text',
+            'eval'      => array('rgxp' => 'email'),
+            'value'     => $objModel->ffm_partner_mail
+        ));
+
+        $objForm->addFormField('ffm_partner_www', array(
+            'label'     => 'Webseite',
+            'inputType' => 'text',
+            'eval'      => array('rgxp' => 'url'),
+            'value'     => $objModel->ffm_partner_www
+        ));
+
+        $objForm->addFormField('ffm_partner_www_linkText', array(
+            'label'     => 'Linktext (Webseite)',
+            'inputType' => 'text',
+            'value'     => $objModel->ffm_partner_www_linkText
+        ));
+
+        $objForm->addFormField('ffm_partner_facebook', array(
+            'label'     => 'Social Facebook',
+            'inputType' => 'text',
+            'eval'      => array('rgxp' => 'url'),
+            'value'     => $objModel->ffm_partner_facebook
+        ));
+
+        $objForm->addFormField('ffm_partner_twitter', array(
+            'label'     => 'Social Twitter',
+            'inputType' => 'text',
+            'eval'      => array('rgxp' => 'url'),
+            'value'     => $objModel->ffm_partner_twitter
+        ));
+
+        $objForm->addFormField('ffm_partner_instagram', array(
+            'label'     => 'Social Instagram',
+            'inputType' => 'text',
+            'eval'      => array('rgxp' => 'url'),
+            'value'     => $objModel->ffm_partner_instagram
+        ));
+
+        $objForm->addFormField('ffm_partner_google', array(
+            'label'     => 'Social Google Plus',
+            'inputType' => 'text',
+            'eval'      => array('rgxp' => 'url'),
+            'value'     => $objModel->ffm_partner_google
+        ));
+
+        if ($this->objPartnerAbo->allowYoutubeEmbed)
+        {
+            $objForm->addFormField('ffm_partner_youtubeid', array(
+                'label'     => 'Youtube ID',
+                'inputType' => 'text',
+                'value'     => $objModel->ffm_partner_youtubeid
+            ));
+        }
+
+        $objForm->addFormField('ffm_partner_text', array(
+            'label'     => 'Beschreibung',
+            'inputType' => 'textarea',
+            'eval'      => array('preserveTags' => true, 'allowHtml' => true, 'decodeEntities' => true),
+            'value'     => StringUtil::decodeEntities(StringUtil::decodeEntities($objModel->ffm_partner_text))
+        ));
+
+
+        // Let's add  a submit button
+        $objForm->addFormField('submit', array(
+            'label'     => $GLOBALS['TL_LANG']['MSC']['partnerSaveBtnLabel'],
+            'inputType' => 'submit',
+        ));
+
+        $objForm->bindModel($objModel);
+
+        if ($objForm->validate())
+        {
+            // Decode entities
+            $objWidget = $objForm->getWidget('ffm_partner_text');
+            $objModel->ffm_partner_text = StringUtil::decodeEntities($objWidget->value);
+            //$objModel->ffm_partner_text = Input::postRaw('ffm_partner_text');
+
+            // Set google maps fields
+            $objModel->ffm_partner_map_street = $objModel->ffm_partner_strasse;
+            $objModel->ffm_partner_map_city = $objModel->ffm_partner_ort;
+            $objModel->ffm_partner_map_zipcode = $objModel->ffm_partner_plz;
+            $objModel->ffm_partner_map = sprintf('%s, %s %s', $objModel->ffm_partner_strasse, $objModel->ffm_partner_plz, $objModel->ffm_partner_ort);
+
+            $objModel->fetstamp = time();
+            $objModel->tstamp = time();
+
+            // Save and reload
+            $objModel->save();
+
+            $this->reload();
+        }
+
+        $this->textForm = $objForm;
     }
 
 
@@ -319,6 +503,7 @@ class PartnerFrontendForm extends Module
         $this->generateSingleUploadForm($settings);
     }
 
+
     /**
      * Generate the main image upload form
      */
@@ -335,6 +520,7 @@ class PartnerFrontendForm extends Module
         );
         $this->generateSingleUploadForm($settings);
     }
+
 
     /**
      * @return null
@@ -354,7 +540,6 @@ class PartnerFrontendForm extends Module
 
         // Get model
         $objModel = $this->getPartnerModel();
-
 
         // Add some fields
         $objForm->addFormField('gallery', array(
@@ -404,7 +589,6 @@ class PartnerFrontendForm extends Module
                     {
                         $binUuid = StringUtil::uuidToBin($uuid);
                         $objFilesModel = FilesModel::findByUuid($binUuid);
-                        //echo $objFilesModel->path .' ';
 
                         if ($objFilesModel !== null)
                         {
@@ -572,14 +756,11 @@ class PartnerFrontendForm extends Module
 
                     $this->reload();
                 }
-
             }
-
             $this->productUploadForms[] = $objForm;
-
-
         } // end for
     }
+
 
     /**
      * Generate the product upload forms
@@ -663,344 +844,6 @@ class PartnerFrontendForm extends Module
         } // end for
     }
 
-    /**
-     *
-     */
-    protected function generateTextForm()
-    {
-
-        // Create the form
-        $objForm = $this->createForm('form-member-text-form');
-
-
-        // Add hidden fields REQUEST_TOKEN & FORM_SUBMIT
-        $objForm->addContaoHiddenFields();
-
-        // Get model
-        $objModel = $this->getPartnerModel();
-
-
-        // Add some fields
-        $objForm->addFormField('name', array(
-            'label'     => 'Name',
-            'inputType' => 'text',
-            'value'     => $objModel->name
-        ));
-
-        $objForm->addFormField('alias', array(
-            'label'     => 'Alias',
-            'inputType' => 'text',
-            'value'     => $objModel->alias
-        ));
-
-        $objForm->addFormField('ffm_partner_cat', array(
-            'label'     => 'Kategorie',
-            'inputType' => 'checkbox',
-            'options'   => $this->Helper->getCatTags(),
-            'eval'      => array('multiple' => true),
-            'value'     => $objModel->ffm_partner_cat
-        ));
-
-        $objForm->addFormField('ffm_partner_filiale', array(
-            'label'     => 'Filiale',
-            'inputType' => 'text',
-            'value'     => $objModel->ffm_partner_filiale
-        ));
-
-        $objForm->addFormField('ffm_partner_strasse', array(
-            'label'     => 'Strasse / Nr',
-            'inputType' => 'text',
-            'value'     => $objModel->ffm_partner_strasse
-        ));
-
-        $objForm->addFormField('ffm_partner_plz', array(
-            'label'     => 'PLZ',
-            'inputType' => 'text',
-            'value'     => $objModel->ffm_partner_plz
-        ));
-
-        $objForm->addFormField('ffm_partner_ort', array(
-            'label'     => 'Ort',
-            'inputType' => 'text',
-            'value'     => $objModel->ffm_partner_ort
-        ));
-
-        $objForm->addFormField('ffm_partner_open', array(
-            'label'     => 'Öffnungszeiten',
-            'inputType' => 'formMultiText',
-            'value'     => $objModel->ffm_partner_open
-        ));
-
-        $objForm->addFormField('ffm_partner_tel', array(
-            'label'     => 'Telefon',
-            'inputType' => 'text',
-            'value'     => $objModel->ffm_partner_tel
-        ));
-
-        $objForm->addFormField('ffm_partner_mail', array(
-            'label'     => 'E-Mail',
-            'inputType' => 'text',
-            'value'     => $objModel->ffm_partner_mail
-        ));
-
-        $objForm->addFormField('ffm_partner_www', array(
-            'label'     => 'Webseite',
-            'inputType' => 'text',
-            'value'     => $objModel->ffm_partner_www
-        ));
-
-        $objForm->addFormField('ffm_partner_www_linkText', array(
-            'label'     => 'Linktext (Webseite)',
-            'inputType' => 'text',
-            'value'     => $objModel->ffm_partner_www_linkText
-        ));
-
-        $objForm->addFormField('ffm_partner_facebook', array(
-            'label'     => 'Social Facebook',
-            'inputType' => 'text',
-            'value'     => $objModel->ffm_partner_facebook
-        ));
-
-        $objForm->addFormField('ffm_partner_twitter', array(
-            'label'     => 'Social Twitter',
-            'inputType' => 'text',
-            'value'     => $objModel->ffm_partner_twitter
-        ));
-
-        $objForm->addFormField('ffm_partner_instagram', array(
-            'label'     => 'Social Instagram',
-            'inputType' => 'text',
-            'value'     => $objModel->ffm_partner_instagram
-        ));
-
-        $objForm->addFormField('ffm_partner_google', array(
-            'label'     => 'Social Google Plus',
-            'inputType' => 'text',
-            'value'     => $objModel->ffm_partner_google
-        ));
-
-        if ($this->objPartnerAbo->allowYoutubeEmbed)
-        {
-            $objForm->addFormField('ffm_partner_youtubeid', array(
-                'label'     => 'Youtube ID',
-                'inputType' => 'text',
-                'value'     => $objModel->ffm_partner_youtubeid
-            ));
-        }
-
-        $objForm->addFormField('ffm_partner_text', array(
-            'label'     => 'Beschreibung',
-            'inputType' => 'textarea',
-            'eval'      => array('preserveTags' => true, 'allowHtml' => true, 'decodeEntities' => true),
-            'value'     => StringUtil::decodeEntities(StringUtil::decodeEntities($objModel->ffm_partner_text))
-        ));
-
-
-        // Let's add  a submit button
-        $objForm->addFormField('submit', array(
-            'label'     => $GLOBALS['TL_LANG']['MSC']['partnerSaveBtnLabel'],
-            'inputType' => 'submit',
-        ));
-
-        $objForm->bindModel($objModel);
-
-        if ($objForm->validate())
-        {
-            // Decode entities
-            $objWidget = $objForm->getWidget('ffm_partner_text');
-            $objModel->ffm_partner_text = StringUtil::decodeEntities($objWidget->value);
-            //$objModel->ffm_partner_text = Input::postRaw('ffm_partner_text');
-
-            // Set google maps fields
-            $objModel->ffm_partner_map_street = $objModel->ffm_partner_strasse;
-            $objModel->ffm_partner_map_city = $objModel->ffm_partner_ort;
-            $objModel->ffm_partner_map_zipcode = $objModel->ffm_partner_plz;
-            $objModel->ffm_partner_map = sprintf('%s, %s %s', $objModel->ffm_partner_strasse,$objModel->ffm_partner_plz,$objModel->ffm_partner_ort);
-
-            // Save and reload
-            $objModel->save();
-
-            $this->reload();
-        }
-        else
-        {
-
-        }
-
-        $this->textForm = $objForm;
-    }
-
-    /**
-     * @param $strId
-     * @return Form
-     */
-    protected function createForm($strId)
-    {
-
-        $objForm = new Form($strId, 'POST', function ($objHaste) {
-            return Input::post('FORM_SUBMIT') === $objHaste->getFormId();
-        });
-
-
-        $url = Environment::get('uri');
-        $objForm->setFormActionFromUri($url);
-
-        // Add hidden fields REQUEST_TOKEN & FORM_SUBMIT
-        $objForm->addContaoHiddenFields();
-
-        return $objForm;
-    }
-
-    /**
-     * @return mixed
-     */
-    protected function getPartnerModel()
-    {
-        $objDb = Database::getInstance()->prepare('SELECT * FROM cc_cardealer WHERE memberid=?')->limit(1)->execute($this->objUser->id);
-        if (!$objDb->numRows)
-        {
-            throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
-        }
-        return CcCardealerModel::findById($objDb->id);
-    }
-
-    /**
-     * @param $strSubDir
-     * @return bool|FilesModel|null
-     * @throws \Exception
-     */
-    protected function getUploadDirObject($strSubDir)
-    {
-
-        if ($this->objUser->assignDir)
-        {
-            if ($this->objUser->homeDir !== '')
-            {
-                if (Validator::isBinaryUuid($this->objUser->homeDir))
-                {
-                    $objFile = FilesModel::findByUuid($this->objUser->homeDir);
-                    if ($objFile->type === 'folder')
-                    {
-                        if (is_dir(TL_ROOT . '/' . $objFile->path))
-                        {
-                            new Folder($objFile->path . '/' . $strSubDir);
-                            Dbafs::addResource($objFile->path . '/' . $strSubDir);
-                            $objUploadDir = FilesModel::findByPath($objFile->path . '/' . $strSubDir);
-                            if (is_dir(TL_ROOT . '/' . $objFile->path . '/' . $strSubDir) && $objUploadDir !== null)
-                            {
-                                return $objUploadDir;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * Rename uploaded file before the validation
-     * @param $objForm
-     * @param $strFieldname
-     * @param $strNewName
-     * @return bool
-     * @throws \Exception
-     */
-    protected function renameFileInGlobals($objForm, $strFieldname, $strNewName)
-    {
-        if (Input::post('FORM_SUBMIT') === $objForm->getFormId())
-        {
-            if (is_array($_FILES) && !empty($_FILES))
-            {
-
-                if (is_array($_FILES[$strFieldname]))
-                {
-                    if ($_FILES[$strFieldname]['name'] !== '')
-                    {
-                        $objFile = new File($_FILES[$strFieldname]['name']);
-                        if ($objFile !== null)
-                        {
-                            $_FILES[$strFieldname]['name'] = sprintf($strNewName, strtolower($objFile->extension));
-                            return true;
-                        }
-                    }
-                }
-            }
-            return false;
-        }
-    }
-
-    /**
-     * @return null|\stdClass
-     */
-    protected function getPartnerAbo()
-    {
-        if (FE_USER_LOGGED_IN)
-        {
-            $objUser = FrontendUser::getInstance();
-            if ($objUser !== null)
-            {
-                $groupsUserBelongsTo = StringUtil::deserialize($objUser->groups, true);
-                if (!empty($groupsUserBelongsTo))
-                {
-                    foreach ($groupsUserBelongsTo as $groupId)
-                    {
-                        $objGroup = MemberGroupModel::findByPk($groupId);
-                        if ($objGroup !== null)
-                        {
-                            if ($objGroup->hasPartnerAbo)
-                            {
-                                if ($objGroup->partnerAbo != '')
-                                {
-                                    if (is_array($GLOBALS['TL_CONFIG']['partnerAbos']))
-                                    {
-                                        $partnerObject = new \stdClass();
-                                        $partnerObject->allowedGalleryImages = $GLOBALS['TL_CONFIG']['partnerAboAllowedGalleryImages'][$objGroup->partnerAbo];
-                                        $partnerObject->allowedCategories = $GLOBALS['TL_CONFIG']['partnerAboAllowedCategories'][$objGroup->partnerAbo];
-                                        $partnerObject->allowedImagesOurBrands = $GLOBALS['TL_CONFIG']['partnerAboAllowedImagesOurBrands'][$objGroup->partnerAbo];
-                                        $partnerObject->allowedProducts = $GLOBALS['TL_CONFIG']['partnerAboAllowedProducts'][$objGroup->partnerAbo];
-                                        $partnerObject->allowYoutubeEmbed = $GLOBALS['TL_CONFIG']['partnerAboAllowYoutubeEmbed'][$objGroup->partnerAbo];
-                                        return $partnerObject;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return null;
-    }
-
-    /**
-     * @param $objModel
-     * @param $strInputFileupload
-     */
-    protected function validateFileupload($objModel, $strInputFileupload)
-    {
-        if (is_array($_SESSION['FILES'][$strInputFileupload]) && !empty($_SESSION['FILES'][$strInputFileupload]))
-        {
-            $strUuid = $_SESSION['FILES'][$strInputFileupload]['uuid'];
-            if (Validator::isStringUuid($strUuid))
-            {
-                $uuid = StringUtil::uuidToBin($strUuid);
-                $objFile = FilesModel::findByUuid($uuid);
-                if ($objFile !== null)
-                {
-                    if (is_file(TL_ROOT . '/' . $objFile->path))
-                    {
-                        $set = array(
-                            $strInputFileupload => $objFile->uuid,
-                            'fetstamp'          => time(),
-                            'tstamp'            => time()
-                        );
-                        Database::getInstance()->prepare('UPDATE cc_cardealer %s WHERE id=?')->set($set)->execute($objModel->id);
-                    }
-                }
-            }
-        }
-    }
 
     /**
      * @param $settings
@@ -1071,6 +914,185 @@ class PartnerFrontendForm extends Module
         $this->{$settings['form']} = $objForm;
     }
 
+
+    /**
+     * @param $strId
+     * @return Form
+     */
+    protected function createForm($strId)
+    {
+
+        $objForm = new Form($strId, 'POST', function ($objHaste) {
+            return Input::post('FORM_SUBMIT') === $objHaste->getFormId();
+        });
+
+
+        $url = Environment::get('uri');
+        $objForm->setFormActionFromUri($url);
+
+        // Add hidden fields REQUEST_TOKEN & FORM_SUBMIT
+        $objForm->addContaoHiddenFields();
+
+        return $objForm;
+    }
+
+
+    /**
+     * @return mixed
+     */
+    protected function getPartnerModel()
+    {
+        $objDb = Database::getInstance()->prepare('SELECT * FROM cc_cardealer WHERE memberid=?')->limit(1)->execute($this->objUser->id);
+        if (!$objDb->numRows)
+        {
+            throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
+        }
+        return CcCardealerModel::findById($objDb->id);
+    }
+
+
+    /**
+     * @return null|\stdClass
+     */
+    protected function getPartnerAbo()
+    {
+        if (FE_USER_LOGGED_IN)
+        {
+            $objUser = FrontendUser::getInstance();
+            if ($objUser !== null)
+            {
+                $groupsUserBelongsTo = StringUtil::deserialize($objUser->groups, true);
+                if (!empty($groupsUserBelongsTo))
+                {
+                    foreach ($groupsUserBelongsTo as $groupId)
+                    {
+                        $objGroup = MemberGroupModel::findByPk($groupId);
+                        if ($objGroup !== null)
+                        {
+                            if ($objGroup->hasPartnerAbo)
+                            {
+                                if ($objGroup->partnerAbo != '')
+                                {
+                                    if (is_array($GLOBALS['TL_CONFIG']['partnerAbos']))
+                                    {
+                                        $partnerObject = new \stdClass();
+                                        $partnerObject->allowedGalleryImages = $GLOBALS['TL_CONFIG']['partnerAboAllowedGalleryImages'][$objGroup->partnerAbo];
+                                        $partnerObject->allowedCategories = $GLOBALS['TL_CONFIG']['partnerAboAllowedCategories'][$objGroup->partnerAbo];
+                                        $partnerObject->allowedImagesOurBrands = $GLOBALS['TL_CONFIG']['partnerAboAllowedImagesOurBrands'][$objGroup->partnerAbo];
+                                        $partnerObject->allowedProducts = $GLOBALS['TL_CONFIG']['partnerAboAllowedProducts'][$objGroup->partnerAbo];
+                                        $partnerObject->allowYoutubeEmbed = $GLOBALS['TL_CONFIG']['partnerAboAllowYoutubeEmbed'][$objGroup->partnerAbo];
+                                        return $partnerObject;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+
+    /**
+     * @param $strSubDir
+     * @return bool|FilesModel|null
+     * @throws \Exception
+     */
+    protected function getUploadDirObject($strSubDir)
+    {
+
+        if ($this->objUser->assignDir)
+        {
+            if ($this->objUser->homeDir !== '')
+            {
+                if (Validator::isBinaryUuid($this->objUser->homeDir))
+                {
+                    $objFile = FilesModel::findByUuid($this->objUser->homeDir);
+                    if ($objFile->type === 'folder')
+                    {
+                        if (is_dir(TL_ROOT . '/' . $objFile->path))
+                        {
+                            new Folder($objFile->path . '/' . $strSubDir);
+                            Dbafs::addResource($objFile->path . '/' . $strSubDir);
+                            $objUploadDir = FilesModel::findByPath($objFile->path . '/' . $strSubDir);
+                            if (is_dir(TL_ROOT . '/' . $objFile->path . '/' . $strSubDir) && $objUploadDir !== null)
+                            {
+                                return $objUploadDir;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+
+    /**
+     * Rename uploaded file before the validation
+     * @param $objForm
+     * @param $strFieldname
+     * @param $strNewName
+     * @return bool
+     * @throws \Exception
+     */
+    protected function renameFileInGlobals($objForm, $strFieldname, $strNewName)
+    {
+        if (Input::post('FORM_SUBMIT') === $objForm->getFormId())
+        {
+            if (is_array($_FILES) && !empty($_FILES))
+            {
+
+                if (is_array($_FILES[$strFieldname]))
+                {
+                    if ($_FILES[$strFieldname]['name'] !== '')
+                    {
+                        $objFile = new File($_FILES[$strFieldname]['name']);
+                        if ($objFile !== null)
+                        {
+                            $_FILES[$strFieldname]['name'] = sprintf($strNewName, strtolower($objFile->extension));
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+    }
+
+
+    /**
+     * @param $objModel
+     * @param $strInputFileupload
+     */
+    protected function validateFileupload($objModel, $strInputFileupload)
+    {
+        if (is_array($_SESSION['FILES'][$strInputFileupload]) && !empty($_SESSION['FILES'][$strInputFileupload]))
+        {
+            $strUuid = $_SESSION['FILES'][$strInputFileupload]['uuid'];
+            if (Validator::isStringUuid($strUuid))
+            {
+                $uuid = StringUtil::uuidToBin($strUuid);
+                $objFile = FilesModel::findByUuid($uuid);
+                if ($objFile !== null)
+                {
+                    if (is_file(TL_ROOT . '/' . $objFile->path))
+                    {
+                        $set = array(
+                            $strInputFileupload => $objFile->uuid,
+                            'fetstamp'          => time(),
+                            'tstamp'            => time()
+                        );
+                        Database::getInstance()->prepare('UPDATE cc_cardealer %s WHERE id=?')->set($set)->execute($objModel->id);
+                    }
+                }
+            }
+        }
+    }
+
+
     /**
      * @param $objModel
      * @return int|null
@@ -1085,6 +1107,7 @@ class PartnerFrontendForm extends Module
         }
         return null;
     }
+
 
     /**
      *

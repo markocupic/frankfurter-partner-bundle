@@ -1,40 +1,24 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: Marko
- * Date: 16.10.2018
- * Time: 08:34
+ * Partner Bundle Plugin for Contao
+ * Copyright (c) 2008-2018 Marko Cupic & Leif Braun from kreadea
+ * @package frankfurter-partner-bundle
+ * @author Marko Cupic m.cupic@gmx.ch, 2018
+ * @link https://github.com/markocupic/frankfurter-partner-bundle
  */
 
 namespace Markocupic\FrankfurterPartnerBundle\Contao\Classes;
 
-use Contao\CcCardealerModel;
 use Contao\Controller;
-use Contao\CoreBundle\Exception\PageNotFoundException;
-use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\Database;
-use Contao\Dbafs;
-use Contao\Files;
 use Contao\FilesModel;
-use Contao\Folder;
 use Contao\File;
-use Contao\Frontend;
 use Contao\FrontendTemplate;
-use Contao\MemberGroupModel;
 use Contao\Message;
-use Contao\Module;
-use Contao\BackendTemplate;
-use Contao\FrontendUser;
 use Contao\StringUtil;
 use Contao\Validator;
-use Haste\Util\FileUpload;
-use Patchwork\Utf8;
-use Haste\Form\Form;
-use Contao\Input;
-use Contao\Environment;
 use Contao\System;
 use Contao\Config;
-use Psr\Log\LogLevel;
 
 
 /**
@@ -54,7 +38,11 @@ class PartnerFrontendFormHelper
      */
     protected $objModule;
 
-
+    /**
+     * PartnerFrontendFormHelper constructor.
+     * @param $objUser
+     * @param $objModule
+     */
     public function __construct($objUser, $objModule)
     {
         $this->objUser = $objUser;
@@ -63,8 +51,6 @@ class PartnerFrontendFormHelper
 
 
     /**
-     * Display a wildcard in the back end
-     *
      * @return string
      */
     public function generateGallery()
@@ -100,8 +86,7 @@ class PartnerFrontendFormHelper
     }
 
     /**
-     * Display a wildcard in the back end
-     *
+     * @param $fieldname
      * @return string
      */
     public function generateProductImage($fieldname)
@@ -112,8 +97,7 @@ class PartnerFrontendFormHelper
     }
 
     /**
-     * Display a wildcard in the back end
-     *
+     * @param $fieldname
      * @return string
      */
     public function generateLogoImage($fieldname)
@@ -220,6 +204,7 @@ class PartnerFrontendFormHelper
         imagejpeg($imgTmp, $rootDir . '/' . $src);
 
         imagedestroy($source);
+        
         return true;
     }
 

@@ -1,19 +1,10 @@
 <?php
-
 /**
- * Contao Open Source CMS
- *
- * Copyright (C) 2005-2013 Leo Feyer
- *
- * @copyright    Tim Gatzky 2014
- * @author        Tim Gatzky <info@tim-gatzky.de>
- * @package        pct_customelements
- * @subpackage    pct_customelements_plugin_customcatalog
- * @link        http://contao.org
- */
-
-/**
- * Namespace
+ * Partner Bundle Plugin for Contao
+ * Copyright (c) 2008-2018 Marko Cupic & Leif Braun from kreadea
+ * @package frankfurter-partner-bundle
+ * @author Marko Cupic m.cupic@gmx.ch, 2018
+ * @link https://github.com/markocupic/frankfurter-partner-bundle
  */
 
 namespace PCT\CustomElements\Plugins\CustomCatalog\Frontend;
@@ -21,7 +12,6 @@ namespace PCT\CustomElements\Plugins\CustomCatalog\Frontend;
 /**
  * Imports
  */
-
 use Contao\CcCardealerModel;
 use Contao\Database;
 use Patchwork\Utf8;

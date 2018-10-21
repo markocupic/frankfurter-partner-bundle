@@ -1,9 +1,10 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: Marko
- * Date: 19.10.2018
- * Time: 15:58
+ * Partner Bundle Plugin for Contao
+ * Copyright (c) 2008-2018 Marko Cupic & Leif Braun from kreadea
+ * @package frankfurter-partner-bundle
+ * @author Marko Cupic m.cupic@gmx.ch, 2018
+ * @link https://github.com/markocupic/frankfurter-partner-bundle
  */
 
 // Add selector

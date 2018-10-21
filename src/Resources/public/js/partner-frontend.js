@@ -1,4 +1,12 @@
+/**
+ * Partner Bundle Plugin for Contao
+ * Copyright (c) 2008-2018 Marko Cupic & Leif Braun from kreadea
+ * @package frankfurter-partner-bundle
+ * @author Marko Cupic m.cupic@gmx.ch, 2018
+ * @link https://github.com/markocupic/frankfurter-partner-bundle
+ */
 
+// Ajax actions
 (function ($) {
     $(document).ready(function () {
         "use strict";
@@ -54,10 +62,9 @@
                 }
             }
         });
-
     });
-
 })(jQuery);
+
 
 // Sessiontabs
 jQuery(document).ready(function () {
@@ -70,7 +77,6 @@ jQuery(document).ready(function () {
         storeInSessionStorrage('activeformtab', jQuery(this).prop('id'));
     });
     reset();
-
 
     function storeInSessionStorrage($strKey, strId) {
         sessionStorage.setItem($strKey, strId);
@@ -100,9 +106,5 @@ jQuery(document).ready(function () {
             jQuery('.form-parts .form-part').first().show();
             jQuery('.form-parts-selector-area .form-parts-selector-item').first().addClass('active');
         }
-
     }
-
 });
-
-/* ]]> */

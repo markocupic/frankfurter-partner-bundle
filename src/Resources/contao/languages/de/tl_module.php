@@ -1,15 +1,14 @@
 <?php
 /**
- * Contao module: Member Picture Feed Bundle
- * Copyright (c) 2008-2018 Marko Cupic
- * @package member-picture-feed-bundle
+ * Partner Bundle Plugin for Contao
+ * Copyright (c) 2008-2018 Marko Cupic & Leif Braun from kreadea
+ * @package frankfurter-partner-bundle
  * @author Marko Cupic m.cupic@gmx.ch, 2018
- * @link https://github.com/markocupic/member-picture-feed
+ * @link https://github.com/markocupic/frankfurter-partner-bundle
  */
 
 // Legends
 $GLOBALS['TL_LANG']['tl_module']['member_picture_feed_settings'] = 'Member Picture Feed Einstellungen';
-
 
 // Fields
 $GLOBALS['TL_LANG']['tl_module']['memberPictureFeedUploadFolder'] = array('Bilder-Upload-Verzeichnis', 'Wählen Sie das Bilder-Upload-Verzeichnis aus dem Dateibaum aus.');

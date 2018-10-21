@@ -5,7 +5,8 @@
     "contao",
     "Custom Catalog",
     "Contao",
-    "Leif Braun"
+    "Leif Braun",
+    "Frontend Edit"
   ],
   "type": "contao-module",
   "license": "MIT",
@@ -25,7 +26,8 @@
     "php": ">=7.0",
     "contao/core-bundle": ">=4.4",
     "codefog/contao-haste": "^4.20",
-    "terminal42/contao-fineuploader": "^2.1"
+    "terminal42/contao-fineuploader": "^2.1",
+    "terminal42/notification_center": "^1.4"
   },
   "conflict": {
     "contao/core": "3.*"
