@@ -35,7 +35,7 @@ if (TL_MODE == 'FE')
 
 
 // Front end form fields
-$GLOBALS['TL_FFL']['formMultiText'] = 'FormMultiText';
+$GLOBALS['TL_FFL']['formMultiText'] = 'FormMultitextField';
 
 // Add one or more cat pid from tl_pct_customelement_tags
 // This is used to generate the options in the PartnerFrontendForm for generating ffm_partner_cat

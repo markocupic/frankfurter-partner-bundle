@@ -280,6 +280,13 @@
                             </div>
 
                             <div class="row">
+                                <?php $field = 'produkt_' . $strItem . '_aktivieren'; ?>
+                                <?php if ($productUploadForm->hasFormField($field)): ?>
+                                <div class="col-xl-4 widget-<?= $field ?>">
+                                    <?= $productUploadForm->getWidget($field)->parse(); ?>
+                                </div>
+                                <?php endif; ?>
+
                                 <?php $field = 'ffm_partner_pro' . $strItem . '_hl'; ?>
                                 <?php if ($productUploadForm->hasFormField($field)): ?>
                                 <div class="col-xl-4 widget-<?= $field ?>">

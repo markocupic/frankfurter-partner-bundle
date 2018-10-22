@@ -376,6 +376,7 @@ class PartnerFrontendForm extends Module
         $objForm->addFormField('ffm_partner_open', array(
             'label'     => 'Öffnungszeiten',
             'inputType' => 'formMultiText',
+            'eval'      => array('multiple' => true),
             'value'     => $objModel->ffm_partner_open
         ));
 
@@ -705,6 +706,14 @@ class PartnerFrontendForm extends Module
                 $hasUpload = $this->renameFileInGlobals($objForm, $strInputFileupload, 'product-image-' . $strItem . '.%s');
             }
 
+            $fieldname = 'produkt_' . $strItem . '_aktivieren';
+            $objForm->addFormField($fieldname, array(
+                'label'     => array('Produkt ' . $strItem . ' aktivieren', 'Produkt anzeigen'),
+                'inputType' => 'checkbox',
+                'eval'      => array('multiple' => false),
+                'value'     => $objModel->{$fieldname}
+            ));
+
             $fieldname = 'ffm_partner_pro' . $strItem . '_hl';
             $objForm->addFormField($fieldname, array(
                 'label'     => 'Produkt ' . $strItem . ' Titel',
@@ -729,7 +738,7 @@ class PartnerFrontendForm extends Module
             // Let's add  a submit button
             $fieldname = 'submit';
             $objForm->addFormField($fieldname, array(
-                'label'     => $GLOBALS['TL_LANG']['MSC']['partnerUploadBtnLabel'],
+                'label'     => &$GLOBALS['TL_LANG']['MSC']['partnerUploadAndSaveBtnLabel'],
                 'inputType' => 'submit',
             ));
 

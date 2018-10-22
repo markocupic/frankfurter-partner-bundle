@@ -15,6 +15,7 @@ $GLOBALS['TL_LANG']['MSC']['business-premium'] = 'Business Premium';
 // Labels
 $GLOBALS['TL_LANG']['MSC']['partnerUploadBtnLabel'] = 'Upload starten';
 $GLOBALS['TL_LANG']['MSC']['partnerSaveBtnLabel'] = 'Änderungen speichern';
+$GLOBALS['TL_LANG']['MSC']['partnerUploadAndSaveBtnLabel'] = 'Änderungen speichern, bzw. Datei hochladen';
 
 // Input field labels
 $GLOBALS['TL_LANG']['MSC']['gallery-lbl'] = 'Bildergalerie';
@@ -24,5 +25,7 @@ $GLOBALS['TL_LANG']['MSC']['gallery-submit-btn'] = 'Bilder Hochladen';
 // Messages
 $GLOBALS['TL_LANG']['MSC']['partnerUploadPictureUploadLimitReachedDuringUploadProcess'] = "Du hast bereits das Upload Maximum erreicht. Um weitere Bilder hochzuladen, musst du zuerst mindestens ein Bild löschen.";
 
-
+//MultitextField
+$GLOBALS['TL_LANG']['MSC']['ffl_multitextfield_addRowLbl'] = 'Zeile hinzufügen';
+$GLOBALS['TL_LANG']['MSC']['ffl_multitextfield_deleteRowLbl'] = 'Zeile löschen';
 
