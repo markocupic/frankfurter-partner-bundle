@@ -1,4 +1,9 @@
-<?php $GLOBALS['TL_JAVASCRIPT'][] ='assets/tinymce4/js/tinymce.min.js'; ?>
+<?php
+$GLOBALS['TL_JAVASCRIPT'][] = 'assets/tinymce4/js/tinymce.min.js';
+$GLOBALS['TL_JAVASCRIPT'][] = 'bundles/markocupicfrankfurterpartner/js/jquery.touchSwipe.min.js';
+$GLOBALS['TL_JAVASCRIPT'][] = 'bundles/markocupicfrankfurterpartner/js/Sortable.min.js';
+?>
+
 <!-- indexer::stop -->
 <div class="<?= $this->class ?> block"<?= $this->cssID ?><?php if ($this->style): ?> style="<?= $this->style ?>"<?php endif; ?>>
 
@@ -6,11 +11,7 @@
     <<?= $this->hl ?>><?= $this->headline ?></<?= $this->hl ?>>
     <?php endif; ?>
 
-    <?php if ($this->hasMessages): ?>
-    <?php foreach($this->arrMessages as $message): ?>
-    <p class="tl_confirm alert alert-info"><?= $message ?></p>
-    <?php endforeach; ?>
-    <?php endif; ?>
+
 
     <div id="formPartsSelectorArea" class="form-parts-selector-area">
         <a data-filter="textupload" id="formPartsSelectorArea_1" class="top-nav-buttons form-parts-selector-item" href="#">Basis-Einstellungen</a>
@@ -352,6 +353,14 @@
         </div>
         <?php endif; ?>
     </div> <!--end form parts -->
+
+<?php if ($this->hasMessages): ?>
+<?php foreach($this->messages as $message): ?>
+<p class="tl_confirm message-box alert alert-info"><?= $message ?></p>
+<?php endforeach; ?>
+<?php endif; ?>
+
+
 </div>
 
 <script>

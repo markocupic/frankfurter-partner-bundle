@@ -36,17 +36,17 @@ class PartnerFrontendFormHelper
     /**
      * @var
      */
-    protected $objModule;
+    protected $objPartnerModel;
 
     /**
      * PartnerFrontendFormHelper constructor.
      * @param $objUser
-     * @param $objModule
+     * @param $objPartnerModel
      */
-    public function __construct($objUser, $objModule)
+    public function __construct($objUser, $objPartnerModel)
     {
         $this->objUser = $objUser;
-        $this->objModule = $objModule;
+        $this->objPartnerModel = $objPartnerModel;
     }
 
 
@@ -57,11 +57,45 @@ class PartnerFrontendFormHelper
     {
         $objTemplate = new FrontendTemplate('modPartnerFrontendGalleryPartial');
 
-        $strItems = '';
-        $arrImages = StringUtil::deserialize($this->objModule->gallery, true);
-        foreach ($arrImages as $uuid)
-        {
+        $images = StringUtil::deserialize($this->objPartnerModel->gallery, true);
 
+
+        // Custom sorting
+        if ($this->objPartnerModel->orderSRC_gallery != '')
+        {
+            $tmp = StringUtil::deserialize($this->objPartnerModel->orderSRC_gallery);
+
+            if (!empty($tmp) && is_array($tmp))
+            {
+                // Remove all values
+                $arrOrder = array_map(function () {}, array_flip($tmp));
+
+                // Move the matching elements to their position in $arrOrder
+                foreach ($images as $k=>$v)
+                {
+                    if (array_key_exists($v, $arrOrder))
+                    {
+                        $arrOrder[$v] = $v;
+                        unset($images[$k]);
+                    }
+                }
+
+                // Append the left-over images at the end
+                if (!empty($images))
+                {
+                    $arrOrder = array_merge($arrOrder, array_values($images));
+                }
+
+                // Remove empty (unreplaced) entries
+                $images = array_values(array_filter($arrOrder));
+                unset($arrOrder);
+            }
+        }
+
+        $strItems = '';
+        $arrOrder = array();
+        foreach ($images as $uuid)
+        {
             if (Validator::isBinaryUuid($uuid))
             {
                 $objFile = FilesModel::findByUuid($uuid);
@@ -69,9 +103,10 @@ class PartnerFrontendFormHelper
                 {
                     if (is_file(TL_ROOT . '/' . $objFile->path))
                     {
+                        $arrOrder[] = $uuid;
                         $objPartial = new FrontendTemplate('partnerFrontendGalleryPartial');
                         $objPartial->class = 'partner-gallery-item';
-                        $objPartial->uuid = StringUtil::binToUuid($uuid);
+                        $objPartial->fileUuid = StringUtil::binToUuid($uuid);
                         $objPartial->fileId = $objFile->id;
                         $objPartial->hasImage = true;
                         $strItems .= $objPartial->parse();
@@ -79,6 +114,9 @@ class PartnerFrontendFormHelper
                 }
             }
         }
+        $this->objPartnerModel->orderSRC_gallery = serialize($arrOrder);
+        $this->objPartnerModel->save();
+
         $objTemplate->items = $strItems;
 
         return Controller::replaceInsertTags($objTemplate->parse());
@@ -136,7 +174,7 @@ class PartnerFrontendFormHelper
      */
     protected function generateImage($objTemplate, $fieldname)
     {
-        $uuid = $this->objModule->{$fieldname};
+        $uuid = $this->objPartnerModel->{$fieldname};
         if (Validator::isBinaryUuid($uuid))
         {
             $objFile = FilesModel::findByUuid($uuid);

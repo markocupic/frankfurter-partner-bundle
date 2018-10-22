@@ -23,9 +23,10 @@ $GLOBALS['TL_LANG']['MSC']['gallery-fineuploader-submit-btn'] = 'Bilder zum Hoch
 $GLOBALS['TL_LANG']['MSC']['gallery-submit-btn'] = 'Bilder Hochladen';
 
 // Messages
-$GLOBALS['TL_LANG']['MSC']['partnerUploadPictureUploadLimitReachedDuringUploadProcess'] = "Du hast bereits das Upload Maximum erreicht. Um weitere Bilder hochzuladen, musst du zuerst mindestens ein Bild löschen.";
+$GLOBALS['TL_LANG']['MSC']['partnerUploadPictureUploadLimitReachedDuringUploadProcess'] = "Sie haben bereits das Upload Maximum erreicht. Um weitere Bilder hochzuladen, müssen Sie zuerst mindestens ein Bild löschen.";
+$GLOBALS['TL_LANG']['MSC']['partnerUploadToManyCategoriesSelectedDuringUploadProcess'] = "Sie haben zu viele Kategorien gewählt. Die Limite beträgt %s Kategorien.";
 
-//MultitextField
-$GLOBALS['TL_LANG']['MSC']['ffl_multitextfield_addRowLbl'] = 'Zeile hinzufügen';
-$GLOBALS['TL_LANG']['MSC']['ffl_multitextfield_deleteRowLbl'] = 'Zeile löschen';
+
+
+
 

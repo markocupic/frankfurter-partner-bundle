@@ -25,6 +25,10 @@
     margin-bottom: 20px;
 }
 
+.draggable-item {
+    cursor: move;
+}
+
 .partner-gallery .row .image_container img {
     max-width: 100% !important;
     height: auto;

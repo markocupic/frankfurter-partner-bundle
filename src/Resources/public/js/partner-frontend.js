@@ -6,6 +6,23 @@
  * @link https://github.com/markocupic/frankfurter-partner-bundle
  */
 
+
+/** Scroll to form fields if there are errors **/
+(function ($) {
+    $(document).ready(function () {
+        if ($('.message-box, .widget.error').length) {
+            var interval = window.setInterval(function () {
+                // Wait until the onload overlay has disapeared
+                clearInterval(interval);
+                window.setTimeout(function () {
+                    window.scrollTo(0, $('.message-box, .widget.error').first().offset().top-100);
+                }, 100);
+            }, 100);
+        }
+    });
+})(jQuery);
+
+
 // Ajax actions
 (function ($) {
     $(document).ready(function () {
@@ -18,7 +35,7 @@
             var elImage = $(this).closest('[data-file-id]');
             if (elImage.length) {
                 var fileId = $(elImage).data('file-id');
-                var fieldname =  $(elImage).data('fieldname');
+                var fieldname = $(elImage).data('fieldname');
                 var requesttoken = $(elImage).data('requesttoken');
                 if (fileId !== undefined) {
                     var jqxhr = $.post(window.location.href, {
@@ -29,9 +46,9 @@
                         'fieldname': fieldname
                     }).done(function (json) {
                         $(elImage).fadeOut();
-                        window.setTimeout(function(){
+                        window.setTimeout(function () {
                             $(elImage).remove();
-                        },1000);
+                        }, 1000);
                     });
                 }
             }
@@ -55,7 +72,7 @@
                         json = $.parseJSON(json);
                         if (json.status === 'success') {
                             window.location.reload();
-                        }else{
+                        } else {
                             alert('Es ist ein Fehler aufgetreten. Bitte kontrollieren Sie die Verbidnung.')
                         }
                     });

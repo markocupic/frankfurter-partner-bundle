@@ -1,5 +1,5 @@
 <div class="partner-gallery image-section row">
-    <div class="row">
+    <div class="row sortable-container">
     <?= $this->items ?>
     </div>
 </div>
@@ -7,6 +7,42 @@
     (function ($) {
         $(document).ready(function () {
             "use strict";
+
+            /**
+             * Image drag and drop sorting
+             * @type {Element|*}
+             */
+            var container = $('.partner-gallery .sortable-container').first();
+            if($(container).length)
+            {
+                var sort = Sortable.create($(container).get(0), {
+                    animation: 50, // ms, animation speed moving items when sorting, `0` — without animation
+                    //handle: ".sortable-item", // Restricts sort start click/touch to the specified element
+                    draggable: ".sortable-item", // Specifies which items inside the element should be sortable
+                    onUpdate: function (event) {
+                        var item = event.item; // the current dragged HTMLElement
+                        var arrUuid = [];
+                        var collection = $(item).closest('.sortable-container').find('.sortable-item');
+                        $(collection).each(function (index) {
+                            arrUuid.push($(this).data('file-uuid'));
+                        });
+                        var jqxhr = $.post(window.location.href, {
+                            'REQUEST_TOKEN': '{{request_token}}',
+                            'arrUuid': JSON.stringify(arrUuid),
+                            'action': 'sortGallery',
+                            'fieldname': 'orderSRC_gallery'
+                        }).done(function (json) {
+                            json = $.parseJSON(json);
+                            console.log(json);
+                            if (json.status != 'success') {
+                                console.log(json);
+                            }
+                        });
+                    }
+                });
+            }
+
+
             $('.partner-gallery .remove-image').on('click touchmove', function (e) {
                 e.preventDefault();
                 var elImage = $(this).closest('[data-file-id]');

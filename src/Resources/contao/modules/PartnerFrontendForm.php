@@ -196,11 +196,20 @@ class PartnerFrontendForm extends Module
             }
         }
 
+        // Handle Messages
+        $session = System::getContainer()->get('session');
+        // Get flash bag messages
+        if ($session->isStarted() && $this->hasFlashMessage($this->flashMessageKey))
+        {
+            $this->arrMessages = array_merge($this->arrMessages, $this->getFlashMessage($this->flashMessageKey));
+            $this->unsetFlashMessage($this->flashMessageKey);
+        }
+
         // Add messages
         if (count($this->arrMessages) > 0)
         {
-            $this->hasMessages = true;
-            $this->Templates->messages = $this->arrMessages;
+            $this->Template->hasMessages = true;
+            $this->Template->messages = $this->arrMessages;
         }
 
     }
@@ -211,6 +220,58 @@ class PartnerFrontendForm extends Module
      */
     protected function handleAjaxRequest()
     {
+
+        // Ajax request: action=sortGallery
+        if (Input::post('action') === 'sortGallery' && Input::post('arrUuid') != '')
+        {
+
+            $blnSuccess = 'error';
+            $objModel = $this->getPartnerModel();
+
+            if ($objModel !== null)
+            {
+
+                $arrUuid = json_decode(Input::post('arrUuid'));
+                mail('m.cupic@gmx.ch', 'sdf', print_r($arrUuid,true));
+                if (is_array($arrUuid))
+                {
+                    $uuids = array();
+                    $intItems = count($arrUuid);
+                    $i = 0;
+                    foreach ($arrUuid as $hexUuid)
+                    {
+                        if (Validator::isStringUuid($hexUuid))
+                        {
+                            $uuid = StringUtil::uuidToBin($hexUuid);
+                            $objFile = FilesModel::findByUuid($uuid);
+                            if ($objFile !== null)
+                            {
+                                if (is_file(TL_ROOT . '/' . $objFile->path))
+                                {
+                                    $i++;
+                                    $uuids[] = $uuid;
+                                }
+                            }
+                        }
+                    }
+
+                    if ($i === $intItems)
+                    {
+                        $objModel->orderSRC_gallery = serialize($uuids);
+                        $objModel->fetstamp = time();
+                        $objModel->tstamp = time();
+                        $objModel->save();
+                        $blnSuccess = 'success';
+                    }
+                }
+            }
+
+            $arrJson = array('status' => $blnSuccess, 'items' => $i, 'intItems' => $intItems);
+            echo \GuzzleHttp\json_encode($arrJson);
+            exit();
+        }
+
+
         // Ajax request: action=removeImage
         if (Input::post('action') === 'removeGalleryImage' && Input::post('fileId') != '')
         {
@@ -462,6 +523,7 @@ class PartnerFrontendForm extends Module
 
         if ($objForm->validate())
         {
+            $blnHasError = false;
             // Decode entities
             $objWidget = $objForm->getWidget('ffm_partner_text');
             $objModel->ffm_partner_text = StringUtil::decodeEntities($objWidget->value);
@@ -473,13 +535,29 @@ class PartnerFrontendForm extends Module
             $objModel->ffm_partner_map_zipcode = $objModel->ffm_partner_plz;
             $objModel->ffm_partner_map = sprintf('%s, %s %s', $objModel->ffm_partner_strasse, $objModel->ffm_partner_plz, $objModel->ffm_partner_ort);
 
-            $objModel->fetstamp = time();
-            $objModel->tstamp = time();
+            // Validate Categories (Upload limit)
+            $objWidget = $objForm->getWidget('ffm_partner_cat');
+            if (!empty($objWidget->value) && is_array($objWidget->value))
+            {
+                if (count($objWidget->value) > $this->objPartnerAbo->allowedCategories)
+                {
+                    $blnHasError = true;
+                    $objWidget->addError(sprintf($GLOBALS['TL_LANG']['MSC']['partnerUploadToManyCategoriesSelectedDuringUploadProcess'], $this->objPartnerAbo->allowedCategories));
+                }
+            }
 
-            // Save and reload
-            $objModel->save();
 
-            $this->reload();
+            if (!$blnHasError)
+            {
+                $objModel->fetstamp = time();
+                $objModel->tstamp = time();
+
+                // Save and reload
+                $objModel->save();
+
+                $this->reload();
+            }
+
         }
 
         $this->textForm = $objForm;
@@ -603,6 +681,9 @@ class PartnerFrontendForm extends Module
                                 $objFile->delete();
                                 Dbafs::updateFolderHashes($objUploadDir->path);
                                 $objWidgetFileupload->addError($GLOBALS['TL_LANG']['MSC']['partnerUploadPictureUploadLimitReachedDuringUploadProcess']);
+                                $this->setFlashMessage($this->flashMessageKey, $GLOBALS['TL_LANG']['MSC']['partnerUploadPictureUploadLimitReachedDuringUploadProcess']);
+                                unset($_SESSION['FILES']);
+                                $this->reload();
                             }
                             else
                             {
@@ -621,11 +702,14 @@ class PartnerFrontendForm extends Module
                                 {
                                     $arrGallery = StringUtil::deserialize($objGallery->gallery, true);
                                     $arrGallery[] = $objFilesModel->uuid;
+                                    $arrSorting = StringUtil::deserialize($objGallery->orderSRC_gallery, true);
+                                    $arrSorting = array_merge($arrSorting, $arrGallery);
 
                                     $set = array(
-                                        'gallery'  => serialize($arrGallery),
-                                        'fetstamp' => time(),
-                                        'tstamp'   => time()
+                                        'gallery'          => serialize($arrGallery),
+                                        'orderSRC_gallery' => serialize($arrSorting),
+                                        'fetstamp'         => time(),
+                                        'tstamp'           => time()
                                     );
                                     Database::getInstance()->prepare("UPDATE cc_cardealer %s WHERE id=?")->set($set)->execute($objModel->id);
                                 }
@@ -1132,5 +1216,58 @@ class PartnerFrontendForm extends Module
                 $objModel->save();
             }
         }
+    }
+
+    /**
+     * @param $key
+     * @param string $message
+     */
+    protected function setFlashMessage($key, $message = '')
+    {
+        if (!isset($_SESSION[$key]))
+        {
+            $_SESSION[$key] = array();
+
+        }
+        $_SESSION[$key][] = $message;
+    }
+
+    /**
+     * @param $key
+     * @return mixed
+     */
+    protected function getFlashMessage($key)
+    {
+        if (!isset($_SESSION[$key]))
+        {
+            $_SESSION[$key] = array();
+
+        }
+        return $_SESSION[$key];
+    }
+
+    /**
+     * @param $key
+     */
+    protected function unsetFlashMessage($key)
+    {
+        if (isset($_SESSION[$key]))
+        {
+            $_SESSION[$key] = null;
+            unset($_SESSION[$key]);
+        }
+    }
+
+    /**
+     * @param $key
+     * @return bool
+     */
+    protected function hasFlashMessage($key)
+    {
+        if (isset($_SESSION[$key]) && !empty($_SESSION[$key]))
+        {
+            return true;
+        }
+        return false;
     }
 }
