@@ -682,8 +682,9 @@ class PartnerFrontendForm extends Module
                                 // Delete from server
                                 $objFile->delete();
                                 Dbafs::updateFolderHashes($objUploadDir->path);
-                                $objWidgetFileupload->addError(sprintf($GLOBALS['TL_LANG']['MSC']['partnerUploadPictureUploadLimitReachedDuringUploadProcess'], $this->objPartnerAbo->allowedGalleryImages));
-                                $this->setFlashMessage($this->flashMessageKey, $GLOBALS['TL_LANG']['MSC']['partnerUploadPictureUploadLimitReachedDuringUploadProcess']);
+                                $errMsg = sprintf($GLOBALS['TL_LANG']['MSC']['partnerUploadPictureUploadLimitReachedDuringUploadProcess'], $this->objPartnerAbo->allowedGalleryImages);
+                                $objWidgetFileupload->addError($errMsg);
+                                $this->setFlashMessage($this->flashMessageKey, $errMsg);
                                 unset($_SESSION['FILES']);
                                 $this->reload();
                             }
