@@ -60,7 +60,7 @@ class PartnerFrontendForm extends Module
     /**
      * @var
      */
-    protected $objPartnerAbo;
+    public $objPartnerAbo;
 
     /**
      * @var
@@ -212,6 +212,9 @@ class PartnerFrontendForm extends Module
             $this->Template->messages = $this->arrMessages;
         }
 
+        // Add the objPartnerAbo object to the template
+        $this->Template->objPartnerAbo = $this->objPartnerAbo;
+
     }
 
 
@@ -232,7 +235,6 @@ class PartnerFrontendForm extends Module
             {
 
                 $arrUuid = json_decode(Input::post('arrUuid'));
-                mail('m.cupic@gmx.ch', 'sdf', print_r($arrUuid,true));
                 if (is_array($arrUuid))
                 {
                     $uuids = array();
@@ -680,7 +682,7 @@ class PartnerFrontendForm extends Module
                                 // Delete from server
                                 $objFile->delete();
                                 Dbafs::updateFolderHashes($objUploadDir->path);
-                                $objWidgetFileupload->addError($GLOBALS['TL_LANG']['MSC']['partnerUploadPictureUploadLimitReachedDuringUploadProcess']);
+                                $objWidgetFileupload->addError(sprintf($GLOBALS['TL_LANG']['MSC']['partnerUploadPictureUploadLimitReachedDuringUploadProcess'], $this->objPartnerAbo->allowedGalleryImages));
                                 $this->setFlashMessage($this->flashMessageKey, $GLOBALS['TL_LANG']['MSC']['partnerUploadPictureUploadLimitReachedDuringUploadProcess']);
                                 unset($_SESSION['FILES']);
                                 $this->reload();
@@ -1069,6 +1071,8 @@ class PartnerFrontendForm extends Module
                                     if (is_array($GLOBALS['TL_CONFIG']['partnerAbos']))
                                     {
                                         $partnerObject = new \stdClass();
+                                        $partnerObject->aboName = $objGroup->partnerAbo;
+                                        $partnerObject->aboNameTranslation = $GLOBALS['TL_LANG']['MSC'][$objGroup->partnerAbo];
                                         $partnerObject->allowedGalleryImages = $GLOBALS['TL_CONFIG']['partnerAboAllowedGalleryImages'][$objGroup->partnerAbo];
                                         $partnerObject->allowedCategories = $GLOBALS['TL_CONFIG']['partnerAboAllowedCategories'][$objGroup->partnerAbo];
                                         $partnerObject->allowedImagesOurBrands = $GLOBALS['TL_CONFIG']['partnerAboAllowedImagesOurBrands'][$objGroup->partnerAbo];

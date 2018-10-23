@@ -56,9 +56,9 @@ class PartnerFrontendFormHelper
     public function generateGallery()
     {
         $objTemplate = new FrontendTemplate('modPartnerFrontendGalleryPartial');
+        $objTemplate->xhrErrMsg = $GLOBALS['TL_LANG']['ERR']['xhrErrMsg'];
 
         $images = StringUtil::deserialize($this->objPartnerModel->gallery, true);
-
 
         // Custom sorting
         if ($this->objPartnerModel->orderSRC_gallery != '')
