@@ -15,7 +15,7 @@
                 // Wait until the onload overlay has disapeared
                 clearInterval(interval);
                 window.setTimeout(function () {
-                    window.scrollTo(0, $('.message-box, .widget.error').first().offset().top-100);
+                    window.scrollTo(0, $('.message-box, .widget.error').first().offset().top - 100);
                 }, 100);
             }, 100);
         }
@@ -45,9 +45,9 @@
                         'fileId': fileId,
                         'fieldname': fieldname
                     }).done(function (json) {
-                        $(elImage).fadeOut();
+                        $(elImage).find('.image_container').fadeOut();
                         window.setTimeout(function () {
-                            $(elImage).remove();
+                            $(elImage).find('.image_container').remove();
                         }, 1000);
                     });
                 }

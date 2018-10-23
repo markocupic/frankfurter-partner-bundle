@@ -85,7 +85,7 @@ class PartnerFrontendForm extends Module
     /**
      * @var array
      */
-    protected $productUploadForms = array();
+    protected $productUploadForm;
 
     /**
      * @var array
@@ -174,8 +174,8 @@ class PartnerFrontendForm extends Module
         $this->generateGalleryUploadForm();
         $this->Template->galleryUploadForm = $this->galleryUploadForm->generate();
 
-        $this->generateProductUploadForms();
-        $this->Template->productUploadForms = $this->productUploadForms;
+        $this->generateProductUploadForm();
+        $this->Template->productUploadForm = $this->productUploadForm;
 
         $this->generateBrandUploadForms();
         $this->Template->brandUploadForms = $this->brandUploadForms;
@@ -745,9 +745,9 @@ class PartnerFrontendForm extends Module
 
 
     /**
-     * Generate the product upload forms
+     * Generate the product upload form
      */
-    protected function generateProductUploadForms()
+    protected function generateProductUploadForm()
     {
 
         $allowedItems = $this->objPartnerAbo->allowedProducts;
@@ -759,19 +759,24 @@ class PartnerFrontendForm extends Module
             return;
         }
 
+        $arrFileInputs = array();
 
         for ($intItem = 1; $intItem <= $allowedItems; $intItem++)
         {
+            if ($intItem === 1)
+            {
+                // Create the form
+                $objForm = $this->createForm('form-member-product-upload', 'multipart/form-data');
+
+                // Get model
+                $objModel = $this->getPartnerModel();
+
+                // Bind model to the form
+                $objForm->bindModel($objModel);
+            }
 
             // Add leading zero: 01, 02, .... 12
             $strItem = str_pad($intItem, 2, '0', STR_PAD_LEFT);
-
-            // Create the form
-            $objForm = $this->createForm('form-member-product-upload-' . $strItem, 'multipart/form-data');
-
-            // Get model
-            $objModel = $this->getPartnerModel();
-
 
             // Add some fields
             $strInputFileupload = 'ffm_partner_pro' . $strItem . '_img';
@@ -819,42 +824,49 @@ class PartnerFrontendForm extends Module
             $objForm->addFormField($fieldname, array(
                 'label'     => 'Produkt ' . $strItem . ' Link',
                 'inputType' => 'text',
+                'eval'      => array('rgxp' => 'url'),
                 'value'     => $objModel->{$fieldname}
             ));
 
-            // Let's add  a submit button
-            $fieldname = 'submit';
-            $objForm->addFormField($fieldname, array(
-                'label'     => &$GLOBALS['TL_LANG']['MSC']['partnerUploadAndSaveBtnLabel'],
-                'inputType' => 'submit',
-            ));
-
-            // Bind model to the form
-            $objForm->bindModel($objModel);
-
-
-            // Validate
-            if (Input::post('FORM_SUBMIT') === $objForm->getFormId())
+            if ($intItem === 1)
             {
-                if ($objForm->validate())
-                {
-                    $objModel->fetstamp = time();
-                    $objModel->tstamp = time();
-                    $objModel->save();
-
-                    if ($hasUpload)
-                    {
-                        if ($hasUpload)
-                        {
-                            $this->validateFileUpload($objModel, $strInputFileupload);
-                        }
-                    }
-
-                    $this->reload();
-                }
+                // Let's add  a submit button
+                $fieldname = 'submit';
+                $objForm->addFormField($fieldname, array(
+                    'label'     => &$GLOBALS['TL_LANG']['MSC']['partnerUploadAndSaveBtnLabel'],
+                    'inputType' => 'submit',
+                ));
             }
-            $this->productUploadForms[] = $objForm;
+
+            $arrFileInputs[] = array(
+                'intItem'   => $intItem,
+                'inputName' => $strInputFileupload,
+                'hasUpload' => $hasUpload
+            );
         } // end for
+
+        // Validate
+        if (Input::post('FORM_SUBMIT') === $objForm->getFormId())
+        {
+            if ($objForm->validate())
+            {
+                $objModel->fetstamp = time();
+                $objModel->tstamp = time();
+                $objModel->save();
+
+                // Traverse each file input
+                foreach ($arrFileInputs as $fileInput)
+                {
+                    if ($fileInput['hasUpload'])
+                    {
+                        $this->validateFileUpload($objModel, $fileInput['inputName']);
+                    }
+                }
+
+                $this->reload();
+            }
+        }
+        $this->productUploadForm = $objForm;
     }
 
 

@@ -130,7 +130,7 @@ class PartnerFrontendFormHelper
     public function generateProductImage($fieldname)
     {
         $objTemplate = new FrontendTemplate('modPartnerFrontendProductImagePartial');
-        $objTemplate->class = 'partner-logo-image';
+        $objTemplate->class = 'partner-product-image';
         return $this->generateImage($objTemplate, $fieldname);
     }
 
