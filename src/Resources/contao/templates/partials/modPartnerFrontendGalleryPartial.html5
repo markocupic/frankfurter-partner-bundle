@@ -1,4 +1,4 @@
-<div class="partner-gallery image-section row">
+<div class="partner-gallery image-section">
     <div class="row sortable-container">
     <?= $this->items ?>
     </div>
