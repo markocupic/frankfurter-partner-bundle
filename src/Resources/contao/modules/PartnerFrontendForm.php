@@ -10,7 +10,6 @@
 namespace Markocupic\FrankfurterPartnerBundle\Contao\Modules;
 
 use Contao\CcCardealerModel;
-use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\Database;
 use Contao\Dbafs;
@@ -90,7 +89,7 @@ class PartnerFrontendForm extends Module
     /**
      * @var array
      */
-    protected $brandUploadForms = array();
+    protected $brandUploadForm;
 
     /**
      * @var
@@ -110,6 +109,7 @@ class PartnerFrontendForm extends Module
 
     /**
      * @return string
+     * @throws \Exception
      */
     public function generate()
     {
@@ -161,7 +161,20 @@ class PartnerFrontendForm extends Module
      */
     protected function compile()
     {
-        if ($this->getPartnerModel() !== false)
+
+        $hasError = false;
+        if (!$this->hasUploadDir())
+        {
+            $hasError = true;
+            $this->arrMessages[] = sprintf($GLOBALS['TL_LANG']['ERR']['noUploadDirectoryDefined'], $this->objUser->firstname, $this->objUser->lastname);
+        }
+        elseif ($this->getPartnerModel() === false)
+        {
+            $hasError = true;
+            $this->arrMessages[] = sprintf($GLOBALS['TL_LANG']['ERR']['noPartnerAssignedToThisUser'], $this->objUser->firstname, $this->objUser->lastname);
+        }
+
+        if (!$hasError)
         {
             // Generate all the forms
             $this->generateTextForm();
@@ -179,8 +192,8 @@ class PartnerFrontendForm extends Module
             $this->generateProductUploadForm();
             $this->Template->productUploadForm = $this->productUploadForm;
 
-            $this->generateBrandUploadForms();
-            $this->Template->brandUploadForms = $this->brandUploadForms;
+            $this->generatebrandUploadForm();
+            $this->Template->brandUploadForm = $this->brandUploadForm;
 
             // Add the preview page link
             if ($this->addPreviewPage && $this->previewPage > 0)
@@ -197,19 +210,16 @@ class PartnerFrontendForm extends Module
 
             // Add the objPartnerAbo object to the template
             $this->Template->objPartnerAbo = $this->objPartnerAbo;
-        }
-        else
-        {
-            $this->arrMessages[] = $GLOBALS['TL_LANG']['ERR']['noPartnerAssignedToThisUser'];
-        }
 
-        // Assign helper class to the template
-        $this->Template->Helper = $this->Helper;
+            // Assign helper class to the template
+            $this->Template->Helper = $this->Helper;
+
+        }
 
 
         // Handle Messages
         $session = System::getContainer()->get('session');
-        // Get flash bag messages
+        // Get flash bag messages and merge them
         if ($session->isStarted() && $this->hasFlashMessage($this->flashMessageKey))
         {
             $this->arrMessages = array_merge($this->arrMessages, $this->getFlashMessage($this->flashMessageKey));
@@ -228,7 +238,7 @@ class PartnerFrontendForm extends Module
 
 
     /**
-     * @return $this
+     * @throws \Exception
      */
     protected function handleAjaxRequest()
     {
@@ -238,6 +248,7 @@ class PartnerFrontendForm extends Module
         {
 
             $blnSuccess = 'error';
+            $intItems = 0;
             $objModel = $this->getPartnerModel();
 
             if ($objModel !== null)
@@ -412,13 +423,16 @@ class PartnerFrontendForm extends Module
             'value'     => $objModel->alias
         ));
 
-        $objForm->addFormField('ffm_partner_cat', array(
-            'label'     => 'Kategorie',
-            'inputType' => 'checkbox',
-            'options'   => $this->Helper->getCatTags(),
-            'eval'      => array('multiple' => true),
-            'value'     => $objModel->ffm_partner_cat
-        ));
+        if ($this->objPartnerAbo->allowedCategories > 0)
+        {
+            $objForm->addFormField('ffm_partner_cat', array(
+                'label'     => 'Kategorie',
+                'inputType' => 'checkbox',
+                'options'   => $this->Helper->getCatTags(),
+                'eval'      => array('multiple' => true),
+                'value'     => $objModel->ffm_partner_cat
+            ));
+        }
 
         $objForm->addFormField('ffm_partner_filiale', array(
             'label'     => 'Filiale',
@@ -618,138 +632,142 @@ class PartnerFrontendForm extends Module
     protected function generateGalleryUploadForm()
     {
 
-        // Get the upload dir object
-        if (false === $objUploadDir = $this->getUploadDirObject('gallery_images'))
+        if ($this->objPartnerAbo->allowedGalleryImages > 0)
         {
-            $this->arrMessages[] = 'Error! No valid upload folder for the product images defined.';
-            return;
-        }
-
-        // Create the form
-        $objForm = $this->createForm('form-member-gallery-upload', 'multipart/form-data');
-
-        // Get model
-        $objModel = $this->getPartnerModel();
-
-        // Add some fields
-        $objForm->addFormField('gallery', array(
-            'label'     => &$GLOBALS['TL_LANG']['MSC']['gallery-lbl'],
-            'inputType' => 'fineUploader',
-            'eval'      => array('extensions'   => 'jpg,jpeg',
-                                 'storeFile'    => true,
-                                 'addToDbafs'   => true,
-                                 'isGallery'    => false,
-                                 'directUpload' => false,
-                                 'multiple'     => true,
-                                 'useHomeDir'   => false,
-                                 'uploadFolder' => $objUploadDir->path,
-                                 'mandatory'    => false
-            ),
-        ));
-
-        // Let's add  a submit button
-        $objForm->addFormField('submit', array(
-            'label'     => &$GLOBALS['TL_LANG']['MSC']['gallery-submit-btn'],
-            'inputType' => 'submit',
-        ));
-
-        // Add attributes
-        $objWidgetFileupload = $objForm->getWidget('gallery');
-        $objWidgetFileupload->addAttribute('accept', '.jpg, .jpeg');
-        $objWidgetFileupload->storeFile = true;
-
-        // Overwrite uploader template
-        if ($this->partnerFrontendFormFineuploaderTemplate !== '')
-        {
-            $objWidgetFileupload->template = $this->partnerFrontendFormFineuploaderTemplate;
-        }
-
-
-        // validate() also checks whether the form has been submitted
-        if ($objForm->validate() && Input::post('FORM_SUBMIT') === $objForm->getFormId())
-        {
-            if (is_array($_SESSION['FILES']) && !empty($_SESSION['FILES']))
+            // Get the upload dir object
+            if (false === $objUploadDir = $this->getUploadDirObject('gallery_images'))
             {
-                $count = 0;
-                foreach ($_SESSION['FILES'] as $k => $file)
+                $this->arrMessages[] = 'Error! No valid upload folder for the product images defined.';
+                return;
+            }
+
+            // Create the form
+            $objForm = $this->createForm('form-member-gallery-upload', 'multipart/form-data');
+
+            // Get model
+            $objModel = $this->getPartnerModel();
+
+            // Add some fields
+            $objForm->addFormField('gallery', array(
+                'label'     => &$GLOBALS['TL_LANG']['MSC']['gallery-lbl'],
+                'inputType' => 'fineUploader',
+                'eval'      => array('extensions'   => 'jpg,jpeg',
+                                     'storeFile'    => true,
+                                     'addToDbafs'   => true,
+                                     'isGallery'    => false,
+                                     'directUpload' => false,
+                                     'multiple'     => true,
+                                     'useHomeDir'   => false,
+                                     'uploadFolder' => $objUploadDir->path,
+                                     'mandatory'    => false
+                ),
+            ));
+
+            // Let's add  a submit button
+            $objForm->addFormField('submit', array(
+                'label'     => &$GLOBALS['TL_LANG']['MSC']['gallery-submit-btn'],
+                'inputType' => 'submit',
+            ));
+
+            // Add attributes
+            $objWidgetFileupload = $objForm->getWidget('gallery');
+            $objWidgetFileupload->addAttribute('accept', '.jpg, .jpeg');
+            $objWidgetFileupload->storeFile = true;
+
+            // Overwrite uploader template
+            if ($this->partnerFrontendFormFineuploaderTemplate !== '')
+            {
+                $objWidgetFileupload->template = $this->partnerFrontendFormFineuploaderTemplate;
+            }
+
+
+            // validate() also checks whether the form has been submitted
+            if ($objForm->validate() && Input::post('FORM_SUBMIT') === $objForm->getFormId())
+            {
+                if (is_array($_SESSION['FILES']) && !empty($_SESSION['FILES']))
                 {
-                    $count++;
-                    $uuid = $file['uuid'];
-                    if (Validator::isStringUuid($uuid))
+                    $count = 0;
+                    foreach ($_SESSION['FILES'] as $k => $file)
                     {
-                        $binUuid = StringUtil::uuidToBin($uuid);
-                        $objFilesModel = FilesModel::findByUuid($binUuid);
-
-                        if ($objFilesModel !== null)
+                        $count++;
+                        $uuid = $file['uuid'];
+                        if (Validator::isStringUuid($uuid))
                         {
-                            $objFile = new File($objFilesModel->path);
-                            //Check if upload limit is reached
-                            if ($this->countGalleryImages($objModel) >= $this->objPartnerAbo->allowedGalleryImages && $this->objPartnerAbo->allowedGalleryImages > 0)
-                            {
-                                // Delete from dbafs
-                                Dbafs::deleteResource($objFilesModel->path);
-                                // Delete from server
-                                $objFile->delete();
-                                Dbafs::updateFolderHashes($objUploadDir->path);
-                                $errMsg = sprintf($GLOBALS['TL_LANG']['MSC']['partnerUploadPictureUploadLimitReachedDuringUploadProcess'], $this->objPartnerAbo->allowedGalleryImages);
-                                $objWidgetFileupload->addError($errMsg);
-                                $this->setFlashMessage($this->flashMessageKey, $errMsg);
-                                unset($_SESSION['FILES']);
-                                $this->reload();
-                            }
-                            else
-                            {
-                                // Rename file
-                                $newFilename = sprintf('%s-%s.%s', $this->objUser->id, time() . ($count), $objFile->extension);
-                                $newPath = dirname($objFile->path) . '/' . $newFilename;
-                                Files::getInstance()->rename($objFile->path, $newPath);
-                                Dbafs::addResource($newPath);
-                                Dbafs::deleteResource($objFilesModel->path);
-                                Dbafs::updateFolderHashes($objUploadDir->path);
+                            $binUuid = StringUtil::uuidToBin($uuid);
+                            $objFilesModel = FilesModel::findByUuid($binUuid);
 
-
-                                $objFilesModel = FilesModel::findByPath($newPath);
-                                $objGallery = Database::getInstance()->prepare('SELECT * FROM cc_cardealer WHERE id=?')->execute($objModel->id);
-                                if ($objGallery->numRows)
+                            if ($objFilesModel !== null)
+                            {
+                                $objFile = new File($objFilesModel->path);
+                                //Check if upload limit is reached
+                                if ($this->countGalleryImages($objModel) >= $this->objPartnerAbo->allowedGalleryImages && $this->objPartnerAbo->allowedGalleryImages > 0)
                                 {
-                                    $arrGallery = StringUtil::deserialize($objGallery->gallery, true);
-                                    $arrGallery[] = $objFilesModel->uuid;
-                                    $arrSorting = StringUtil::deserialize($objGallery->orderSRC_gallery, true);
-                                    $arrSorting = array_merge($arrSorting, $arrGallery);
-
-                                    $set = array(
-                                        'gallery'          => serialize($arrGallery),
-                                        'orderSRC_gallery' => serialize($arrSorting),
-                                        'fetstamp'         => time(),
-                                        'tstamp'           => time()
-                                    );
-                                    Database::getInstance()->prepare("UPDATE cc_cardealer %s WHERE id=?")->set($set)->execute($objModel->id);
+                                    // Delete from dbafs
+                                    Dbafs::deleteResource($objFilesModel->path);
+                                    // Delete from server
+                                    $objFile->delete();
+                                    Dbafs::updateFolderHashes($objUploadDir->path);
+                                    $errMsg = sprintf($GLOBALS['TL_LANG']['MSC']['partnerUploadPictureUploadLimitReachedDuringUploadProcess'], $this->objPartnerAbo->allowedGalleryImages);
+                                    $objWidgetFileupload->addError($errMsg);
+                                    $this->setFlashMessage($this->flashMessageKey, $errMsg);
+                                    unset($_SESSION['FILES']);
+                                    $this->reload();
                                 }
+                                else
+                                {
+                                    // Rename file
+                                    $newFilename = sprintf('%s-%s.%s', $this->objUser->id, time() . ($count), $objFile->extension);
+                                    $newPath = dirname($objFile->path) . '/' . $newFilename;
+                                    Files::getInstance()->rename($objFile->path, $newPath);
+                                    Dbafs::addResource($newPath);
+                                    Dbafs::deleteResource($objFilesModel->path);
+                                    Dbafs::updateFolderHashes($objUploadDir->path);
 
-                                //$this->resizeUploadedImage($objModel->path);
 
-                                // Flash message
-                                //$this->setFlashMessage($this->flashMessageKey, sprintf($GLOBALS['TL_LANG']['MSC']['memberPictureFeedFileuploadSuccess'], $objModel->name));
+                                    $objFilesModel = FilesModel::findByPath($newPath);
+                                    $objGallery = Database::getInstance()->prepare('SELECT * FROM cc_cardealer WHERE id=?')->execute($objModel->id);
+                                    if ($objGallery->numRows)
+                                    {
+                                        $arrGallery = StringUtil::deserialize($objGallery->gallery, true);
+                                        $arrGallery[] = $objFilesModel->uuid;
+                                        $arrSorting = StringUtil::deserialize($objGallery->orderSRC_gallery, true);
+                                        $arrSorting = array_merge($arrSorting, $arrGallery);
 
-                                // Log
-                                $strText = sprintf('User with username %s has uploadad a new picture ("%s") via the partner upload form.', $this->objUser->username, $objFilesModel->path);
-                                $logger = System::getContainer()->get('monolog.logger.contao');
-                                $logger->log(LogLevel::INFO, $strText, array('contao' => new ContaoContext(__METHOD__, 'PARTNER_FRONTEND_FORM')));
+                                        $set = array(
+                                            'gallery'          => serialize($arrGallery),
+                                            'orderSRC_gallery' => serialize($arrSorting),
+                                            'fetstamp'         => time(),
+                                            'tstamp'           => time()
+                                        );
+                                        Database::getInstance()->prepare("UPDATE cc_cardealer %s WHERE id=?")->set($set)->execute($objModel->id);
+                                    }
+
+                                    //$this->resizeUploadedImage($objModel->path);
+
+                                    // Flash message
+                                    //$this->setFlashMessage($this->flashMessageKey, sprintf($GLOBALS['TL_LANG']['MSC']['memberPictureFeedFileuploadSuccess'], $objModel->name));
+
+                                    // Log
+                                    $strText = sprintf('User with username %s has uploadad a new picture ("%s") via the partner upload form.', $this->objUser->username, $objFilesModel->path);
+                                    $logger = System::getContainer()->get('monolog.logger.contao');
+                                    $logger->log(LogLevel::INFO, $strText, array('contao' => new ContaoContext(__METHOD__, 'PARTNER_FRONTEND_FORM')));
+                                }
                             }
                         }
                     }
                 }
+
+                if (!$objWidgetFileupload->hasErrors())
+                {
+                    // Reload page
+                    $this->reload();
+                }
             }
 
-            if (!$objWidgetFileupload->hasErrors())
-            {
-                // Reload page
-                $this->reload();
-            }
+            unset($_SESSION['FILES']);
+            $this->galleryUploadForm = $objForm;
         }
 
-        unset($_SESSION['FILES']);
-        $this->galleryUploadForm = $objForm;
     }
 
 
@@ -760,205 +778,211 @@ class PartnerFrontendForm extends Module
     {
 
         $allowedItems = $this->objPartnerAbo->allowedProducts;
-
-        // Get the upload dir object
-        if (false === $objUploadDir = $this->getUploadDirObject('product_images'))
+        if ($allowedItems > 0)
         {
-            $this->arrMessages[] = 'Error! No valid upload folder for the product images defined.';
-            return;
-        }
-
-        $arrFileInputs = array();
-
-        for ($intItem = 1; $intItem <= $allowedItems; $intItem++)
-        {
-            if ($intItem === 1)
+            // Get the upload dir object
+            if (false === $objUploadDir = $this->getUploadDirObject('product_images'))
             {
-                // Create the form
-                $objForm = $this->createForm('form-member-product-upload', 'multipart/form-data');
-
-                // Get model
-                $objModel = $this->getPartnerModel();
-
-                // Bind model to the form
-                $objForm->bindModel($objModel);
+                $this->arrMessages[] = 'Error! No valid upload folder for the product images defined.';
+                return;
             }
-
-            // Add leading zero: 01, 02, .... 12
-            $strItem = str_pad($intItem, 2, '0', STR_PAD_LEFT);
-
-            // Add some fields
-            $strInputFileupload = 'ffm_partner_pro' . $strItem . '_img';
-            $objForm->addFormField($strInputFileupload, array(
-                'label'     => 'Bild zu Produkt ' . $strItem,
-                'inputType' => 'upload',
-                'eval'      => array(
-                    'uploadFolder' => $objUploadDir->uuid,
-                    'storeFile'    => true,
-                    'extensions'   => 'jpg,png,gif,jpeg'
-                    //'value'     => $objModel->{$fieldname}
-                )
-            ));
-            // !!!Put this right after the widget dca settings
-            // Rename the uploaded file in $_FILES before the validation process
-            $hasUpload = false;
-            if (Input::post('FORM_SUBMIT') === $objForm->getFormId())
-            {
-                $hasUpload = $this->renameFileInGlobals($objForm, $strInputFileupload, 'product-image-' . $strItem . '.%s');
-            }
-
-            $fieldname = 'produkt_' . $strItem . '_aktivieren';
-            $objForm->addFormField($fieldname, array(
-                'label'     => array('Produkt ' . $strItem . ' aktivieren', 'Produkt anzeigen'),
-                'inputType' => 'checkbox',
-                'eval'      => array('multiple' => false),
-                'value'     => $objModel->{$fieldname}
-            ));
-
-            $fieldname = 'ffm_partner_pro' . $strItem . '_hl';
-            $objForm->addFormField($fieldname, array(
-                'label'     => 'Produkt ' . $strItem . ' Titel',
-                'inputType' => 'text',
-                'value'     => $objModel->{$fieldname}
-            ));
-
-            $fieldname = 'ffm_partner_pro' . $strItem . '_lab';
-            $objForm->addFormField($fieldname, array(
-                'label'     => 'Produkt ' . $strItem . ' Label',
-                'inputType' => 'text',
-                'value'     => $objModel->{$fieldname}
-            ));
-
-            $fieldname = 'ffm_partner_pro' . $strItem . '_link';
-            $objForm->addFormField($fieldname, array(
-                'label'     => 'Produkt ' . $strItem . ' Link',
-                'inputType' => 'text',
-                'eval'      => array('rgxp' => 'url'),
-                'value'     => $objModel->{$fieldname}
-            ));
-
-            if ($intItem === 1)
-            {
-                // Let's add  a submit button
-                $fieldname = 'submit';
-                $objForm->addFormField($fieldname, array(
-                    'label'     => &$GLOBALS['TL_LANG']['MSC']['partnerUploadAndSaveBtnLabel'],
-                    'inputType' => 'submit',
-                ));
-            }
-
-            $arrFileInputs[] = array(
-                'intItem'   => $intItem,
-                'inputName' => $strInputFileupload,
-                'hasUpload' => $hasUpload
-            );
-        } // end for
-
-        // Validate
-        if (Input::post('FORM_SUBMIT') === $objForm->getFormId())
-        {
-            if ($objForm->validate())
-            {
-                $objModel->fetstamp = time();
-                $objModel->tstamp = time();
-                $objModel->save();
-
-                // Traverse each file input
-                foreach ($arrFileInputs as $fileInput)
-                {
-                    if ($fileInput['hasUpload'])
-                    {
-                        $this->validateFileUpload($objModel, $fileInput['inputName']);
-                    }
-                }
-
-                $this->reload();
-            }
-        }
-        $this->productUploadForm = $objForm;
-    }
-
-
-    /**
-     * Generate the product upload forms
-     */
-    protected function generateBrandUploadForms()
-    {
-        $allowedItems = $this->objPartnerAbo->allowedImagesOurBrands;
-
-        // Get the upload dir object
-        if (false === $objUploadDir = $this->getUploadDirObject('brand_images'))
-        {
-            $this->arrMessages[] = 'Error! No valid upload folder for the product images defined.';
-            return;
-        }
-
-
-        for ($intItem = 1; $intItem <= $allowedItems; $intItem++)
-        {
-
-            // Add leading zero: 01, 02, .... 12
-            $strItem = str_pad($intItem, 2, '0', STR_PAD_LEFT);
 
             // Create the form
-            $objForm = $this->createForm('form-member-brand-upload-' . $strItem, 'multipart/form-data');
-
-            // Get model
-            $objModel = $this->getPartnerModel();
-
-
-            // Add some fields
-            $strInputFileupload = 'ffm_partner_lab' . $strItem . '_img';
-            $objForm->addFormField($strInputFileupload, array(
-                'label'     => 'Bild zu Marke ' . $strItem,
-                'inputType' => 'upload',
-                'eval'      => array(
-                    'uploadFolder' => $objUploadDir->uuid,
-                    'storeFile'    => true,
-                    'extensions'   => 'jpg,png,gif,jpeg'
-                    //'value'     => $objModel->{$fieldname}
-                )
-            ));
-
-            // !!!Put this right after the widget dca settings
-            // Rename the uploaded file in $_FILES before the validation process
-            $hasUpload = false;
-            if (Input::post('FORM_SUBMIT') === $objForm->getFormId())
-            {
-                $hasUpload = $this->renameFileInGlobals($objForm, $strInputFileupload, 'brand-image-' . $strItem . '.%s');
-            }
-
+            $objForm = $this->createForm('form-member-product-upload', 'multipart/form-data');
 
             // Let's add  a submit button
             $fieldname = 'submit';
             $objForm->addFormField($fieldname, array(
-                'label'     => $GLOBALS['TL_LANG']['MSC']['partnerUploadBtnLabel'],
+                'label'     => &$GLOBALS['TL_LANG']['MSC']['partnerUploadAndSaveBtnLabel'],
                 'inputType' => 'submit',
             ));
+
+            // Get model
+            $objModel = $this->getPartnerModel();
 
             // Bind model to the form
             $objForm->bindModel($objModel);
 
+            $arrFileInputs = array();
+
+            for ($intItem = 1; $intItem <= $allowedItems; $intItem++)
+            {
+                // Add leading zero: 01, 02, .... 12
+                $strItem = str_pad($intItem, 2, '0', STR_PAD_LEFT);
+
+                // Add some fields
+                $strInputFileupload = 'ffm_partner_pro' . $strItem . '_img';
+                $objForm->addFormField($strInputFileupload, array(
+                    'label'     => 'Bild zu Produkt ' . $strItem,
+                    'inputType' => 'upload',
+                    'eval'      => array(
+                        'uploadFolder' => $objUploadDir->uuid,
+                        'storeFile'    => true,
+                        'extensions'   => 'jpg,png,gif,jpeg'
+                        //'value'     => $objModel->{$fieldname}
+                    )
+                ));
+                // !!!Put this right after the widget dca settings
+                // Rename the uploaded file in $_FILES before the validation process
+                $hasUpload = false;
+                if (Input::post('FORM_SUBMIT') === $objForm->getFormId())
+                {
+                    $hasUpload = $this->renameFileInGlobals($objForm, $strInputFileupload, 'product-image-' . $strItem . '.%s');
+                }
+
+                $fieldname = 'produkt_' . $strItem . '_aktivieren';
+                $objForm->addFormField($fieldname, array(
+                    'label'     => array('Produkt ' . $strItem . ' aktivieren', 'Produkt anzeigen'),
+                    'inputType' => 'checkbox',
+                    'eval'      => array('multiple' => false),
+                    'value'     => $objModel->{$fieldname}
+                ));
+
+                $fieldname = 'ffm_partner_pro' . $strItem . '_hl';
+                $objForm->addFormField($fieldname, array(
+                    'label'     => 'Produkt ' . $strItem . ' Titel',
+                    'inputType' => 'text',
+                    'value'     => $objModel->{$fieldname}
+                ));
+
+                $fieldname = 'ffm_partner_pro' . $strItem . '_lab';
+                $objForm->addFormField($fieldname, array(
+                    'label'     => 'Produkt ' . $strItem . ' Label',
+                    'inputType' => 'text',
+                    'value'     => $objModel->{$fieldname}
+                ));
+
+                $fieldname = 'ffm_partner_pro' . $strItem . '_link';
+                $objForm->addFormField($fieldname, array(
+                    'label'     => 'Produkt ' . $strItem . ' Link',
+                    'inputType' => 'text',
+                    'eval'      => array('rgxp' => 'url'),
+                    'value'     => $objModel->{$fieldname}
+                ));
+
+                $arrFileInputs[] = array(
+                    'intItem'   => $intItem,
+                    'inputName' => $strInputFileupload,
+                    'hasUpload' => $hasUpload
+                );
+            } // end for
 
             // Validate
             if (Input::post('FORM_SUBMIT') === $objForm->getFormId())
             {
                 if ($objForm->validate())
                 {
-                    if ($hasUpload)
+                    $objModel->fetstamp = time();
+                    $objModel->tstamp = time();
+                    $objModel->save();
+
+                    // Traverse each file input
+                    foreach ($arrFileInputs as $fileInput)
                     {
-                        $this->validateFileUpload($objModel, $strInputFileupload);
+                        if ($fileInput['hasUpload'])
+                        {
+                            $this->validateFileUpload($objModel, $fileInput['inputName']);
+                        }
                     }
 
                     $this->reload();
                 }
             }
+            $this->productUploadForm = $objForm;
+        }
+    }
 
 
-            $this->brandUploadForms[] = $objForm;
+    /**
+     * Generate the product upload forms
+     */
+    protected function generateBrandUploadForm()
+    {
+        $allowedItems = $this->objPartnerAbo->allowedImagesOurBrands;
 
+        if ($allowedItems > 0)
+        {
+            // Get the upload dir object
+            if (false === $objUploadDir = $this->getUploadDirObject('product_images'))
+            {
+                $this->arrMessages[] = 'Error! No valid upload folder for the product images defined.';
+                return;
+            }
 
-        } // end for
+            // Create the form
+            $objForm = $this->createForm('form-member-brand-upload', 'multipart/form-data');
+
+            // Let's add  a submit button
+            $fieldname = 'submit';
+            $objForm->addFormField($fieldname, array(
+                'label'     => &$GLOBALS['TL_LANG']['MSC']['partnerUploadAndSaveBtnLabel'],
+                'inputType' => 'submit',
+            ));
+
+            // Get model
+            $objModel = $this->getPartnerModel();
+
+            // Bind model to the form
+            $objForm->bindModel($objModel);
+
+            $arrFileInputs = array();
+
+            for ($intItem = 1; $intItem <= $allowedItems; $intItem++)
+            {
+                // Add leading zero: 01, 02, .... 12
+                $strItem = str_pad($intItem, 2, '0', STR_PAD_LEFT);
+
+                // Add some fields
+                $strInputFileupload = 'ffm_partner_lab' . $strItem . '_img';
+                $objForm->addFormField($strInputFileupload, array(
+                    'label'     => 'Bild zu Marke ' . $strItem,
+                    'inputType' => 'upload',
+                    'eval'      => array(
+                        'uploadFolder' => $objUploadDir->uuid,
+                        'storeFile'    => true,
+                        'extensions'   => 'jpg,png,gif,jpeg'
+                        //'value'     => $objModel->{$fieldname}
+                    )
+                ));
+                // !!!Put this right after the widget dca settings
+                // Rename the uploaded file in $_FILES before the validation process
+                $hasUpload = false;
+                if (Input::post('FORM_SUBMIT') === $objForm->getFormId())
+                {
+                    $hasUpload = $this->renameFileInGlobals($objForm, $strInputFileupload, 'brand-image-' . $strItem . '.%s');
+                }
+
+                $arrFileInputs[] = array(
+                    'intItem'   => $intItem,
+                    'inputName' => $strInputFileupload,
+                    'hasUpload' => $hasUpload
+                );
+            }//endfor
+
+            // Validate
+            if (Input::post('FORM_SUBMIT') === $objForm->getFormId())
+            {
+                if ($objForm->validate())
+                {
+                    $objModel->fetstamp = time();
+                    $objModel->tstamp = time();
+                    $objModel->save();
+
+                    // Traverse each file input
+                    foreach ($arrFileInputs as $fileInput)
+                    {
+                        if ($fileInput['hasUpload'])
+                        {
+                            $this->validateFileUpload($objModel, $fileInput['inputName']);
+                        }
+                    }
+
+                    $this->reload();
+                }
+            }
+            $this->brandUploadForm = $objForm;
+        }
+
     }
 
 
@@ -1111,6 +1135,34 @@ class PartnerFrontendForm extends Module
             }
         }
         return null;
+    }
+
+
+    /**
+     * @return bool
+     */
+    protected function hasUploadDir()
+    {
+
+        if ($this->objUser->assignDir)
+        {
+            if ($this->objUser->homeDir !== '')
+            {
+                if (Validator::isBinaryUuid($this->objUser->homeDir))
+                {
+                    $objFile = FilesModel::findByUuid($this->objUser->homeDir);
+                    if ($objFile->type === 'folder')
+                    {
+                        if (is_dir(TL_ROOT . '/' . $objFile->path))
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+
+        return false;
     }
 
 

@@ -1,4 +1,4 @@
-<div class="col-12 col-md-6 col-xl-4 image-section <?= $this->class ?>"<?php if($this->hasImage): ?> data-requesttoken="<?= REQUEST_TOKEN ?>" data-fieldname="<?= $this->fieldname ?>" data-file-id="<?= $this->fileId ?>"<?php endif; ?>>
+<div class="image-section <?= $this->class ?>"<?php if($this->hasImage): ?> data-requesttoken="<?= REQUEST_TOKEN ?>" data-fieldname="<?= $this->fieldname ?>" data-file-id="<?= $this->fileId ?>"<?php endif; ?>>
     <?php if($this->hasImage): ?>
     <div class="image_container has-button-overlay">
         {{image::<?= $this->uuid ?>?mode=proportional&width=300}}

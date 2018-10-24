@@ -25,6 +25,12 @@ $GLOBALS['TL_JAVASCRIPT'][] = 'bundles/markocupicfrankfurterpartner/js/Sortable.
         <?php endif; ?>
     </div>
 
+    <?php if ($this->hasMessages): ?>
+    <?php foreach($this->messages as $message): ?>
+    <p class="tl_confirm message-box alert alert-info"><?= $message ?></p>
+    <?php endforeach; ?>
+    <?php endif; ?>
+
 
     <div id="formParts" class="form-parts">
 
@@ -255,7 +261,7 @@ $GLOBALS['TL_JAVASCRIPT'][] = 'bundles/markocupicfrankfurterpartner/js/Sortable.
 
         <?php if($this->productUploadForm): ?>
         <div class="form-part" data-formpartname="productupload">
-            <div class="hasteform_form-partner-product-upload-<?= $strItem ?> block">
+            <div class="hasteform_form-partner-product-upload ?> block">
                 <form action="<?= $this->productUploadForm->getFormAction() ?>" method="<?= $this->productUploadForm->getMethod() ?>" enctype="multipart/form-data">
                     <div class="formbody">
                         <!-- hidden fields -->
@@ -333,47 +339,49 @@ $GLOBALS['TL_JAVASCRIPT'][] = 'bundles/markocupicfrankfurterpartner/js/Sortable.
         <?php endif; ?>
 
 
-        <?php if(!empty($this->brandUploadForms)): ?>
+        <?php if($this->brandUploadForm): ?>
         <div class="form-part" data-formpartname="brandupload">
-        <?php foreach($this->brandUploadForms as $intItem => $brandUploadForm): ?>
-            <?php $strItem = str_pad($intItem + 1, 2, '0', STR_PAD_LEFT); ?>
-            <div class="hasteform_form-partner-brand-upload-<?= $strItem ?> block">
-                <form action="<?= $brandUploadForm->getFormAction() ?>" method="<?= $brandUploadForm->getMethod() ?>" enctype="multipart/form-data">
+            <div class="hasteform_form-partner-brand-upload block">
+                <form action="<?= $this->brandUploadForm->getFormAction() ?>" method="<?= $this->brandUploadForm->getMethod() ?>" enctype="multipart/form-data">
                     <div class="formbody">
-                        <?php if ($brandUploadForm->hasFormField('FORM_SUBMIT')): ?>
-                        <?= $brandUploadForm->getWidget('FORM_SUBMIT')->parse(); ?>
+                        <!-- hidden fields -->
+                        <?php if ($this->brandUploadForm->hasFormField('FORM_SUBMIT')): ?>
+                        <?= $this->brandUploadForm->getWidget('FORM_SUBMIT')->parse(); ?>
                         <?php endif; ?>
 
-                        <?php if ($brandUploadForm->hasFormField('REQUEST_TOKEN')): ?>
-                        <?= $brandUploadForm->getWidget('REQUEST_TOKEN')->parse(); ?>
+                        <?php if ($this->brandUploadForm->hasFormField('REQUEST_TOKEN')): ?>
+                        <?= $this->brandUploadForm->getWidget('REQUEST_TOKEN')->parse(); ?>
                         <?php endif; ?>
+                        <!-- End hidden fields -->
 
-                        <?php $field = 'ffm_partner_lab' . $strItem . '_img'; ?>
-                        <?= $this->Helper->generateBrandImage($field); ?>
-                        <?php if ($brandUploadForm->hasFormField($field)): ?>
-                        <div class="widget-<?= $field ?>">
-                            <?= $brandUploadForm->getWidget($field)->parse(); ?>
-                        </div>
-                        <?php endif; ?>
+                        <!-- Loop begin -->
+                        <?php for($i = 1; $i <= $this->objPartnerAbo->allowedImagesOurBrands; $i++): ?>
+                            <?php $strItem = str_pad($i, 2, '0', STR_PAD_LEFT); ?>
+                            <?php $field = 'ffm_partner_lab' . $strItem . '_img'; ?>
+                            <div class="row">
+                                <!-- Get the image -->
+                                <div class="col-12 col-md-6 col-xl-4">
+                                    <?= $this->Helper->generateBrandImage($field); ?>
+                                </div>
+                            </div>
 
-                        <?php if ($brandUploadForm->hasFormField('submit')): ?>
-                        <?= $brandUploadForm->getWidget('submit')->parse(); ?>
+                            <?php if ($this->brandUploadForm->hasFormField($field)): ?>
+                            <div class="widget-<?= $field ?>">
+                                <?= $this->brandUploadForm->getWidget($field)->parse(); ?>
+                            </div>
+                            <?php endif; ?>
+                        <?php endfor; ?>
+                        <!-- End loop -->
+
+                        <?php if ($this->brandUploadForm->hasFormField('submit')): ?>
+                        <?= $this->brandUploadForm->getWidget('submit')->parse(); ?>
                         <?php endif; ?>
                     </div>
                 </form>
             </div>
-            <?php endforeach; ?>
         </div>
         <?php endif; ?>
     </div> <!--end form parts -->
-
-<?php if ($this->hasMessages): ?>
-<?php foreach($this->messages as $message): ?>
-<p class="tl_confirm message-box alert alert-info"><?= $message ?></p>
-<?php endforeach; ?>
-<?php endif; ?>
-
-
 </div>
 
 <script>
