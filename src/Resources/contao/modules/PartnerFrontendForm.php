@@ -161,40 +161,51 @@ class PartnerFrontendForm extends Module
      */
     protected function compile()
     {
-        // Generate all the forms
-        $this->generateTextForm();
-        $this->Template->textForm = $this->textForm;
+        if ($this->getPartnerModel() !== false)
+        {
+            // Generate all the forms
+            $this->generateTextForm();
+            $this->Template->textForm = $this->textForm;
 
-        $this->generateLogoUploadForm();
-        $this->Template->logoUploadForm = $this->logoUploadForm;
+            $this->generateLogoUploadForm();
+            $this->Template->logoUploadForm = $this->logoUploadForm;
 
-        $this->generateMainImageUploadForm();
-        $this->Template->mainImageUploadForm = $this->mainImageUploadForm;
+            $this->generateMainImageUploadForm();
+            $this->Template->mainImageUploadForm = $this->mainImageUploadForm;
 
-        $this->generateGalleryUploadForm();
-        $this->Template->galleryUploadForm = $this->galleryUploadForm->generate();
+            $this->generateGalleryUploadForm();
+            $this->Template->galleryUploadForm = $this->galleryUploadForm->generate();
 
-        $this->generateProductUploadForm();
-        $this->Template->productUploadForm = $this->productUploadForm;
+            $this->generateProductUploadForm();
+            $this->Template->productUploadForm = $this->productUploadForm;
 
-        $this->generateBrandUploadForms();
-        $this->Template->brandUploadForms = $this->brandUploadForms;
+            $this->generateBrandUploadForms();
+            $this->Template->brandUploadForms = $this->brandUploadForms;
+
+            // Add the preview page link
+            if ($this->addPreviewPage && $this->previewPage > 0)
+            {
+                $objModel = $this->getPartnerModel();
+                $objPage = PageModel::findByPk($this->previewPage);
+                if ($objPage !== null)
+                {
+                    $this->Template->addPreviewPageLink = true;
+                    $this->Template->objPreviewPage = $objPage;
+                    $this->Template->objPreviewLinkUrl = $objPage->getFrontendUrl('/' . $objModel->alias) . '?previewtoken=' . $objModel->previewtoken;
+                }
+            }
+
+            // Add the objPartnerAbo object to the template
+            $this->Template->objPartnerAbo = $this->objPartnerAbo;
+        }
+        else
+        {
+            $this->arrMessages[] = $GLOBALS['TL_LANG']['ERR']['noPartnerAssignedToThisUser'];
+        }
 
         // Assign helper class to the template
         $this->Template->Helper = $this->Helper;
 
-        // Add the preview page link
-        if ($this->addPreviewPage && $this->previewPage > 0)
-        {
-            $objModel = $this->getPartnerModel();
-            $objPage = PageModel::findByPk($this->previewPage);
-            if ($objPage !== null)
-            {
-                $this->Template->addPreviewPageLink = true;
-                $this->Template->objPreviewPage = $objPage;
-                $this->Template->objPreviewLinkUrl = $objPage->getFrontendUrl('/' . $objModel->alias) . '?previewtoken=' . $objModel->previewtoken;
-            }
-        }
 
         // Handle Messages
         $session = System::getContainer()->get('session');
@@ -212,8 +223,6 @@ class PartnerFrontendForm extends Module
             $this->Template->messages = $this->arrMessages;
         }
 
-        // Add the objPartnerAbo object to the template
-        $this->Template->objPartnerAbo = $this->objPartnerAbo;
 
     }
 
@@ -1051,11 +1060,12 @@ class PartnerFrontendForm extends Module
     protected function getPartnerModel()
     {
         $objDb = Database::getInstance()->prepare('SELECT * FROM cc_cardealer WHERE memberid=?')->limit(1)->execute($this->objUser->id);
-        if (!$objDb->numRows)
+        if ($objDb->numRows)
         {
-            throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
+            return CcCardealerModel::findById($objDb->id);
         }
-        return CcCardealerModel::findById($objDb->id);
+        // throw new PageNotFoundException('Page not found: ' . Environment::get('uri'));
+        return false;
     }
 
 

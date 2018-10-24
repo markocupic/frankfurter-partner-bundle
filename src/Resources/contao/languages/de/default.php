@@ -26,4 +26,5 @@ $GLOBALS['TL_LANG']['MSC']['gallery-submit-btn'] = 'Bilder Hochladen';
 $GLOBALS['TL_LANG']['MSC']['partnerUploadPictureUploadLimitReachedDuringUploadProcess'] = "Sie haben bereits das Upload Maximum von %s Bildern erreicht. Um weitere Bilder hochzuladen, müssen Sie zuerst mindestens ein Bild löschen.";
 $GLOBALS['TL_LANG']['MSC']['partnerUploadToManyCategoriesSelectedDuringUploadProcess'] = "Sie haben zu viele Kategorien gewählt. Die Limite beträgt %s Kategorien.";
 $GLOBALS['TL_LANG']['ERR']['xhrErrMsg'] = "Es ist ein Fehler aufgetreten. Bitte kontrollieren Sie die Verbindung.";
+$GLOBALS['TL_LANG']['ERR']['noPartnerAssignedToThisUser'] = "Diesem Benutzer wurde kein Partner zugewiesen.";
 
