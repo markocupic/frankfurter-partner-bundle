@@ -49,7 +49,7 @@ $GLOBALS['TL_CONFIG']['partnerAboAllowedGalleryImages'] = array(
     'business-premium' => 16
 );
 
-$GLOBALS['TL_CONFIG']['partnerAboAllowedCategories'] = array(
+$GLOBALS['TL_CONFIG']['partnerAboAllowedSubCategories'] = array(
     'business'         => 1,
     'business-pro'     => 2,
     'business-premium' => 4

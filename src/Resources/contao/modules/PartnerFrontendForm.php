@@ -423,10 +423,21 @@ class PartnerFrontendForm extends Module
             'value'     => $objModel->alias
         ));
 
-        if ($this->objPartnerAbo->allowedCategories > 0)
+        if ($this->objPartnerAbo->allowedMainCategories > 0)
+        {
+            $objForm->addFormField('hauptkategorie', array(
+                'label'     => 'Hauptkategorie',
+                'inputType' => 'select',
+                'options'   => $this->Helper->getCatTags(),
+                'eval'      => array('multiple' => false),
+                'value'     => $objModel->hauptkategorie
+            ));
+        }
+
+        if ($this->objPartnerAbo->allowedSubCategories > 0)
         {
             $objForm->addFormField('ffm_partner_cat', array(
-                'label'     => 'Kategorie',
+                'label'     => 'Unterkategorie',
                 'inputType' => 'checkbox',
                 'options'   => $this->Helper->getCatTags(),
                 'eval'      => array('multiple' => true),
@@ -533,7 +544,7 @@ class PartnerFrontendForm extends Module
         $objForm->addFormField('ffm_partner_text', array(
             'label'     => 'Beschreibung',
             'inputType' => 'textarea',
-            'eval'      => array('preserveTags' => true, 'allowHtml' => true, 'decodeEntities' => true),
+            'eval'      => array('preserveTags' => true, 'allowHtml' => true, 'maxlength' => 1600, 'decodeEntities' => true),
             'value'     => StringUtil::decodeEntities(StringUtil::decodeEntities($objModel->ffm_partner_text))
         ));
 
@@ -560,14 +571,24 @@ class PartnerFrontendForm extends Module
             $objModel->ffm_partner_map_zipcode = $objModel->ffm_partner_plz;
             $objModel->ffm_partner_map = sprintf('%s, %s %s', $objModel->ffm_partner_strasse, $objModel->ffm_partner_plz, $objModel->ffm_partner_ort);
 
-            // Validate Categories (Upload limit)
+            // Validate Main Categories (Upload limit)
+            $objWidget = $objForm->getWidget('hauptkategorie');
+            if (!empty($objWidget->value) && is_array($objWidget->value))
+            {
+                if (count($objWidget->value) > $this->objPartnerAbo->hauptkategorie)
+                {
+                    $blnHasError = true;
+                    $objWidget->addError(sprintf($GLOBALS['TL_LANG']['MSC']['partnerUploadToManyMainCategoriesSelectedDuringUploadProcess'], $this->objPartnerAbo->allowedMainCategories));
+                }
+            }
+            // Validate Sub Categories (Upload limit)
             $objWidget = $objForm->getWidget('ffm_partner_cat');
             if (!empty($objWidget->value) && is_array($objWidget->value))
             {
-                if (count($objWidget->value) > $this->objPartnerAbo->allowedCategories)
+                if (count($objWidget->value) > $this->objPartnerAbo->allowedSubCategories)
                 {
                     $blnHasError = true;
-                    $objWidget->addError(sprintf($GLOBALS['TL_LANG']['MSC']['partnerUploadToManyCategoriesSelectedDuringUploadProcess'], $this->objPartnerAbo->allowedCategories));
+                    $objWidget->addError(sprintf($GLOBALS['TL_LANG']['MSC']['partnerUploadToManySubCategoriesSelectedDuringUploadProcess'], $this->objPartnerAbo->allowedSubCategories));
                 }
             }
 
@@ -1121,7 +1142,8 @@ class PartnerFrontendForm extends Module
                                         $partnerObject->aboName = $objGroup->partnerAbo;
                                         $partnerObject->aboNameTranslation = $GLOBALS['TL_LANG']['MSC'][$objGroup->partnerAbo];
                                         $partnerObject->allowedGalleryImages = $GLOBALS['TL_CONFIG']['partnerAboAllowedGalleryImages'][$objGroup->partnerAbo];
-                                        $partnerObject->allowedCategories = $GLOBALS['TL_CONFIG']['partnerAboAllowedCategories'][$objGroup->partnerAbo];
+                                        $partnerObject->allowedMainCategories = $GLOBALS['TL_CONFIG']['partnerAboAllowedMainCategories'][$objGroup->partnerAbo];
+                                        $partnerObject->allowedSubCategories = $GLOBALS['TL_CONFIG']['partnerAboAllowedSubCategories'][$objGroup->partnerAbo];
                                         $partnerObject->allowedImagesOurBrands = $GLOBALS['TL_CONFIG']['partnerAboAllowedImagesOurBrands'][$objGroup->partnerAbo];
                                         $partnerObject->allowedProducts = $GLOBALS['TL_CONFIG']['partnerAboAllowedProducts'][$objGroup->partnerAbo];
                                         $partnerObject->allowYoutubeEmbed = $GLOBALS['TL_CONFIG']['partnerAboAllowYoutubeEmbed'][$objGroup->partnerAbo];

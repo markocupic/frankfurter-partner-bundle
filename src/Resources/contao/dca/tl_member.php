@@ -8,3 +8,4 @@
  */
 
 $GLOBALS['TL_DCA']['tl_member']['fields']['id']['label'] = &$GLOBALS['TL_LANG']['tl_member']['id'];
+$GLOBALS['TL_DCA']['tl_member']['fields']['company']['eval']['mandatory'] = true;

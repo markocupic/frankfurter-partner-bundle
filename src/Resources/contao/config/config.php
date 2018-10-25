@@ -48,10 +48,16 @@ $GLOBALS['TL_CONFIG']['partnerAboAllowedGalleryImages'] = array(
     'business-premium' => 16
 );
 
-$GLOBALS['TL_CONFIG']['partnerAboAllowedCategories'] = array(
+$GLOBALS['TL_CONFIG']['partnerAboAllowedMainCategories'] = array(
     'business'         => 1,
-    'business-pro'     => 2,
-    'business-premium' => 4
+    'business-pro'     => 1,
+    'business-premium' => 1
+);
+
+$GLOBALS['TL_CONFIG']['partnerAboAllowedSubCategories'] = array(
+    'business'         => 0,
+    'business-pro'     => 1,
+    'business-premium' => 3
 );
 
 $GLOBALS['TL_CONFIG']['partnerAboAllowedImagesOurBrands'] = array(

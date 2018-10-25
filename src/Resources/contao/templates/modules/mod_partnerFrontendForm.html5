@@ -61,6 +61,13 @@ $GLOBALS['TL_JAVASCRIPT'][] = 'bundles/markocupicfrankfurterpartner/js/Sortable.
                         </div>
                         <?php endif; ?>
 
+                        <?php $field = 'hauptkategorie'; ?>
+                        <?php if ($this->textForm->hasFormField($field)): ?>
+                        <div class="widget-<?= $field ?>">
+                            <?= $this->textForm->getWidget($field)->parse(); ?>
+                        </div>
+                        <?php endif; ?>
+
                         <?php $field = 'ffm_partner_cat'; ?>
                         <?php if ($this->textForm->hasFormField($field)): ?>
                         <div class="widget-<?= $field ?>">
