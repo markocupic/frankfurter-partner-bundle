@@ -43,7 +43,6 @@ class PartnerNotification
                 $objNotification = Notification::findByPk($notificationId);
                 if ($objNotification !== null)
                 {
-
                     // Set token array
                     $arrTokens = array(
                         'partner_name'  => html_entity_decode($objPartner->name),
@@ -60,32 +59,6 @@ class PartnerNotification
                     $objCardealerModel = CcCardealerModel::findByPk($objPartner->id);
                     $objCardealerModel->fetstamp = '';
                     $objCardealerModel->save();
-
-
-                    // Backup if notification center fails
-                    $rootDir = System::getContainer()->getParameter('kernel.project_dir');
-                    require_once($rootDir . '/system/config/localconfig.php');
-
-                    $objTemplate = new FrontendTemplate('admin_advice');
-                    foreach ($arrTokens as $k => $v)
-                    {
-                        $objTemplate->{$k} = $v;
-                    }
-
-                    $subject = 'Aenderungen an der Partner Datenbank (' . $objPartner->name . ')';
-                    $sender = "Administrator <" . $GLOBALS['TL_CONFIG']['adminEmail'] . ">";
-                    $headers = array();
-                    $headers[] = "MIME-Version: 1.0";
-                    $headers[] = "Content-type: text/plain; charset=utf-8";
-                    $headers[] = "From: {$sender}";
-                    // falls Bcc benötigt wird
-                    $headers[] = "Bcc: Marko Cupic <m.cupic@gmx.ch>";
-                    //$headers[] = "Reply-To: {$absender}";
-                    $headers[] = "Subject: {$subject}";
-                    $headers[] = "X-Mailer: PHP/" . phpversion();
-
-                    $strText = $objTemplate->parse();
-                    mail($GLOBALS['TL_CONFIG']['adminEmail'], $subject, $strText, implode("\r\n", $headers));
                 }
             }
         }
