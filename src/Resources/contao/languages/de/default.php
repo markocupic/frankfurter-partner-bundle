@@ -29,4 +29,5 @@ $GLOBALS['TL_LANG']['MSC']['partnerUploadToManySubCategoriesSelectedDuringUpload
 $GLOBALS['TL_LANG']['ERR']['xhrErrMsg'] = "Es ist ein Fehler aufgetreten. Bitte kontrollieren Sie die Verbindung.";
 $GLOBALS['TL_LANG']['ERR']['noPartnerAssignedToThisUser'] = "Es ist ein Fehler aufgetreten. Dem Benutzer \"%s %s\" wurde kein Partner zugewiesen.";
 $GLOBALS['TL_LANG']['ERR']['noUploadDirectoryDefined'] = "Es ist ein Fehler aufgetreten. Dem Benutzer \"%s %s\" wurde kein Uploadverzeihnis zugewiesen.";
+$GLOBALS['TL_LANG']['ERR']['partnerUploadStrToLong'] = "Es ist ein Fehler aufgetreten. Der Text ist mit %s Zeichen zu lang. Die Limite beträgt %s Zeichen.";
 

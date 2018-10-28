@@ -42,6 +42,16 @@ $GLOBALS['TL_CONFIG']['partnerCatPid'] = array(31);
 $GLOBALS['TL_CONFIG']['partnerAbos'] = array('business', 'business-pro', 'business-premium');
 
 // Partner Abo settings
+$GLOBALS['TL_CONFIG']['partnerAbo'] = array(
+    'fields' => array(
+        'ffm_partner_text' => array(
+            'eval' => array(
+                'maxlength' => 1600
+            )
+        )
+    )
+);
+
 $GLOBALS['TL_CONFIG']['partnerAboAllowedGalleryImages'] = array(
     'business'         => 4,
     'business-pro'     => 8,

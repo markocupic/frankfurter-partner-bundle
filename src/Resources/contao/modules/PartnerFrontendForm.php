@@ -544,7 +544,7 @@ class PartnerFrontendForm extends Module
         $objForm->addFormField('ffm_partner_text', array(
             'label'     => 'Beschreibung',
             'inputType' => 'textarea',
-            'eval'      => array('preserveTags' => true, 'allowHtml' => true, 'maxlength' => 1600, 'decodeEntities' => true),
+            'eval'      => array('preserveTags' => true, 'allowHtml' => true, 'decodeEntities' => true),
             'value'     => StringUtil::decodeEntities(StringUtil::decodeEntities($objModel->ffm_partner_text))
         ));
 
@@ -562,6 +562,17 @@ class PartnerFrontendForm extends Module
             $blnHasError = false;
             // Decode entities
             $objWidget = $objForm->getWidget('ffm_partner_text');
+            if (!empty($GLOBALS['TL_CONFIG']['partnerAbo']['fields'][$objWidget->name]['eval']['maxlength']))
+            {
+                $intMaxLen = $GLOBALS['TL_CONFIG']['partnerAbo']['fields'][$objWidget->name]['eval']['maxlength'];
+                $intStrLen = strlen(strip_tags(StringUtil::decodeEntities($objWidget->value)));
+                if ($intStrLen > $intMaxLen)
+                {
+                    $objWidget->addError(sprintf($GLOBALS['TL_LANG']['ERR']['partnerUploadStrToLong'], $intStrLen, $intMaxLen));
+                    $blnHasError = true;
+                }
+            }
+
             $objModel->ffm_partner_text = StringUtil::decodeEntities($objWidget->value);
             //$objModel->ffm_partner_text = Input::postRaw('ffm_partner_text');
 
