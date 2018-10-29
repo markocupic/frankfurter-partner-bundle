@@ -68,10 +68,11 @@ class PartnerFrontendFormHelper
             if (!empty($tmp) && is_array($tmp))
             {
                 // Remove all values
-                $arrOrder = array_map(function () {}, array_flip($tmp));
+                $arrOrder = array_map(function () {
+                }, array_flip($tmp));
 
                 // Move the matching elements to their position in $arrOrder
-                foreach ($images as $k=>$v)
+                foreach ($images as $k => $v)
                 {
                     if (array_key_exists($v, $arrOrder))
                     {
@@ -242,8 +243,36 @@ class PartnerFrontendFormHelper
         imagejpeg($imgTmp, $rootDir . '/' . $src);
 
         imagedestroy($source);
-        
+
         return true;
+    }
+
+    /**
+     * @param $field
+     * @return mixed|null|string
+     */
+    public static function getCatalogAttributeTitle($field)
+    {
+        $objDb = Database::getInstance()->prepare('SELECT * FROM tl_pct_customelement_attribute WHERE alias=?')->limit(1)->execute($field);
+        if ($objDb->numRows)
+        {
+            return $objDb->title;
+        }
+        return '';
+    }
+
+    /**
+     * @param $field
+     * @return mixed|null|string
+     */
+    public static function getCatalogAttributeDescription($field)
+    {
+        $objDb = Database::getInstance()->prepare('SELECT * FROM tl_pct_customelement_attribute WHERE alias=?')->limit(1)->execute($field);
+        if ($objDb->numRows)
+        {
+            return $objDb->description;
+        }
+        return '';
     }
 
     /**
@@ -271,5 +300,22 @@ class PartnerFrontendFormHelper
         }
 
         return $opt;
+    }
+
+    /**
+     * @param null $intId
+     * @return mixed|null|string
+     */
+    public static function getCatTitleFromId($intId = null)
+    {
+        if ($intId !== null)
+        {
+            $objDb = Database::getInstance()->prepare("SELECT * FROM tl_pct_customelement_tags WHERE id=?")->limit(1)->execute($intId);
+            if ($objDb->numRows)
+            {
+                return $objDb->title;
+            }
+        }
+        return '';
     }
 }

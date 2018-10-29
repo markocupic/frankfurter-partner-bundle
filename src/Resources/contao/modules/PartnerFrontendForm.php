@@ -412,13 +412,13 @@ class PartnerFrontendForm extends Module
 
         // Add some fields
         $objForm->addFormField('name', array(
-            'label'     => 'Name',
+            'label'     => $this->Helper->getCatalogAttributeTitle('name'),
             'inputType' => 'text',
             'value'     => $objModel->name
         ));
 
         $objForm->addFormField('alias', array(
-            'label'     => 'Alias',
+            'label'     => $this->Helper->getCatalogAttributeTitle('alias'),
             'inputType' => 'text',
             'value'     => $objModel->alias
         ));
@@ -426,7 +426,7 @@ class PartnerFrontendForm extends Module
         if ($this->objPartnerAbo->allowedMainCategories > 0)
         {
             $objForm->addFormField('hauptkategorie', array(
-                'label'     => 'Hauptkategorie',
+                'label'     => $this->Helper->getCatalogAttributeTitle('hauptkategorie'),
                 'inputType' => 'select',
                 'options'   => $this->Helper->getCatTags(),
                 'eval'      => array('multiple' => false),
@@ -437,7 +437,7 @@ class PartnerFrontendForm extends Module
         if ($this->objPartnerAbo->allowedSubCategories > 0)
         {
             $objForm->addFormField('ffm_partner_cat', array(
-                'label'     => 'Unterkategorie',
+                'label'     => $this->Helper->getCatalogAttributeTitle('ffm_partner_cat'),
                 'inputType' => 'checkbox',
                 'options'   => $this->Helper->getCatTags(),
                 'eval'      => array('multiple' => true),
@@ -446,87 +446,87 @@ class PartnerFrontendForm extends Module
         }
 
         $objForm->addFormField('ffm_partner_filiale', array(
-            'label'     => 'Filiale',
+            'label'     => $this->Helper->getCatalogAttributeTitle('ffm_partner_filiale'),
             'inputType' => 'text',
             'value'     => $objModel->ffm_partner_filiale
         ));
 
         $objForm->addFormField('ffm_partner_strasse', array(
-            'label'     => 'Strasse / Nr',
+            'label'     => $this->Helper->getCatalogAttributeTitle('ffm_partner_strasse'),
             'inputType' => 'text',
             'value'     => $objModel->ffm_partner_strasse
         ));
 
         $objForm->addFormField('ffm_partner_plz', array(
-            'label'     => 'PLZ',
+            'label'     => $this->Helper->getCatalogAttributeTitle('ffm_partner_plz'),
             'inputType' => 'text',
             'eval'      => array('rgxp' => 'natural'),
             'value'     => $objModel->ffm_partner_plz
         ));
 
         $objForm->addFormField('ffm_partner_ort', array(
-            'label'     => 'Ort',
+            'label'     => $this->Helper->getCatalogAttributeTitle('ffm_partner_ort'),
             'inputType' => 'text',
             'value'     => $objModel->ffm_partner_ort
         ));
 
         $objForm->addFormField('ffm_partner_open', array(
-            'label'     => 'Öffnungszeiten',
+            'label'     => $this->Helper->getCatalogAttributeTitle('ffm_partner_open'),
             'inputType' => 'formMultiText',
             'eval'      => array('multiple' => true),
             'value'     => $objModel->ffm_partner_open
         ));
 
         $objForm->addFormField('ffm_partner_tel', array(
-            'label'     => 'Telefon',
+            'label'     => $this->Helper->getCatalogAttributeTitle('ffm_partner_tel'),
             'inputType' => 'text',
             'eval'      => array('rgxp' => 'phone'),
             'value'     => $objModel->ffm_partner_tel
         ));
 
         $objForm->addFormField('ffm_partner_mail', array(
-            'label'     => 'E-Mail',
+            'label'     => $this->Helper->getCatalogAttributeTitle('ffm_partner_mail'),
             'inputType' => 'text',
             'eval'      => array('rgxp' => 'email'),
             'value'     => $objModel->ffm_partner_mail
         ));
 
         $objForm->addFormField('ffm_partner_www', array(
-            'label'     => 'Webseite',
+            'label'     => $this->Helper->getCatalogAttributeTitle('ffm_partner_www'),
             'inputType' => 'text',
             'eval'      => array('rgxp' => 'url'),
             'value'     => $objModel->ffm_partner_www
         ));
 
         $objForm->addFormField('ffm_partner_www_linkText', array(
-            'label'     => 'Linktext (Webseite)',
+            'label'     => $this->Helper->getCatalogAttributeTitle('ffm_partner_www_linkText'),
             'inputType' => 'text',
             'value'     => $objModel->ffm_partner_www_linkText
         ));
 
         $objForm->addFormField('ffm_partner_facebook', array(
-            'label'     => 'Social Facebook',
+            'label'     => $this->Helper->getCatalogAttributeTitle('ffm_partner_facebook'),
             'inputType' => 'text',
             'eval'      => array('rgxp' => 'url'),
             'value'     => $objModel->ffm_partner_facebook
         ));
 
         $objForm->addFormField('ffm_partner_twitter', array(
-            'label'     => 'Social Twitter',
+            'label'     => $this->Helper->getCatalogAttributeTitle('ffm_partner_twitter'),
             'inputType' => 'text',
             'eval'      => array('rgxp' => 'url'),
             'value'     => $objModel->ffm_partner_twitter
         ));
 
         $objForm->addFormField('ffm_partner_instagram', array(
-            'label'     => 'Social Instagram',
+            'label'     => $this->Helper->getCatalogAttributeTitle('ffm_partner_instagram'),
             'inputType' => 'text',
             'eval'      => array('rgxp' => 'url'),
             'value'     => $objModel->ffm_partner_instagram
         ));
 
         $objForm->addFormField('ffm_partner_google', array(
-            'label'     => 'Social Google Plus',
+            'label'     => $this->Helper->getCatalogAttributeTitle('ffm_partner_google'),
             'inputType' => 'text',
             'eval'      => array('rgxp' => 'url'),
             'value'     => $objModel->ffm_partner_google
@@ -535,14 +535,14 @@ class PartnerFrontendForm extends Module
         if ($this->objPartnerAbo->allowYoutubeEmbed)
         {
             $objForm->addFormField('ffm_partner_youtubeid', array(
-                'label'     => 'Youtube ID',
+                'label'     => $this->Helper->getCatalogAttributeTitle('ffm_partner_youtubeid'),
                 'inputType' => 'text',
                 'value'     => $objModel->ffm_partner_youtubeid
             ));
         }
 
         $objForm->addFormField('ffm_partner_text', array(
-            'label'     => 'Beschreibung',
+            'label'     => $this->Helper->getCatalogAttributeTitle('ffm_partner_plz'),
             'inputType' => 'textarea',
             'eval'      => array('preserveTags' => true, 'allowHtml' => true, 'decodeEntities' => true),
             'value'     => StringUtil::decodeEntities(StringUtil::decodeEntities($objModel->ffm_partner_text))
@@ -845,7 +845,7 @@ class PartnerFrontendForm extends Module
                 // Add some fields
                 $strInputFileupload = 'ffm_partner_pro' . $strItem . '_img';
                 $objForm->addFormField($strInputFileupload, array(
-                    'label'     => 'Bild zu Produkt ' . $strItem,
+                    'label'     => $this->Helper->getCatalogAttributeTitle($strInputFileupload),
                     'inputType' => 'upload',
                     'eval'      => array(
                         'uploadFolder' => $objUploadDir->uuid,
@@ -864,7 +864,7 @@ class PartnerFrontendForm extends Module
 
                 $fieldname = 'produkt_' . $strItem . '_aktivieren';
                 $objForm->addFormField($fieldname, array(
-                    'label'     => array('Produkt ' . $strItem . ' aktivieren', 'Produkt anzeigen'),
+                    'label'     => array($this->Helper->getCatalogAttributeTitle($fieldname), 'Produkt anzeigen'),
                     'inputType' => 'checkbox',
                     'eval'      => array('multiple' => false),
                     'value'     => $objModel->{$fieldname}
@@ -872,21 +872,21 @@ class PartnerFrontendForm extends Module
 
                 $fieldname = 'ffm_partner_pro' . $strItem . '_hl';
                 $objForm->addFormField($fieldname, array(
-                    'label'     => 'Produkt ' . $strItem . ' Titel',
+                    'label'     => $this->Helper->getCatalogAttributeTitle($fieldname),
                     'inputType' => 'text',
                     'value'     => $objModel->{$fieldname}
                 ));
 
                 $fieldname = 'ffm_partner_pro' . $strItem . '_lab';
                 $objForm->addFormField($fieldname, array(
-                    'label'     => 'Produkt ' . $strItem . ' Label',
+                    'label'     => $this->Helper->getCatalogAttributeTitle($fieldname),
                     'inputType' => 'text',
                     'value'     => $objModel->{$fieldname}
                 ));
 
                 $fieldname = 'ffm_partner_pro' . $strItem . '_link';
                 $objForm->addFormField($fieldname, array(
-                    'label'     => 'Produkt ' . $strItem . ' Link',
+                    'label'     => $this->Helper->getCatalogAttributeTitle($fieldname),
                     'inputType' => 'text',
                     'eval'      => array('rgxp' => 'url'),
                     'value'     => $objModel->{$fieldname}
@@ -967,7 +967,7 @@ class PartnerFrontendForm extends Module
                 // Add some fields
                 $strInputFileupload = 'ffm_partner_lab' . $strItem . '_img';
                 $objForm->addFormField($strInputFileupload, array(
-                    'label'     => 'Bild zu Marke ' . $strItem,
+                    'label'     => $this->Helper->getCatalogAttributeTitle($strInputFileupload),
                     'inputType' => 'upload',
                     'eval'      => array(
                         'uploadFolder' => $objUploadDir->uuid,
