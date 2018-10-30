@@ -587,14 +587,24 @@ class PartnerFrontendForm extends Module
 
             // Validate Main Categories (Upload limit)
             $objWidget = $objForm->getWidget('hauptkategorie');
-            if (!empty($objWidget->value) && is_array($objWidget->value))
+            if (!empty($objWidget->value))
             {
-                if (count($objWidget->value) > $this->objPartnerAbo->hauptkategorie)
+                if(is_array($objWidget->value))
                 {
-                    $blnHasError = true;
-                    $objWidget->addError(sprintf($GLOBALS['TL_LANG']['MSC']['partnerUploadToManyMainCategoriesSelectedDuringUploadProcess'], $this->objPartnerAbo->allowedMainCategories));
+                    if (count($objWidget->value) > $this->objPartnerAbo->allowedMainCategories)
+                    {
+                        $blnHasError = true;
+                        $objWidget->addError(sprintf($GLOBALS['TL_LANG']['MSC']['partnerUploadToManyMainCategoriesSelectedDuringUploadProcess'], $this->objPartnerAbo->allowedMainCategories));
+                    }
+                }else{
+                    if($this->objPartnerAbo->allowedMainCategories < 1)
+                    {
+                        $blnHasError = true;
+                        $objWidget->addError(sprintf($GLOBALS['TL_LANG']['MSC']['partnerUploadToManyMainCategoriesSelectedDuringUploadProcess'], $this->objPartnerAbo->allowedMainCategories));
+                    }
                 }
             }
+
             // Validate Sub Categories (Upload limit)
             $objWidget = $objForm->getWidget('ffm_partner_cat');
             if (!empty($objWidget->value) && is_array($objWidget->value))
@@ -604,6 +614,28 @@ class PartnerFrontendForm extends Module
                     $blnHasError = true;
                     $objWidget->addError(sprintf($GLOBALS['TL_LANG']['MSC']['partnerUploadToManySubCategoriesSelectedDuringUploadProcess'], $this->objPartnerAbo->allowedSubCategories));
                 }
+            }
+
+            // Check if user has selected a valid hauptkategorie
+            // hauptkategorie must be an item of ffm_partner_cat
+            $objWidgetMultiCat = $objForm->getWidget('ffm_partner_cat');
+            $objWidgetMainCat = $objForm->getWidget('hauptkategorie');
+            if(!empty($objWidgetMainCat->value) && !is_array($objWidgetMainCat->value))
+            {
+                $err = false;
+                if(empty($objWidgetMultiCat->value))
+                {
+                    $err = true;
+                }
+                elseif(!in_array($objWidgetMainCat->value, $objWidgetMultiCat->value))
+                {
+                    $err = true;
+                }
+                if($err === true){
+                    $objWidgetMainCat->addError($GLOBALS['TL_LANG']['MSC']['partnerUploadInvalidMainCatSelected']);
+                    $blnHasError = true;
+                }
+                unset($err);
             }
 
 
