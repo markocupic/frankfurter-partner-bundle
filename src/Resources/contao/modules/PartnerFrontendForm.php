@@ -233,6 +233,9 @@ class PartnerFrontendForm extends Module
             $this->Template->messages = $this->arrMessages;
         }
 
+        global $objPage;
+        $this->Template->objPage = $objPage;
+
 
     }
 
@@ -542,7 +545,7 @@ class PartnerFrontendForm extends Module
         }
 
         $objForm->addFormField('ffm_partner_text', array(
-            'label'     => $this->Helper->getCatalogAttributeTitle('ffm_partner_plz'),
+            'label'     => $this->Helper->getCatalogAttributeTitle('ffm_partner_text'),
             'inputType' => 'textarea',
             'eval'      => array('preserveTags' => true, 'allowHtml' => true, 'decodeEntities' => true),
             'value'     => StringUtil::decodeEntities(StringUtil::decodeEntities($objModel->ffm_partner_text))
