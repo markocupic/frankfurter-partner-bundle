@@ -65,9 +65,9 @@ $GLOBALS['TL_CONFIG']['partnerAboAllowedMainCategories'] = array(
 );
 
 $GLOBALS['TL_CONFIG']['partnerAboAllowedSubCategories'] = array(
-    'business'         => 0,
-    'business-pro'     => 1,
-    'business-premium' => 3
+    'business'         => 1,
+    'business-pro'     => 2,
+    'business-premium' => 4
 );
 
 $GLOBALS['TL_CONFIG']['partnerAboAllowedImagesOurBrands'] = array(

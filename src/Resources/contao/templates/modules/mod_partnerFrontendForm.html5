@@ -8,392 +8,385 @@ $GLOBALS['TL_JAVASCRIPT'][] = 'bundles/markocupicfrankfurterpartner/js/Sortable.
 <!-- indexer::stop -->
 <div class="<?= $this->class ?> block"<?= $this->cssID ?><?php if ($this->style): ?> style="<?= $this->style ?>"<?php endif; ?>>
 
-    <?php if ($this->headline): ?>
-    <<?= $this->hl ?>><?= $this->headline ?></<?= $this->hl ?>>
+<?php if ($this->headline): ?>
+<<?= $this->hl ?>><?= $this->headline ?></<?= $this->hl ?>>
+<?php endif; ?>
+
+
+<div id="formPartsSelectorArea" class="form-parts-selector-area">
+    <a data-filter="textupload" id="formPartsSelectorArea_1" class="top-nav-buttons form-parts-selector-item" href="#">Basis-Einstellungen</a>
+    <a data-filter="logoupload" id="formPartsSelectorArea_2" class="top-nav-buttons form-parts-selector-item" href="#">Logo-Upload</a>
+    <a data-filter="mainimageupload" id="formPartsSelectorArea_3" class="top-nav-buttons form-parts-selector-item" href="#">Hauptbild-Upload</a>
+    <a data-filter="galleryupload" id="formPartsSelectorArea_4" class="top-nav-buttons form-parts-selector-item" href="#">Galerie-Upload</a>
+    <a data-filter="productupload" id="formPartsSelectorArea_5" class="top-nav-buttons form-parts-selector-item" href="#">Produkt-Upload</a>
+    <a data-filter="brandupload" id="formPartsSelectorArea_6" class="top-nav-buttons form-parts-selector-item" href="#">Marken-Upload</a>
+    <?php if($this->addPreviewPageLink): ?>
+    <a id="previewPageBtn" class="top-nav-buttons preview-button" href="<?= $this->objPreviewLinkUrl ?>">Vorschau</a>
     <?php endif; ?>
+</div>
+
+<?php if ($this->hasMessages): ?>
+<?php foreach($this->messages as $message): ?>
+<p class="tl_confirm message-box alert alert-info"><?= $message ?></p>
+<?php endforeach; ?>
+<?php endif; ?>
 
 
+<div id="formParts" class="form-parts">
 
-    <div id="formPartsSelectorArea" class="form-parts-selector-area">
-        <a data-filter="textupload" id="formPartsSelectorArea_1" class="top-nav-buttons form-parts-selector-item" href="#">Basis-Einstellungen</a>
-        <a data-filter="logoupload" id="formPartsSelectorArea_2" class="top-nav-buttons form-parts-selector-item" href="#">Logo-Upload</a>
-        <a data-filter="mainimageupload" id="formPartsSelectorArea_3" class="top-nav-buttons form-parts-selector-item" href="#">Hauptbild-Upload</a>
-        <a data-filter="galleryupload" id="formPartsSelectorArea_4" class="top-nav-buttons form-parts-selector-item" href="#">Galerie-Upload</a>
-        <a data-filter="productupload" id="formPartsSelectorArea_5" class="top-nav-buttons form-parts-selector-item" href="#">Produkt-Upload</a>
-        <a data-filter="brandupload" id="formPartsSelectorArea_6" class="top-nav-buttons form-parts-selector-item" href="#">Marken-Upload</a>
-        <?php if($this->addPreviewPageLink): ?>
-        <a id="previewPageBtn" class="top-nav-buttons preview-button" href="<?= $this->objPreviewLinkUrl ?>">Vorschau</a>
-        <?php endif; ?>
-    </div>
+    <?php if($this->textForm): ?>
+    <div class="form-part" data-formpartname="textupload">
+        <div class="hasteform_form-partner-text block">
+            <form action="<?= $this->textForm->getFormAction() ?>" method="<?= $this->textForm->getMethod() ?>" enctype="<?= $this->textForm->getEnctype() ?>">
+                <div class="formbody">
+                    <?php if ($this->textForm->hasFormField('FORM_SUBMIT')): ?>
+                    <?= $this->textForm->getWidget('FORM_SUBMIT')->parse(); ?>
+                    <?php endif; ?>
 
-    <?php if ($this->hasMessages): ?>
-    <?php foreach($this->messages as $message): ?>
-    <p class="tl_confirm message-box alert alert-info"><?= $message ?></p>
-    <?php endforeach; ?>
-    <?php endif; ?>
+                    <?php if ($this->textForm->hasFormField('REQUEST_TOKEN')): ?>
+                    <?= $this->textForm->getWidget('REQUEST_TOKEN')->parse(); ?>
+                    <?php endif; ?>
 
-
-    <div id="formParts" class="form-parts">
-
-        <?php if($this->textForm): ?>
-        <div class="form-part" data-formpartname="textupload">
-            <div class="hasteform_form-partner-text block">
-                <form action="<?= $this->textForm->getFormAction() ?>" method="<?= $this->textForm->getMethod() ?>" enctype="<?= $this->textForm->getEnctype() ?>">
-                    <div class="formbody">
-                        <?php if ($this->textForm->hasFormField('FORM_SUBMIT')): ?>
-                        <?= $this->textForm->getWidget('FORM_SUBMIT')->parse(); ?>
-                        <?php endif; ?>
-
-                        <?php if ($this->textForm->hasFormField('REQUEST_TOKEN')): ?>
-                        <?= $this->textForm->getWidget('REQUEST_TOKEN')->parse(); ?>
-                        <?php endif; ?>
-
-                        <?php $field = 'name'; ?>
-                        <?php if ($this->textForm->hasFormField($field)): ?>
-                        <div class="widget-<?= $field ?>">
-                            <?= $this->textForm->getWidget($field)->parse(); ?>
-                        </div>
-                        <?php endif; ?>
-
-                        <?php $field = 'alias'; ?>
-                        <?php if ($this->textForm->hasFormField($field)): ?>
-                        <div class="widget-<?= $field ?>">
-                            <?= $this->textForm->getWidget($field)->parse(); ?>
-                        </div>
-                        <?php endif; ?>
-
-                        <?php $field = 'hauptkategorie'; ?>
-                        <?php if ($this->textForm->hasFormField($field)): ?>
-                        <div class="widget-<?= $field ?>">
-                            <?= $this->textForm->getWidget($field)->parse(); ?>
-                        </div>
-                        <?php endif; ?>
-
-                        <?php $field = 'ffm_partner_cat'; ?>
-                        <?php if ($this->textForm->hasFormField($field)): ?>
-                        <div class="widget-<?= $field ?>">
-                            <?= $this->textForm->getWidget($field)->parse(); ?>
-                        </div>
-                        <?php endif; ?>
-
-                        <?php $field = 'ffm_partner_filiale'; ?>
-                        <?php if ($this->textForm->hasFormField($field)): ?>
-                        <div class="widget-<?= $field ?>">
-                            <?= $this->textForm->getWidget($field)->parse(); ?>
-                        </div>
-                        <?php endif; ?>
-
-                        <?php $field = 'ffm_partner_strasse'; ?>
-                        <?php if ($this->textForm->hasFormField($field)): ?>
-                        <div class="widget-<?= $field ?>">
-                            <?= $this->textForm->getWidget($field)->parse(); ?>
-                        </div>
-                        <?php endif; ?>
-
-                        <?php $field = 'ffm_partner_plz'; ?>
-                        <?php if ($this->textForm->hasFormField($field)): ?>
-                        <div class="widget-<?= $field ?>">
-                            <?= $this->textForm->getWidget($field)->parse(); ?>
-                        </div>
-                        <?php endif; ?>
-
-                        <?php $field = 'ffm_partner_ort'; ?>
-                        <?php if ($this->textForm->hasFormField($field)): ?>
-                        <div class="widget-<?= $field ?>">
-                            <?= $this->textForm->getWidget($field)->parse(); ?>
-                        </div>
-                        <?php endif; ?>
-
-                        <?php $field = 'ffm_partner_open'; ?>
-                        <?php if ($this->textForm->hasFormField($field)): ?>
-                        <div class="widget-<?= $field ?>">
-                            <?= $this->textForm->getWidget($field)->parse(); ?>
-                        </div>
-                        <?php endif; ?>
-
-                        <?php $field = 'ffm_partner_tel'; ?>
-                        <?php if ($this->textForm->hasFormField($field)): ?>
-                        <div class="widget-<?= $field ?>">
-                            <?= $this->textForm->getWidget($field)->parse(); ?>
-                        </div>
-                        <?php endif; ?>
-
-                        <?php $field = 'ffm_partner_mail'; ?>
-                        <?php if ($this->textForm->hasFormField($field)): ?>
-                        <div class="widget-<?= $field ?>">
-                            <?= $this->textForm->getWidget($field)->parse(); ?>
-                        </div>
-                        <?php endif; ?>
-
-                        <?php $field = 'ffm_partner_www'; ?>
-                        <?php if ($this->textForm->hasFormField($field)): ?>
-                        <div class="widget-<?= $field ?>">
-                            <?= $this->textForm->getWidget($field)->parse(); ?>
-                        </div>
-                        <?php endif; ?>
-
-                        <?php $field = 'ffm_partner_www_linkText'; ?>
-                        <?php if ($this->textForm->hasFormField($field)): ?>
-                        <div class="widget-<?= $field ?>">
-                            <?= $this->textForm->getWidget($field)->parse(); ?>
-                        </div>
-                        <?php endif; ?>
-
-                        <?php $field = 'ffm_partner_facebook'; ?>
-                        <?php if ($this->textForm->hasFormField($field)): ?>
-                        <div class="widget-<?= $field ?>">
-                            <?= $this->textForm->getWidget($field)->parse(); ?>
-                        </div>
-                        <?php endif; ?>
-
-                        <?php $field = 'ffm_partner_twitter'; ?>
-                        <?php if ($this->textForm->hasFormField($field)): ?>
-                        <div class="widget-<?= $field ?>">
-                            <?= $this->textForm->getWidget($field)->parse(); ?>
-                        </div>
-                        <?php endif; ?>
-
-                        <?php $field = 'ffm_partner_instagram'; ?>
-                        <?php if ($this->textForm->hasFormField($field)): ?>
-                        <div class="widget-<?= $field ?>">
-                            <?= $this->textForm->getWidget($field)->parse(); ?>
-                        </div>
-                        <?php endif; ?>
-
-                        <?php $field = 'ffm_partner_google'; ?>
-                        <?php if ($this->textForm->hasFormField($field)): ?>
-                        <div class="widget-<?= $field ?>">
-                            <?= $this->textForm->getWidget($field)->parse(); ?>
-                        </div>
-                        <?php endif; ?>
-
-                        <?php $field = 'ffm_partner_youtubeid'; ?>
-                        <?php if ($this->textForm->hasFormField($field)): ?>
-                        <div class="widget-<?= $field ?>">
-                            <?= $this->textForm->getWidget($field)->parse(); ?>
-                        </div>
-                        <?php endif; ?>
-
-                        <?php $field = 'ffm_partner_text'; ?>
-                        <?php if ($this->textForm->hasFormField($field)): ?>
-                        <div class="widget-<?= $field ?>">
-                            <?= $this->textForm->getWidget($field)->parse(); ?>
-                        </div>
-                        <?php endif; ?>
-
-                        <?php if ($this->textForm->hasFormField('submit')): ?>
-                        <?= $this->textForm->getWidget('submit')->parse(); ?>
-                        <?php endif; ?>
+                    <?php $field = 'name'; ?>
+                    <?php if ($this->textForm->hasFormField($field)): ?>
+                    <div class="widget-<?= $field ?>">
+                        <?= $this->textForm->getWidget($field)->parse(); ?>
                     </div>
-                </form>
-            </div>
-        </div>
-        <?php endif; ?>
+                    <?php endif; ?>
 
-
-
-        <?php if($this->logoUploadForm): ?>
-        <div class="form-part" data-formpartname="logoupload">
-            <div class="hasteform_form-partner-logo-upload block">
-                <form action="<?= $this->logoUploadForm->getFormAction() ?>" method="<?= $this->logoUploadForm->getMethod() ?>" enctype="multipart/form-data">
-                    <div class="formbody">
-                        <?php if ($this->logoUploadForm->hasFormField('FORM_SUBMIT')): ?>
-                        <?= $this->logoUploadForm->getWidget('FORM_SUBMIT')->parse(); ?>
-                        <?php endif; ?>
-
-                        <?php if ($this->logoUploadForm->hasFormField('REQUEST_TOKEN')): ?>
-                        <?= $this->logoUploadForm->getWidget('REQUEST_TOKEN')->parse(); ?>
-                        <?php endif; ?>
-
-                        <?php $field = 'ffm_partner_logo'; ?>
-                        <?= $this->Helper->generateLogoImage($field); ?>
-                        <?php if ($this->logoUploadForm->hasFormField($field)): ?>
-                        <div class="widget-<?= $field ?>">
-                            <?= $this->logoUploadForm->getWidget($field)->parse(); ?>
-                        </div>
-                        <?php endif; ?>
-
-                        <?php if ($this->logoUploadForm->hasFormField('submit')): ?>
-                        <?= $this->logoUploadForm->getWidget('submit')->parse(); ?>
-                        <?php endif; ?>
+                    <?php $field = 'alias'; ?>
+                    <?php if ($this->textForm->hasFormField($field)): ?>
+                    <div class="widget-<?= $field ?>">
+                        <?= $this->textForm->getWidget($field)->parse(); ?>
                     </div>
-                </form>
-            </div>
-        </div>
-        <?php endif; ?>
+                    <?php endif; ?>
 
-
-
-
-        <?php if($this->mainImageUploadForm): ?>
-        <div class="form-part" data-formpartname="mainimageupload">
-            <div class="hasteform_form-partner-main-image-upload block">
-                <form action="<?= $this->mainImageUploadForm->getFormAction() ?>" method="<?= $this->mainImageUploadForm->getMethod() ?>" enctype="multipart/form-data">
-                    <div class="formbody">
-                        <?php if ($this->mainImageUploadForm->hasFormField('FORM_SUBMIT')): ?>
-                        <?= $this->mainImageUploadForm->getWidget('FORM_SUBMIT')->parse(); ?>
-                        <?php endif; ?>
-
-                        <?php if ($this->mainImageUploadForm->hasFormField('REQUEST_TOKEN')): ?>
-                        <?= $this->mainImageUploadForm->getWidget('REQUEST_TOKEN')->parse(); ?>
-                        <?php endif; ?>
-
-                        <?php $field = 'image'; ?>
-                        <?= $this->Helper->generateMainImage($field); ?>
-                        <?php if ($this->mainImageUploadForm->hasFormField($field)): ?>
-                        <div class="widget-<?= $field ?>">
-                            <?= $this->mainImageUploadForm->getWidget($field)->parse(); ?>
-                        </div>
-                        <?php endif; ?>
-
-                        <?php if ($this->mainImageUploadForm->hasFormField('submit')): ?>
-                        <?= $this->mainImageUploadForm->getWidget('submit')->parse(); ?>
-                        <?php endif; ?>
+                    <?php $field = 'ffm_partner_cat'; ?>
+                    <?php if ($this->textForm->hasFormField($field)): ?>
+                    <div class="widget-<?= $field ?>">
+                        <?= $this->textForm->getWidget($field)->parse(); ?>
                     </div>
-                </form>
-            </div>
-        </div>
-        <?php endif; ?>
+                    <?php endif; ?>
 
+                    <?php $field = 'hauptkategorie'; ?>
+                    <?php if ($this->textForm->hasFormField($field)): ?>
+                    <div class="widget-<?= $field ?>">
+                        <?= $this->textForm->getWidget($field)->parse(); ?>
+                    </div>
+                    <?php endif; ?>
 
+                    <?php $field = 'ffm_partner_filiale'; ?>
+                    <?php if ($this->textForm->hasFormField($field)): ?>
+                    <div class="widget-<?= $field ?>">
+                        <?= $this->textForm->getWidget($field)->parse(); ?>
+                    </div>
+                    <?php endif; ?>
 
+                    <?php $field = 'ffm_partner_strasse'; ?>
+                    <?php if ($this->textForm->hasFormField($field)): ?>
+                    <div class="widget-<?= $field ?>">
+                        <?= $this->textForm->getWidget($field)->parse(); ?>
+                    </div>
+                    <?php endif; ?>
 
-        <?php if($this->galleryUploadForm): ?>
-        <div class="form-part" data-formpartname="galleryupload">
-            <?= $this->Helper->generateGallery() ?>
-            <?= $this->galleryUploadForm ?>
-        </div>
-        <?php endif; ?>
+                    <?php $field = 'ffm_partner_plz'; ?>
+                    <?php if ($this->textForm->hasFormField($field)): ?>
+                    <div class="widget-<?= $field ?>">
+                        <?= $this->textForm->getWidget($field)->parse(); ?>
+                    </div>
+                    <?php endif; ?>
 
+                    <?php $field = 'ffm_partner_ort'; ?>
+                    <?php if ($this->textForm->hasFormField($field)): ?>
+                    <div class="widget-<?= $field ?>">
+                        <?= $this->textForm->getWidget($field)->parse(); ?>
+                    </div>
+                    <?php endif; ?>
 
+                    <?php $field = 'ffm_partner_open'; ?>
+                    <?php if ($this->textForm->hasFormField($field)): ?>
+                    <div class="widget-<?= $field ?>">
+                        <?= $this->textForm->getWidget($field)->parse(); ?>
+                    </div>
+                    <?php endif; ?>
 
-        <?php if($this->productUploadForm): ?>
-        <div class="form-part" data-formpartname="productupload">
-            <div class="hasteform_form-partner-product-upload ?> block">
-                <form action="<?= $this->productUploadForm->getFormAction() ?>" method="<?= $this->productUploadForm->getMethod() ?>" enctype="multipart/form-data">
-                    <div class="formbody">
-                        <!-- hidden fields -->
-                        <?php if ($this->productUploadForm->hasFormField('FORM_SUBMIT')): ?>
-                        <?= $this->productUploadForm->getWidget('FORM_SUBMIT')->parse(); ?>
-                        <?php endif; ?>
+                    <?php $field = 'ffm_partner_tel'; ?>
+                    <?php if ($this->textForm->hasFormField($field)): ?>
+                    <div class="widget-<?= $field ?>">
+                        <?= $this->textForm->getWidget($field)->parse(); ?>
+                    </div>
+                    <?php endif; ?>
 
-                        <?php if ($this->productUploadForm->hasFormField('REQUEST_TOKEN')): ?>
-                        <?= $this->productUploadForm->getWidget('REQUEST_TOKEN')->parse(); ?>
-                        <?php endif; ?>
-                        <!-- End hidden fields -->
+                    <?php $field = 'ffm_partner_mail'; ?>
+                    <?php if ($this->textForm->hasFormField($field)): ?>
+                    <div class="widget-<?= $field ?>">
+                        <?= $this->textForm->getWidget($field)->parse(); ?>
+                    </div>
+                    <?php endif; ?>
 
-                        <!-- Loop begin -->
-                        <?php for($i = 1; $i <= $this->objPartnerAbo->allowedProducts; $i++): ?>
-                            <?php $strItem = str_pad($i, 2, '0', STR_PAD_LEFT); ?>
-                            <div class="row">
-                                <!-- Get the image -->
-                                <div class="col-12 col-md-6 col-xl-4">
-                                    <?php $field = 'ffm_partner_pro' . $strItem . '_img'; ?>
-                                    <?= $this->Helper->generateProductImage($field) ?>
-                                </div>
-                                <!-- End image -->
+                    <?php $field = 'ffm_partner_www'; ?>
+                    <?php if ($this->textForm->hasFormField($field)): ?>
+                    <div class="widget-<?= $field ?>">
+                        <?= $this->textForm->getWidget($field)->parse(); ?>
+                    </div>
+                    <?php endif; ?>
 
-                                <div class="col-12 col-md-6 col-xl-8">
-                                    <?php $field = 'produkt_' . $strItem . '_aktivieren'; ?>
-                                    <?php if ($this->productUploadForm->hasFormField($field)): ?>
-                                    <div class="widget-<?= $field ?>">
-                                        <?= $this->productUploadForm->getWidget($field)->parse(); ?>
-                                    </div>
-                                    <?php endif; ?>
+                    <?php $field = 'ffm_partner_www_linkText'; ?>
+                    <?php if ($this->textForm->hasFormField($field)): ?>
+                    <div class="widget-<?= $field ?>">
+                        <?= $this->textForm->getWidget($field)->parse(); ?>
+                    </div>
+                    <?php endif; ?>
 
-                                    <!-- Upload field -->
-                                    <?php $field = 'ffm_partner_pro' . $strItem . '_img'; ?>
-                                    <?php if ($this->productUploadForm->hasFormField($field)): ?>
-                                    <div class="widget-<?= $field ?>">
-                                        <?= $this->productUploadForm->getWidget($field)->parse(); ?>
-                                    </div>
-                                    <!-- End upload field -->
-                                    <?php endif; ?>
-                                </div>
-                            </div>
+                    <?php $field = 'ffm_partner_facebook'; ?>
+                    <?php if ($this->textForm->hasFormField($field)): ?>
+                    <div class="widget-<?= $field ?>">
+                        <?= $this->textForm->getWidget($field)->parse(); ?>
+                    </div>
+                    <?php endif; ?>
 
-                            <div class="row">
-                                <?php $field = 'ffm_partner_pro' . $strItem . '_hl'; ?>
-                                <?php if ($this->productUploadForm->hasFormField($field)): ?>
-                                <div class="col-xl-4 widget-<?= $field ?>">
-                                    <?= $this->productUploadForm->getWidget($field)->parse(); ?>
-                                </div>
-                                <?php endif; ?>
+                    <?php $field = 'ffm_partner_twitter'; ?>
+                    <?php if ($this->textForm->hasFormField($field)): ?>
+                    <div class="widget-<?= $field ?>">
+                        <?= $this->textForm->getWidget($field)->parse(); ?>
+                    </div>
+                    <?php endif; ?>
 
-                                <?php $field = 'ffm_partner_pro' . $strItem . '_lab'; ?>
-                                <?php if ($this->productUploadForm->hasFormField($field)): ?>
-                                <div class="col-xl-4 widget-<?= $field ?>">
-                                    <?= $this->productUploadForm->getWidget($field)->parse(); ?>
-                                </div>
-                                <?php endif; ?>
+                    <?php $field = 'ffm_partner_instagram'; ?>
+                    <?php if ($this->textForm->hasFormField($field)): ?>
+                    <div class="widget-<?= $field ?>">
+                        <?= $this->textForm->getWidget($field)->parse(); ?>
+                    </div>
+                    <?php endif; ?>
 
-                                <?php $field = 'ffm_partner_pro' . $strItem . '_link'; ?>
-                                <?php if ($this->productUploadForm->hasFormField($field)): ?>
-                                <div class="col-xl-4 widget-<?= $field ?>">
-                                    <?= $this->productUploadForm->getWidget($field)->parse(); ?>
-                                </div>
-                                <?php endif; ?>
-                            </div>
-                        <?php endfor; ?>
-                        <!-- End loop -->
+                    <?php $field = 'ffm_partner_google'; ?>
+                    <?php if ($this->textForm->hasFormField($field)): ?>
+                    <div class="widget-<?= $field ?>">
+                        <?= $this->textForm->getWidget($field)->parse(); ?>
+                    </div>
+                    <?php endif; ?>
 
-                        <?php if ($this->productUploadForm->hasFormField('submit')): ?>
-                        <?= $this->productUploadForm->getWidget('submit')->parse(); ?>
-                        <?php endif; ?>
-                        </div>
-                    </form>
+                    <?php $field = 'ffm_partner_youtubeid'; ?>
+                    <?php if ($this->textForm->hasFormField($field)): ?>
+                    <div class="widget-<?= $field ?>">
+                        <?= $this->textForm->getWidget($field)->parse(); ?>
+                    </div>
+                    <?php endif; ?>
+
+                    <?php $field = 'ffm_partner_text'; ?>
+                    <?php if ($this->textForm->hasFormField($field)): ?>
+                    <div class="widget-<?= $field ?>">
+                        <?= $this->textForm->getWidget($field)->parse(); ?>
+                    </div>
+                    <?php endif; ?>
+
+                    <?php if ($this->textForm->hasFormField('submit')): ?>
+                    <?= $this->textForm->getWidget('submit')->parse(); ?>
+                    <?php endif; ?>
                 </div>
+            </form>
         </div>
-        <?php endif; ?>
+    </div>
+    <?php endif; ?>
 
 
-        <?php if($this->brandUploadForm): ?>
-        <div class="form-part" data-formpartname="brandupload">
-            <div class="hasteform_form-partner-brand-upload block">
-                <form action="<?= $this->brandUploadForm->getFormAction() ?>" method="<?= $this->brandUploadForm->getMethod() ?>" enctype="multipart/form-data">
-                    <div class="formbody">
-                        <!-- hidden fields -->
-                        <?php if ($this->brandUploadForm->hasFormField('FORM_SUBMIT')): ?>
-                        <?= $this->brandUploadForm->getWidget('FORM_SUBMIT')->parse(); ?>
-                        <?php endif; ?>
+    <?php if($this->logoUploadForm): ?>
+    <div class="form-part" data-formpartname="logoupload">
+        <div class="hasteform_form-partner-logo-upload block">
+            <form action="<?= $this->logoUploadForm->getFormAction() ?>" method="<?= $this->logoUploadForm->getMethod() ?>" enctype="multipart/form-data">
+                <div class="formbody">
+                    <?php if ($this->logoUploadForm->hasFormField('FORM_SUBMIT')): ?>
+                    <?= $this->logoUploadForm->getWidget('FORM_SUBMIT')->parse(); ?>
+                    <?php endif; ?>
 
-                        <?php if ($this->brandUploadForm->hasFormField('REQUEST_TOKEN')): ?>
-                        <?= $this->brandUploadForm->getWidget('REQUEST_TOKEN')->parse(); ?>
-                        <?php endif; ?>
-                        <!-- End hidden fields -->
+                    <?php if ($this->logoUploadForm->hasFormField('REQUEST_TOKEN')): ?>
+                    <?= $this->logoUploadForm->getWidget('REQUEST_TOKEN')->parse(); ?>
+                    <?php endif; ?>
 
-                        <!-- Loop begin -->
-                        <?php for($i = 1; $i <= $this->objPartnerAbo->allowedImagesOurBrands; $i++): ?>
-                            <?php $strItem = str_pad($i, 2, '0', STR_PAD_LEFT); ?>
-                            <?php $field = 'ffm_partner_lab' . $strItem . '_img'; ?>
-                            <div class="row">
-                                <!-- Get the image -->
-                                <div class="col-12 col-md-6 col-xl-4">
-                                    <?= $this->Helper->generateBrandImage($field); ?>
-                                </div>
-                            </div>
+                    <?php $field = 'ffm_partner_logo'; ?>
+                    <?= $this->Helper->generateLogoImage($field); ?>
+                    <?php if ($this->logoUploadForm->hasFormField($field)): ?>
+                    <div class="widget-<?= $field ?>">
+                        <?= $this->logoUploadForm->getWidget($field)->parse(); ?>
+                    </div>
+                    <?php endif; ?>
 
-                            <?php if ($this->brandUploadForm->hasFormField($field)): ?>
+                    <?php if ($this->logoUploadForm->hasFormField('submit')): ?>
+                    <?= $this->logoUploadForm->getWidget('submit')->parse(); ?>
+                    <?php endif; ?>
+                </div>
+            </form>
+        </div>
+    </div>
+    <?php endif; ?>
+
+
+    <?php if($this->mainImageUploadForm): ?>
+    <div class="form-part" data-formpartname="mainimageupload">
+        <div class="hasteform_form-partner-main-image-upload block">
+            <form action="<?= $this->mainImageUploadForm->getFormAction() ?>" method="<?= $this->mainImageUploadForm->getMethod() ?>" enctype="multipart/form-data">
+                <div class="formbody">
+                    <?php if ($this->mainImageUploadForm->hasFormField('FORM_SUBMIT')): ?>
+                    <?= $this->mainImageUploadForm->getWidget('FORM_SUBMIT')->parse(); ?>
+                    <?php endif; ?>
+
+                    <?php if ($this->mainImageUploadForm->hasFormField('REQUEST_TOKEN')): ?>
+                    <?= $this->mainImageUploadForm->getWidget('REQUEST_TOKEN')->parse(); ?>
+                    <?php endif; ?>
+
+                    <?php $field = 'image'; ?>
+                    <?= $this->Helper->generateMainImage($field); ?>
+                    <?php if ($this->mainImageUploadForm->hasFormField($field)): ?>
+                    <div class="widget-<?= $field ?>">
+                        <?= $this->mainImageUploadForm->getWidget($field)->parse(); ?>
+                    </div>
+                    <?php endif; ?>
+
+                    <?php if ($this->mainImageUploadForm->hasFormField('submit')): ?>
+                    <?= $this->mainImageUploadForm->getWidget('submit')->parse(); ?>
+                    <?php endif; ?>
+                </div>
+            </form>
+        </div>
+    </div>
+    <?php endif; ?>
+
+
+    <?php if($this->galleryUploadForm): ?>
+    <div class="form-part" data-formpartname="galleryupload">
+        <?= $this->Helper->generateGallery() ?>
+        <?= $this->galleryUploadForm ?>
+    </div>
+    <?php endif; ?>
+
+
+    <?php if($this->productUploadForm): ?>
+    <div class="form-part" data-formpartname="productupload">
+        <div class="hasteform_form-partner-product-upload ?> block">
+            <form action="<?= $this->productUploadForm->getFormAction() ?>" method="<?= $this->productUploadForm->getMethod() ?>" enctype="multipart/form-data">
+                <div class="formbody">
+                    <!-- hidden fields -->
+                    <?php if ($this->productUploadForm->hasFormField('FORM_SUBMIT')): ?>
+                    <?= $this->productUploadForm->getWidget('FORM_SUBMIT')->parse(); ?>
+                    <?php endif; ?>
+
+                    <?php if ($this->productUploadForm->hasFormField('REQUEST_TOKEN')): ?>
+                    <?= $this->productUploadForm->getWidget('REQUEST_TOKEN')->parse(); ?>
+                    <?php endif; ?>
+                    <!-- End hidden fields -->
+
+                    <!-- Loop begin -->
+                    <?php for($i = 1; $i <= $this->objPartnerAbo->allowedProducts; $i++): ?>
+                    <?php $strItem = str_pad($i, 2, '0', STR_PAD_LEFT); ?>
+                    <div class="row">
+                        <!-- Get the image -->
+                        <div class="col-12 col-md-6 col-xl-4">
+                            <?php $field = 'ffm_partner_pro' . $strItem . '_img'; ?>
+                            <?= $this->Helper->generateProductImage($field) ?>
+                        </div>
+                        <!-- End image -->
+
+                        <div class="col-12 col-md-6 col-xl-8">
+                            <?php $field = 'produkt_' . $strItem . '_aktivieren'; ?>
+                            <?php if ($this->productUploadForm->hasFormField($field)): ?>
                             <div class="widget-<?= $field ?>">
-                                <?= $this->brandUploadForm->getWidget($field)->parse(); ?>
+                                <?= $this->productUploadForm->getWidget($field)->parse(); ?>
                             </div>
                             <?php endif; ?>
-                        <?php endfor; ?>
-                        <!-- End loop -->
 
-                        <?php if ($this->brandUploadForm->hasFormField('submit')): ?>
-                        <?= $this->brandUploadForm->getWidget('submit')->parse(); ?>
+                            <!-- Upload field -->
+                            <?php $field = 'ffm_partner_pro' . $strItem . '_img'; ?>
+                            <?php if ($this->productUploadForm->hasFormField($field)): ?>
+                            <div class="widget-<?= $field ?>">
+                                <?= $this->productUploadForm->getWidget($field)->parse(); ?>
+                            </div>
+                            <!-- End upload field -->
+                            <?php endif; ?>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <?php $field = 'ffm_partner_pro' . $strItem . '_hl'; ?>
+                        <?php if ($this->productUploadForm->hasFormField($field)): ?>
+                        <div class="col-xl-4 widget-<?= $field ?>">
+                            <?= $this->productUploadForm->getWidget($field)->parse(); ?>
+                        </div>
+                        <?php endif; ?>
+
+                        <?php $field = 'ffm_partner_pro' . $strItem . '_lab'; ?>
+                        <?php if ($this->productUploadForm->hasFormField($field)): ?>
+                        <div class="col-xl-4 widget-<?= $field ?>">
+                            <?= $this->productUploadForm->getWidget($field)->parse(); ?>
+                        </div>
+                        <?php endif; ?>
+
+                        <?php $field = 'ffm_partner_pro' . $strItem . '_link'; ?>
+                        <?php if ($this->productUploadForm->hasFormField($field)): ?>
+                        <div class="col-xl-4 widget-<?= $field ?>">
+                            <?= $this->productUploadForm->getWidget($field)->parse(); ?>
+                        </div>
                         <?php endif; ?>
                     </div>
-                </form>
-            </div>
+                    <?php endfor; ?>
+                    <!-- End loop -->
+
+                    <?php if ($this->productUploadForm->hasFormField('submit')): ?>
+                    <?= $this->productUploadForm->getWidget('submit')->parse(); ?>
+                    <?php endif; ?>
+                </div>
+            </form>
         </div>
-        <?php endif; ?>
-    </div> <!--end form parts -->
+    </div>
+    <?php endif; ?>
+
+
+    <?php if($this->brandUploadForm): ?>
+    <div class="form-part" data-formpartname="brandupload">
+        <div class="hasteform_form-partner-brand-upload block">
+            <form action="<?= $this->brandUploadForm->getFormAction() ?>" method="<?= $this->brandUploadForm->getMethod() ?>" enctype="multipart/form-data">
+                <div class="formbody">
+                    <!-- hidden fields -->
+                    <?php if ($this->brandUploadForm->hasFormField('FORM_SUBMIT')): ?>
+                    <?= $this->brandUploadForm->getWidget('FORM_SUBMIT')->parse(); ?>
+                    <?php endif; ?>
+
+                    <?php if ($this->brandUploadForm->hasFormField('REQUEST_TOKEN')): ?>
+                    <?= $this->brandUploadForm->getWidget('REQUEST_TOKEN')->parse(); ?>
+                    <?php endif; ?>
+                    <!-- End hidden fields -->
+
+                    <!-- Loop begin -->
+                    <?php for($i = 1; $i <= $this->objPartnerAbo->allowedImagesOurBrands; $i++): ?>
+                    <?php $strItem = str_pad($i, 2, '0', STR_PAD_LEFT); ?>
+                    <?php $field = 'ffm_partner_lab' . $strItem . '_img'; ?>
+                    <div class="row">
+                        <!-- Get the image -->
+                        <div class="col-12 col-md-6 col-xl-4">
+                            <?= $this->Helper->generateBrandImage($field); ?>
+                        </div>
+                    </div>
+
+                    <?php if ($this->brandUploadForm->hasFormField($field)): ?>
+                    <div class="widget-<?= $field ?>">
+                        <?= $this->brandUploadForm->getWidget($field)->parse(); ?>
+                    </div>
+                    <?php endif; ?>
+                    <?php endfor; ?>
+                    <!-- End loop -->
+
+                    <?php if ($this->brandUploadForm->hasFormField('submit')): ?>
+                    <?= $this->brandUploadForm->getWidget('submit')->parse(); ?>
+                    <?php endif; ?>
+                </div>
+            </form>
+        </div>
+    </div>
+    <?php endif; ?>
+</div> <!--end form parts -->
 </div>
 
 <script>
-    setTimeout(function() {
+    setTimeout(function () {
         window.tinymce && tinymce.init({
             skin: 'contao',
             selector: '#ctrl_ffm_partner_text',
@@ -403,16 +396,18 @@ $GLOBALS['TL_JAVASCRIPT'][] = 'bundles/markocupicfrankfurterpartner/js/Sortable.
             element_format: 'html',
             document_base_url: 'https://the-frankfurter.com/',
             entities: '160,nbsp,60,lt,62,gt,173,shy',
-            setup: function(editor) {
+            setup: function (editor) {
                 editor.getElement().removeAttribute('required');
             },
-            init_instance_callback: function(editor) {
+            init_instance_callback: function (editor) {
                 if (document.activeElement && document.activeElement.id && document.activeElement.id == editor.id) {
                     editor.editorManager.get(editor.id).focus();
                 }
-                editor.on('focus', function(){ Backend.getScrollOffset(); });
+                editor.on('focus', function () {
+                    Backend.getScrollOffset();
+                });
             },
-            file_browser_callback: function(field_name, url, type, win) {
+            file_browser_callback: function (field_name, url, type, win) {
                 Backend.openModalBrowser(field_name, url, type, win);
             },
             plugins: 'autosave charmap fullscreen link lists paste searchreplace tabfocus table visualblocks',
