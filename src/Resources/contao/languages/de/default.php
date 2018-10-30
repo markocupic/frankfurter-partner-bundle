@@ -30,4 +30,4 @@ $GLOBALS['TL_LANG']['ERR']['xhrErrMsg'] = "Es ist ein Fehler aufgetreten. Bitte 
 $GLOBALS['TL_LANG']['ERR']['noPartnerAssignedToThisUser'] = "Es ist ein Fehler aufgetreten. Dem Benutzer \"%s %s\" wurde kein Partner zugewiesen.";
 $GLOBALS['TL_LANG']['ERR']['noUploadDirectoryDefined'] = "Es ist ein Fehler aufgetreten. Dem Benutzer \"%s %s\" wurde kein Uploadverzeihnis zugewiesen.";
 $GLOBALS['TL_LANG']['ERR']['partnerUploadStrToLong'] = "Es ist ein Fehler aufgetreten. Der Text ist mit %s Zeichen zu lang. Die Limite beträgt %s Zeichen.";
-
+$GLOBALS['TL_LANG']['MSC']['partnerUploadInvalidMainCatSelected'] = "Bitte wählen Sie eine gültige Hauptkategorie aus. Die Hauptkategorie muss in 'Kategorien' enthalten sein.";
