@@ -24,10 +24,18 @@ $GLOBALS['TL_LANG']['MSC']['gallery-submit-btn'] = 'Bilder Hochladen';
 
 // Messages
 $GLOBALS['TL_LANG']['MSC']['partnerUploadPictureUploadLimitReachedDuringUploadProcess'] = "Sie haben bereits das Upload Maximum von %s Bildern erreicht. Um weitere Bilder hochzuladen, müssen Sie zuerst mindestens ein Bild löschen.";
-$GLOBALS['TL_LANG']['MSC']['partnerUploadToManyMainCategoriesSelectedDuringUploadProcess'] = "Sie haben zu viele Hauptkategorien gewählt. Die Limite beträgt %s Kategorie(n).";
-$GLOBALS['TL_LANG']['MSC']['partnerUploadToManySubCategoriesSelectedDuringUploadProcess'] = "Sie haben zu viele Unterkategorien gewählt. Die Limite beträgt %s Kategorie(n).";
+$GLOBALS['TL_LANG']['MSC']['partnerUploadToManyMainCategoriesSelectedDuringUploadProcess'] = "Sie haben zu viele Hauptkategorien gewählt. Das Limit beträgt %s Kategorie(n).";
+$GLOBALS['TL_LANG']['MSC']['partnerUploadToManySubCategoriesSelectedDuringUploadProcess'] = "Sie haben zu viele Unterkategorien gewählt. Das Limit beträgt %s Kategorie(n).";
 $GLOBALS['TL_LANG']['ERR']['xhrErrMsg'] = "Es ist ein Fehler aufgetreten. Bitte kontrollieren Sie die Verbindung.";
 $GLOBALS['TL_LANG']['ERR']['noPartnerAssignedToThisUser'] = "Es ist ein Fehler aufgetreten. Dem Benutzer \"%s %s\" wurde kein Partner zugewiesen.";
-$GLOBALS['TL_LANG']['ERR']['noUploadDirectoryDefined'] = "Es ist ein Fehler aufgetreten. Dem Benutzer \"%s %s\" wurde kein Uploadverzeihnis zugewiesen.";
-$GLOBALS['TL_LANG']['ERR']['partnerUploadStrToLong'] = "Es ist ein Fehler aufgetreten. Der Text ist mit %s Zeichen zu lang. Die Limite beträgt %s Zeichen.";
+$GLOBALS['TL_LANG']['ERR']['noUploadDirectoryDefined'] = "Es ist ein Fehler aufgetreten. Dem Benutzer \"%s %s\" wurde kein Uploadverzeichnis zugewiesen.";
+$GLOBALS['TL_LANG']['ERR']['partnerUploadStrToLong'] = "Es ist ein Fehler aufgetreten. Der Text ist mit %s Zeichen zu lang. Das Limit beträgt %s Zeichen.";
 $GLOBALS['TL_LANG']['MSC']['partnerUploadInvalidMainCatSelected'] = "Bitte wählen Sie eine gültige Hauptkategorie aus. Die Hauptkategorie muss in 'Kategorien' enthalten sein.";
+
+
+$GLOBALS['TL_LANG']['MSC']['memberBenefitPublish'] = array('Veröffentlichen', 'Kampagne aktivieren?');
+$GLOBALS['TL_LANG']['MSC']['memberBenefitFirstname'] = array('Vorname', 'Geben Sie den Vornamen ein.');
+$GLOBALS['TL_LANG']['MSC']['memberBenefitLastname'] = array('Nachname', 'Geben Sie den Nachnamen ein.');
+$GLOBALS['TL_LANG']['MSC']['memberBenefitEmail'] = array('E-Mail-Adresse', 'Geben Sie die E-Mail-Adresse ein.');
+$GLOBALS['TL_LANG']['MSC']['memberBenefitPhone'] = array('Telefonnummer', 'Geben Sie die Telefonnummer ein.');
+$GLOBALS['TL_LANG']['MSC']['memberBenefitSubmit'] = array('Absenden', '');

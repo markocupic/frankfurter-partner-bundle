@@ -10,6 +10,7 @@
 // Palettes
 $GLOBALS['TL_DCA']['tl_module']['palettes']['__selector__'][] = 'addPreviewPage';
 $GLOBALS['TL_DCA']['tl_module']['palettes']['partnerFrontendForm'] = '{title_legend},name,headline,type;{partner_frontend_form_settings},addPreviewPage;{template_legend:hide},customTpl,partnerFrontendFormFineuploaderTemplate;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID';
+$GLOBALS['TL_DCA']['tl_module']['palettes']['partnerBenefitForm'] = '{title_legend},name,headline,type;{partner_benefit_form_settings};{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID';
 $GLOBALS['TL_DCA']['tl_module']['palettes']['customcatalogreaderpartnerpreview'] = '{title_legend},name,headline,type;{config_legend},customcatalog;{list_legend},customcatalog_setVisibles;{filter_legend},customcatalog_filter_actLang;{template_legend:hide},customcatalog_template,customcatalog_mod_template;{comment_legend:hide},com_template;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID,space';
 
 // Subpalettes
