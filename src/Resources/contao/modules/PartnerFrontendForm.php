@@ -82,14 +82,19 @@ class PartnerFrontendForm extends Module
     protected $galleryUploadForm;
 
     /**
-     * @var array
+     * @var
      */
     protected $productUploadForm;
 
     /**
-     * @var array
+     * @var
      */
     protected $brandUploadForm;
+
+    /**
+     * @var
+     */
+    protected $memberBenefitForm;
 
     /**
      * @var
@@ -194,6 +199,13 @@ class PartnerFrontendForm extends Module
 
             $this->generatebrandUploadForm();
             $this->Template->brandUploadForm = $this->brandUploadForm;
+
+            if ($this->objPartnerAbo->allowMemberBenefitModule)
+            {
+                $this->generateMemberBenefitForm();
+                $this->Template->memberBenefitForm = $this->memberBenefitForm;
+            }
+
 
             // Add the preview page link
             if ($this->addPreviewPage && $this->previewPage > 0)
@@ -589,15 +601,17 @@ class PartnerFrontendForm extends Module
             $objWidget = $objForm->getWidget('hauptkategorie');
             if (!empty($objWidget->value))
             {
-                if(is_array($objWidget->value))
+                if (is_array($objWidget->value))
                 {
                     if (count($objWidget->value) > $this->objPartnerAbo->allowedMainCategories)
                     {
                         $blnHasError = true;
                         $objWidget->addError(sprintf($GLOBALS['TL_LANG']['MSC']['partnerUploadToManyMainCategoriesSelectedDuringUploadProcess'], $this->objPartnerAbo->allowedMainCategories));
                     }
-                }else{
-                    if($this->objPartnerAbo->allowedMainCategories < 1)
+                }
+                else
+                {
+                    if ($this->objPartnerAbo->allowedMainCategories < 1)
                     {
                         $blnHasError = true;
                         $objWidget->addError(sprintf($GLOBALS['TL_LANG']['MSC']['partnerUploadToManyMainCategoriesSelectedDuringUploadProcess'], $this->objPartnerAbo->allowedMainCategories));
@@ -620,18 +634,19 @@ class PartnerFrontendForm extends Module
             // hauptkategorie must be an item of ffm_partner_cat
             $objWidgetMultiCat = $objForm->getWidget('ffm_partner_cat');
             $objWidgetMainCat = $objForm->getWidget('hauptkategorie');
-            if(!empty($objWidgetMainCat->value) && !is_array($objWidgetMainCat->value))
+            if (!empty($objWidgetMainCat->value) && !is_array($objWidgetMainCat->value))
             {
                 $err = false;
-                if(empty($objWidgetMultiCat->value))
+                if (empty($objWidgetMultiCat->value))
                 {
                     $err = true;
                 }
-                elseif(!in_array($objWidgetMainCat->value, $objWidgetMultiCat->value))
+                elseif (!in_array($objWidgetMainCat->value, $objWidgetMultiCat->value))
                 {
                     $err = true;
                 }
-                if($err === true){
+                if ($err === true)
+                {
                     $objWidgetMainCat->addError($GLOBALS['TL_LANG']['MSC']['partnerUploadInvalidMainCatSelected']);
                     $blnHasError = true;
                 }
@@ -1054,6 +1069,87 @@ class PartnerFrontendForm extends Module
 
 
     /**
+     * Generate the member benefit form
+     */
+    protected function generateMemberBenefitForm()
+    {
+
+        // Get model
+        $objModel = $this->getPartnerModel();
+
+        // Create the form
+        $objForm = $this->createForm('form-member-benefit-form', 'application/x-www-form-urlencoded');
+
+        $objForm->addFormField('ffm_partner_memberBenefitPublish', array(
+            'label'     => $this->Helper->getCatalogAttributeTitle('ffm_partner_memberBenefitPublish'),
+            'inputType' => 'checkbox',
+            'options'   => array('1' => 'aktivieren/veröffentlichen'),
+            'value'     => $objModel->ffm_partner_memberBenefitPublish
+        ));
+
+        $objForm->addFormField('ffm_partner_memberBenefitHeadline', array(
+            'label'     => $this->Helper->getCatalogAttributeTitle('ffm_partner_memberBenefitHeadline'),
+            'inputType' => 'text',
+            'value'     => $objModel->ffm_partner_memberBenefitHeadline
+        ));
+
+        $objForm->addFormField('ffm_partner_memberBenefitText', array(
+            'label'     => $this->Helper->getCatalogAttributeTitle('ffm_partner_memberBenefitText'),
+            'inputType' => 'textarea',
+            'eval'      => array('preserveTags' => true, 'allowHtml' => true, 'decodeEntities' => true),
+            'value'     => StringUtil::decodeEntities(StringUtil::decodeEntities($objModel->ffm_partner_memberBenefitText))
+        ));
+
+        $objForm->addFormField('ffm_partner_memberBenefitEmail', array(
+            'label'     => $this->Helper->getCatalogAttributeTitle('ffm_partner_memberBenefitEmail'),
+            'inputType' => 'text',
+            'eval'      => array('rgxp' => 'email'),
+            'value'     => $objModel->ffm_partner_memberBenefitEmail
+        ));
+
+        $objForm->addFormField('submit', array(
+            'label'     => &$GLOBALS['TL_LANG']['MSC']['partnerSaveBtnLabel'],
+            'inputType' => 'submit',
+        ));
+
+        // Bind model to the form
+        $objForm->bindModel($objModel);
+
+        // Validate
+        if (Input::post('FORM_SUBMIT') === $objForm->getFormId())
+        {
+            if ($objForm->validate())
+            {
+                $blnHasError = false;
+                // Decode entities
+                $objWidget = $objForm->getWidget('ffm_partner_memberBenefitText');
+                if (!empty($GLOBALS['TL_CONFIG']['partnerAbo']['fields'][$objWidget->name]['eval']['maxlength']))
+                {
+                    $intMaxLen = $GLOBALS['TL_CONFIG']['partnerAbo']['fields'][$objWidget->name]['eval']['maxlength'];
+                    $intStrLen = strlen(strip_tags(StringUtil::decodeEntities($objWidget->value)));
+                    if ($intStrLen > $intMaxLen)
+                    {
+                        $objWidget->addError(sprintf($GLOBALS['TL_LANG']['ERR']['partnerUploadStrToLong'], $intStrLen, $intMaxLen));
+                        $blnHasError = true;
+                    }
+                }
+
+                if ($blnHasError === false)
+                {
+                    $objModel->fetstamp = time();
+                    $objModel->tstamp = time();
+                    $objModel->save();
+
+                    $this->reload();
+                }
+            }
+        }
+        $this->memberBenefitForm = $objForm;
+
+    }
+
+
+    /**
      * @param $settings
      * @throws \Exception
      */
@@ -1193,6 +1289,7 @@ class PartnerFrontendForm extends Module
                                         $partnerObject->allowedImagesOurBrands = $GLOBALS['TL_CONFIG']['partnerAboAllowedImagesOurBrands'][$objGroup->partnerAbo];
                                         $partnerObject->allowedProducts = $GLOBALS['TL_CONFIG']['partnerAboAllowedProducts'][$objGroup->partnerAbo];
                                         $partnerObject->allowYoutubeEmbed = $GLOBALS['TL_CONFIG']['partnerAboAllowYoutubeEmbed'][$objGroup->partnerAbo];
+                                        $partnerObject->allowMemberBenefitModule = $GLOBALS['TL_CONFIG']['partnerAboAllowMemberBenefitModule'][$objGroup->partnerAbo];
                                         return $partnerObject;
                                     }
                                 }

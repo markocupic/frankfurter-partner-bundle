@@ -21,3 +21,12 @@
 #memberBenefitModalContainer.submitting-form #formOverlay {
     display: flex;
 }
+
+a[data-inline-lightbox]{
+    background-color: goldenrod;
+    color: #000;
+    padding: 10px;
+}
+a[data-inline-lightbox]:hover{
+    background-color: gold;
+}

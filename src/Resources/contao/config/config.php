@@ -18,6 +18,7 @@ require_once($rootDir . '/src/markocupic/frankfurter-partner-bundle/src/Resource
 // Frontend Modules
 $GLOBALS['FE_MOD']['partner_catalog'] = array(
     'partnerFrontendForm'               => 'Markocupic\FrankfurterPartnerBundle\Contao\Modules\PartnerFrontendForm',
+    'partnerBenefitForm'                => 'Markocupic\FrankfurterPartnerBundle\Contao\Modules\PartnerBenefitForm',
     'customcatalogreaderpartnerpreview' => 'PCT\CustomElements\Plugins\CustomCatalog\Frontend\ModuleReaderPartnerPreview'
 );
 
@@ -44,9 +45,14 @@ $GLOBALS['TL_CONFIG']['partnerAbos'] = array('business', 'business-pro', 'busine
 // Partner Abo settings
 $GLOBALS['TL_CONFIG']['partnerAbo'] = array(
     'fields' => array(
-        'ffm_partner_text' => array(
+        'ffm_partner_text'              => array(
             'eval' => array(
                 'maxlength' => 1600
+            )
+        ),
+        'ffm_partner_memberBenefitText' => array(
+            'eval' => array(
+                'maxlength' => 500
             )
         )
     )
@@ -87,6 +93,13 @@ $GLOBALS['TL_CONFIG']['partnerAboAllowYoutubeEmbed'] = array(
     'business-pro'     => false,
     'business-premium' => true
 );
+
+$GLOBALS['TL_CONFIG']['partnerAboAllowMemberBenefitModule'] = array(
+    'business'         => false,
+    'business-pro'     => true,
+    'business-premium' => true
+);
+
 
 
 

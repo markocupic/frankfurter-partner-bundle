@@ -22,5 +22,18 @@ $GLOBALS['NOTIFICATION_CENTER']['NOTIFICATION_TYPE']['frankfurter_partner_bundle
         'email_subject' => array('partner_name'),
         'email_text'    => array('partner_name', 'hostname', 'partner_id', 'partner_alias', 'publish_state', 'preview_token'),
         'email_html'    => array('partner_name', 'hostname', 'partner_id', 'partner_alias', 'publish_state', 'preview_token'),
+    ),
+    // Type
+    'member_benefit_advice' => array
+    (
+        // Field in tl_nc_language
+        'recipients'           => array('partner_email'),
+        //'email_sender_name'    => array(),
+        //'email_sender_address' => array(),
+        //'recipients'           => array(),
+        //'email_replyTo'        => array(),
+        'email_subject' => array('partner_name'),
+        'email_text'    => array('partner_name','partner_id', 'customer_firstname', 'customer_lastname', 'customer_phone', 'customer_email'),
+        'email_text'    => array('partner_name','partner_id', 'customer_firstname', 'customer_lastname', 'customer_phone', 'customer_email'),
     )
 );

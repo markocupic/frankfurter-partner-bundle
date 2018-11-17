@@ -15,3 +15,4 @@ $GLOBALS['TL_LANG']['tl_module']['customcatalogreaderpartnerpreview'] = 'Custom 
 // Fields
 $GLOBALS['TL_LANG']['tl_module']['addPreviewPage'] = array('Mit Vorschau Seite verknüpfen');
 $GLOBALS['TL_LANG']['tl_module']['previewPage'] = array('Vorschau Seite hinzufügen');
+$GLOBALS['TL_LANG']['tl_module']['partnerFrontendFormFineuploaderTemplate'] = array('Alternatives Fine-Uploader-Template auswählen.', 'Wählen Sie ein alternatives Uploader-Template aus.');

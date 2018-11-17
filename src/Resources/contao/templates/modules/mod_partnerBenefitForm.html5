@@ -1,0 +1,162 @@
+<?php
+$GLOBALS['TL_CSS'][] = 'src/markocupic/frankfurter-partner-bundle/src/Resources/public/css/benefitform.css|static';
+?>
+
+<!-- indexer::stop -->
+<div class="<?= $this->class ?> block"<?= $this->cssID ?><?php if ($this->style): ?> style="<?= $this->style ?>"<?php endif; ?>>
+    <div class="container ffm_greybox">
+    <?php if ($this->headline): ?>
+    <<?= $this->hl ?>><?= $this->headline ?></<?= $this->hl ?>>
+    <?php endif; ?>
+
+    <a data-inline-lightbox="memberbenefitform" class="" href="#">Member Benefit starten</a>
+
+    <?php if($this->form): ?>
+    <div id="memberBenefitSuccessMessage" style="display: none;">
+        <div class="successMessage">
+            <h3>Formular wurde übermittelt</h3>
+            <p>Das Formular wurde erfolgreich übermittelt. Sie hören bald von uns.</p>
+        </div>
+    </div>
+
+    <div style="display:none;">
+        <div id="memberBenefitModalContainer">
+
+            <?php if($this->objPartnerModel->ffm_partner_memberBenefitHeadline != ''): ?>
+            <h1 class="modalMemberBenefitHeadline">
+                <?= $this->objPartnerModel->ffm_partner_memberBenefitHeadline ?>
+            </h1>
+            <?php endif; ?>
+
+            <?php if($this->objPartnerModel->ffm_partner_memberBenefitText != ''): ?>
+            <div class="modalMemberBenefitText">
+                <?= $this->objPartnerModel->ffm_partner_memberBenefitText ?>
+            </div>
+            <?php endif; ?>
+
+            <div class="hasteform_form-partner-text block">
+
+                <form id="memberBenefitForm" action="<?= $this->form->getFormAction() ?>" method="<?= $this->form->getMethod() ?>" enctype="<?= $this->form->getEnctype() ?>">
+                    <div class="formbody">
+                        <?php if ($this->form->hasFormField('FORM_SUBMIT')): ?>
+                        <?= $this->form->getWidget('FORM_SUBMIT')->parse(); ?>
+                        <?php endif; ?>
+
+                        <?php if ($this->form->hasFormField('REQUEST_TOKEN')): ?>
+                        <?= $this->form->getWidget('REQUEST_TOKEN')->parse(); ?>
+                        <?php endif; ?>
+
+                        <?php $field = 'memberBenefitFirstname'; ?>
+                        <?php if ($this->form->hasFormField($field)): ?>
+                            <div data-input="<?= $field ?>">
+                                <div class="widget-<?= $field ?>">
+                                    <?= $this->form->getWidget($field)->parse(); ?>
+                                </div>
+                            </div>
+                        <?php endif; ?>
+
+                        <?php $field = 'memberBenefitLastname'; ?>
+                        <?php if ($this->form->hasFormField($field)): ?>
+                            <div data-input="<?= $field ?>">
+                                <div class="widget-<?= $field ?>">
+                                    <?= $this->form->getWidget($field)->parse(); ?>
+                                </div>
+                             </div>
+                        <?php endif; ?>
+
+                        <?php $field = 'memberBenefitPhone'; ?>
+                        <?php if ($this->form->hasFormField($field)): ?>
+                            <div data-input="<?= $field ?>">
+                                <div class="widget-<?= $field ?>">
+                                    <?= $this->form->getWidget($field)->parse(); ?>
+                                </div>
+                            </div>
+                        <?php endif; ?>
+
+                        <?php $field = 'memberBenefitEmail'; ?>
+                        <?php if ($this->form->hasFormField($field)): ?>
+                            <div data-input="<?= $field ?>">
+                                <div class="widget-<?= $field ?>">
+                                    <?= $this->form->getWidget($field)->parse(); ?>
+                                </div>
+                            </div>
+                        <?php endif; ?>
+
+                        <?php $field = 'memberBenefitSubmit'; ?>
+                        <?php if ($this->form->hasFormField($field)): ?>
+                        <div class="widget-<?= $field ?>">
+                            <?= $this->form->getWidget($field)->parse(); ?>
+                        </div>
+                        <?php endif; ?>
+
+                    </div>
+                </form>
+            </div>
+
+            <div id="formOverlay">
+                <div>Einen Moment Geduld, bitte.</div>
+                <div>Das Formular wird geprüft.</div>
+            </div>
+        </div>
+    </div>
+    <?php endif; ?>
+
+    </div>
+</div>
+<script>
+    jQuery().ready(function(){
+        // this is the id of the form
+        jQuery("#memberBenefitForm").submit(function(e) {
+            e.preventDefault(); // avoid to execute the actual submit of the form.
+            jQuery("#memberBenefitModalContainer").addClass('submitting-form');
+            var form = jQuery(this);
+            var url = form.attr('action');
+            jQuery.ajax({
+                type: "POST",
+                url: url,
+                data: form.serialize(), // serializes the form's elements.
+                success: function(data)
+                {
+                    //console.log(data);
+                    var json = jQuery.parseJSON( data );
+                    if(typeof json.state !== 'undefined'){
+                        if(json.state === 'error') {
+                            jQuery.each( json.fields, function( key, value ) {
+                                jQuery('[data-input="' + key + '"]').first().html(json.fields[key]);
+                            });
+                            jQuery.colorbox.resize();
+                        }else{
+                            window.setTimeout(function(){
+                                jQuery('#memberBenefitModalContainer').html(jQuery('#memberBenefitSuccessMessage').html());
+                                jQuery.colorbox.resize();
+                            },1000);
+                        }
+                        jQuery.colorbox.resize();
+                        // console.log(json);
+                    }
+
+                },
+                always: function(){
+                    window.setTimeout(function(){
+                        jQuery("#memberBenefitModalContainer").removeClass('submitting-form');
+                        jQuery.colorbox.resize();
+                    },1050);
+                }
+            });
+
+        });
+
+        jQuery('a[data-inline-lightbox]').click(function(e) {
+            e.preventDefault();
+            jQuery.colorbox({
+                inline:true,
+                href:"#memberBenefitModalContainer",
+                maxWidth: '95%',
+                maxHeight: '95%'
+            });
+            return false;
+        });
+
+    });
+</script>
+<!-- indexer::continue -->
