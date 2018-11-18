@@ -15,8 +15,6 @@ use Contao\CcCardealerModel;
 use Contao\Config;
 use Contao\Database;
 use Contao\Environment;
-use Contao\FrontendTemplate;
-use Contao\System;
 use NotificationCenter\Model\Notification;
 
 

@@ -10,28 +10,17 @@
 namespace Markocupic\FrankfurterPartnerBundle\Contao\Modules;
 
 use Contao\CcCardealerModel;
-use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\Database;
-use Contao\Dbafs;
-use Contao\Files;
-use Contao\FilesModel;
-use Contao\Folder;
-use Contao\File;
 use Contao\MemberGroupModel;
 use Contao\Module;
 use Contao\BackendTemplate;
 use Contao\MemberModel;
-use Contao\PageModel;
 use Contao\StringUtil;
-use Contao\Validator;
-use Markocupic\FrankfurterPartnerBundle\Contao\Classes\PartnerFrontendFormHelper;
 use NotificationCenter\Model\Notification;
 use Patchwork\Utf8;
 use Haste\Form\Form;
 use Contao\Input;
 use Contao\Environment;
-use Contao\System;
-use Psr\Log\LogLevel;
 
 
 /**
@@ -61,7 +50,6 @@ class PartnerBenefitForm extends Module
      * @var
      */
     protected $form;
-
 
     /**
      * @return string
@@ -129,9 +117,6 @@ class PartnerBenefitForm extends Module
         $this->Template->objPartnerModel = $this->objPartnerModel;
 
     }
-
-
-
 
 
     /**
@@ -222,7 +207,7 @@ class PartnerBenefitForm extends Module
     }
 
     /**
-     * Display a wildcard in the back end
+     * Display a wildcard in the backend
      *
      * @return string
      */
@@ -264,7 +249,7 @@ class PartnerBenefitForm extends Module
                     $arrTokens['customer_email'] = $objForm->getWidget('memberBenefitEmail')->value;
                 }
 
-               $arrNotification[] = $objNotification->send($arrTokens, $objPage->language); // Language is optional
+                $arrNotification[] = $objNotification->send($arrTokens, $objPage->language); // Language is optional
             }
         }
 

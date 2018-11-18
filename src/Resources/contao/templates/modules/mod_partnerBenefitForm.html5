@@ -95,7 +95,7 @@ $GLOBALS['TL_CSS'][] = 'src/markocupic/frankfurter-partner-bundle/src/Resources/
 
             <div id="formOverlay">
                 <div>Einen Moment Geduld, bitte.</div>
-                <div>Das Formular wird geprüft.</div>
+                <div>Ihre Eingaben werden geprüft.</div>
             </div>
         </div>
     </div>
