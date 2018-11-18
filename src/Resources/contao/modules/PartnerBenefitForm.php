@@ -10,6 +10,7 @@
 namespace Markocupic\FrankfurterPartnerBundle\Contao\Modules;
 
 use Contao\CcCardealerModel;
+use Contao\Controller;
 use Contao\Database;
 use Contao\MemberGroupModel;
 use Contao\Module;
@@ -111,6 +112,9 @@ class PartnerBenefitForm extends Module
     protected function compile()
     {
 
+        global $objPage;
+        Controller::loadLanguageFile('tl_member', $objPage->language);
+
         // Generate all the forms
         $this->generateForm();
         $this->Template->form = $this->form;
@@ -144,6 +148,14 @@ class PartnerBenefitForm extends Module
         );
 
         // Add some fields
+        $objForm->addFormField('memberBenefitGender', array(
+            'label'     => &$GLOBALS['TL_LANG']['MSC']['memberBenefitGender'][0],
+            'inputType' => 'select',
+            'options'   => array('female', 'male'),
+            'reference' => &$GLOBALS['TL_LANG']['MSC'],
+            'eval'      => array('includeBlankOption' => true, 'mandatory' => true)
+        ));
+
         $objForm->addFormField('memberBenefitFirstname', array(
             'label'     => &$GLOBALS['TL_LANG']['MSC']['memberBenefitFirstname'][0],
             'inputType' => 'text',
@@ -232,6 +244,10 @@ class PartnerBenefitForm extends Module
                     'partner_id'    => $this->objPartnerModel->id,
                     'partner_alias' => html_entity_decode($this->objPartnerModel->alias),
                 );
+                if ($objForm->hasFormField('memberBenefitGender'))
+                {
+                    $arrTokens['customer_gender'] = $GLOBALS['TL_LANG']['MSC'][$objForm->getWidget('memberBenefitGender')->value];
+                }
                 if ($objForm->hasFormField('memberBenefitFirstname'))
                 {
                     $arrTokens['customer_firstname'] = $objForm->getWidget('memberBenefitFirstname')->value;

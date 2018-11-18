@@ -34,6 +34,9 @@ $GLOBALS['TL_LANG']['MSC']['partnerUploadInvalidMainCatSelected'] = "Bitte wähl
 
 
 $GLOBALS['TL_LANG']['MSC']['memberBenefitPublish'] = array('Veröffentlichen', 'Kampagne aktivieren?');
+$GLOBALS['TL_LANG']['MSC']['male'] = 'Herr';
+$GLOBALS['TL_LANG']['MSC']['female'] = 'Frau';
+$GLOBALS['TL_LANG']['MSC']['memberBenefitGender'] = array('Anrede', 'Wählen Sie die Anreder aus.');
 $GLOBALS['TL_LANG']['MSC']['memberBenefitFirstname'] = array('Vorname', 'Geben Sie den Vornamen ein.');
 $GLOBALS['TL_LANG']['MSC']['memberBenefitLastname'] = array('Nachname', 'Geben Sie den Nachnamen ein.');
 $GLOBALS['TL_LANG']['MSC']['memberBenefitEmail'] = array('E-Mail-Adresse', 'Geben Sie die E-Mail-Adresse ein.');

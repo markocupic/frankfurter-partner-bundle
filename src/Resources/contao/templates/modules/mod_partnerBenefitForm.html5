@@ -9,7 +9,7 @@ $GLOBALS['TL_CSS'][] = 'src/markocupic/frankfurter-partner-bundle/src/Resources/
     <<?= $this->hl ?>><?= $this->headline ?></<?= $this->hl ?>>
     <?php endif; ?>
 
-    <a data-inline-lightbox="memberbenefitform" class="" href="#">Member Benefit starten</a>
+    <a data-inline-lightbox="memberbenefitform" class="" href="#"><?= $this->objPartnerModel->ffm_partner_memberBenefitHeadline ?></a>
 
     <?php if($this->form): ?>
     <div id="memberBenefitSuccessMessage" style="display: none;">
@@ -44,6 +44,15 @@ $GLOBALS['TL_CSS'][] = 'src/markocupic/frankfurter-partner-bundle/src/Resources/
 
                         <?php if ($this->form->hasFormField('REQUEST_TOKEN')): ?>
                         <?= $this->form->getWidget('REQUEST_TOKEN')->parse(); ?>
+                        <?php endif; ?>
+
+                        <?php $field = 'memberBenefitGender'; ?>
+                        <?php if ($this->form->hasFormField($field)): ?>
+                        <div data-input="<?= $field ?>">
+                            <div class="widget-<?= $field ?>">
+                                <?= $this->form->getWidget($field)->parse(); ?>
+                            </div>
+                        </div>
                         <?php endif; ?>
 
                         <?php $field = 'memberBenefitFirstname'; ?>
@@ -132,7 +141,7 @@ $GLOBALS['TL_CSS'][] = 'src/markocupic/frankfurter-partner-bundle/src/Resources/
                             },1000);
                         }
                         jQuery.colorbox.resize();
-                        // console.log(json);
+                        //console.log(json);
                     }
 
                 },
@@ -151,6 +160,7 @@ $GLOBALS['TL_CSS'][] = 'src/markocupic/frankfurter-partner-bundle/src/Resources/
             jQuery.colorbox({
                 inline:true,
                 href:"#memberBenefitModalContainer",
+                width: '600px',
                 maxWidth: '95%',
                 maxHeight: '95%'
             });
