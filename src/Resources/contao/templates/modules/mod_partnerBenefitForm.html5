@@ -126,30 +126,33 @@ $GLOBALS['TL_CSS'][] = 'src/markocupic/frankfurter-partner-bundle/src/Resources/
                 data: form.serialize(), // serializes the form's elements.
                 success: function(data)
                 {
-                    //console.log(data);
-                    var json = jQuery.parseJSON( data );
-                    if(typeof json.state !== 'undefined'){
-                        if(json.state === 'error') {
-                            jQuery.each( json.fields, function( key, value ) {
-                                jQuery('[data-input="' + key + '"]').first().html(json.fields[key]);
-                            });
-                            jQuery.colorbox.resize();
-                        }else{
-                            window.setTimeout(function(){
+                    window.setTimeout(function(){
+                        //console.log(data);
+                        var json = jQuery.parseJSON( data );
+                        if(typeof json.state !== 'undefined'){
+                            if(json.state === 'error') {
+                                jQuery.each( json.fields, function( key, value ) {
+                                    jQuery('[data-input="' + key + '"]').first().html(json.fields[key]);
+                                });
+                                jQuery("#memberBenefitModalContainer").removeClass('submitting-form');
+                                jQuery.colorbox.resize();
+                            }else{
                                 jQuery('#memberBenefitModalContainer').html(jQuery('#memberBenefitSuccessMessage').html());
                                 jQuery.colorbox.resize();
-                            },1000);
+                                jQuery("#memberBenefitModalContainer").removeClass('submitting-form');
+                            }
+                            console.log(json);
+                        }else{
+                            jQuery("#memberBenefitModalContainer").removeClass('submitting-form');
+                            jQuery.colorbox.resize();
                         }
-                        jQuery.colorbox.resize();
-                        //console.log(json);
-                    }
-
+                    },1000);
                 },
                 always: function(){
                     window.setTimeout(function(){
                         jQuery("#memberBenefitModalContainer").removeClass('submitting-form');
                         jQuery.colorbox.resize();
-                    },1050);
+                    },1001);
                 }
             });
 
