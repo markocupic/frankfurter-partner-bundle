@@ -178,7 +178,7 @@ class PartnerBenefitForm extends Module
         $objForm->addFormField('memberBenefitPhone', array(
             'label'     => &$GLOBALS['TL_LANG']['MSC']['memberBenefitPhone'][0],
             'inputType' => 'text',
-            'eval'      => array('mandatory' => true, 'rgxp' => 'phone')
+            'eval'      => array('mandatory' => false, 'rgxp' => 'phone')
         ));
 
         $objForm->addFormField('memberBenefitCaptcha', array(
