@@ -30,3 +30,8 @@ a[data-inline-lightbox]{
 a[data-inline-lightbox]:hover{
     background-color: gold;
 }
+
+
+#cboxContent{
+    overflow: auto !important;
+}

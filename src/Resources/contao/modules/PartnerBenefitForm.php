@@ -145,6 +145,7 @@ class PartnerBenefitForm extends Module
             'memberBenefitLastname',
             'memberBenefitPhone',
             'memberBenefitEmail',
+            'memberBenefitCaptcha',
         );
 
         // Add some fields
@@ -178,6 +179,11 @@ class PartnerBenefitForm extends Module
             'label'     => &$GLOBALS['TL_LANG']['MSC']['memberBenefitPhone'][0],
             'inputType' => 'text',
             'eval'      => array('mandatory' => true, 'rgxp' => 'phone')
+        ));
+
+        $objForm->addFormField('memberBenefitCaptcha', array(
+            'label'     => &$GLOBALS['TL_LANG']['MSC']['memberBenefitCaptcha'][0],
+            'inputType' => 'captcha',
         ));
 
         $objForm->addFormField('memberBenefitSubmit', array(

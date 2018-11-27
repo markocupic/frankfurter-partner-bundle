@@ -41,4 +41,5 @@ $GLOBALS['TL_LANG']['MSC']['memberBenefitFirstname'] = array('Vorname', 'Geben S
 $GLOBALS['TL_LANG']['MSC']['memberBenefitLastname'] = array('Nachname', 'Geben Sie den Nachnamen ein.');
 $GLOBALS['TL_LANG']['MSC']['memberBenefitEmail'] = array('E-Mail-Adresse', 'Geben Sie die E-Mail-Adresse ein.');
 $GLOBALS['TL_LANG']['MSC']['memberBenefitPhone'] = array('Telefonnummer', 'Geben Sie die Telefonnummer ein.');
+$GLOBALS['TL_LANG']['MSC']['memberBenefitCaptcha'] = array('Sicherheitsfrage', 'Bitte beantworten Sie die Sicherheitsfrage.');
 $GLOBALS['TL_LANG']['MSC']['memberBenefitSubmit'] = array('Absenden', '');
