@@ -23,7 +23,7 @@ $GLOBALS['FE_MOD']['partner_catalog'] = array(
 );
 
 // Cron
-$GLOBALS['TL_CRON']['daily']['adminAdvice'] = array('Markocupic\FrankfurterPartnerBundle\Contao\Notifications\PartnerNotification', 'sendNotification');
+$GLOBALS['TL_CRON']['hourly']['adminAdvice'] = array('Markocupic\FrankfurterPartnerBundle\Contao\Notifications\PartnerNotification', 'sendNotification');
 
 // Notification id
 $GLOBALS['TL_CONFIG']['notification_advice_admin_on_new_entries'] = 1;
