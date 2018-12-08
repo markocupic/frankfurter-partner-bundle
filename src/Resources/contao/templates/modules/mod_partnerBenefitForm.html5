@@ -147,8 +147,8 @@ $GLOBALS['TL_CSS'][] = 'src/markocupic/frankfurter-partner-bundle/src/Resources/
             // Get captcha sum from regex
             if(captchaSum != '')
             {
-                jQuery('#ctrl_memberBenefitCaptcha').attr('value', captchaSum);
-                jQuery('#ctrl_memberBenefitCaptcha').val(captchaSum);
+                jQuery('#ctrl_memberBenefitCaptcha[name="' + captchaKey + '"]').attr('value', captchaSum);
+                jQuery('#ctrl_memberBenefitCaptcha[name="' + captchaKey + '"]').val(captchaSum);
             }
 
             e.preventDefault(); // avoid to execute the actual submit of the form.
@@ -285,12 +285,13 @@ $GLOBALS['TL_CSS'][] = 'src/markocupic/frankfurter-partner-bundle/src/Resources/
         function getCaptchaSum(strHtml)
         {
             var sum = '';
-            var regex = /value = \'(.*)\'\;/gi;
+            var regex = /value = \'(\d{1,2})\'\;/gi;
             match = regex.exec(strHtml);
             if(match[1] !== undefined)
             {
                 sum = match[1];
             }
+            console.log(sum);
             return sum;
         }
 
@@ -302,7 +303,7 @@ $GLOBALS['TL_CSS'][] = 'src/markocupic/frankfurter-partner-bundle/src/Resources/
         function getCaptchaKey(strHtml)
         {
             var key = '';
-            var regex = /name="(.*)_name"/gi;
+            var regex = /name=\"(.*)_name\"/gi;
             match = regex.exec(strHtml);
             if(match[1] !== undefined)
             {
