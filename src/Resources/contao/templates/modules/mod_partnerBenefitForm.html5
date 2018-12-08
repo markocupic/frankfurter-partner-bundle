@@ -20,7 +20,7 @@ $GLOBALS['TL_CSS'][] = 'src/markocupic/frankfurter-partner-bundle/src/Resources/
         </div>
     </div>
 
-    <div style="displllay:none">
+    <div style="display:none">
         <div id="memberBenefitModalContainer">
             <div class="modal-content">
 
