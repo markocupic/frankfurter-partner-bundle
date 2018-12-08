@@ -128,6 +128,7 @@ class PartnerBenefitForm extends Module
      */
     protected function generateForm()
     {
+
         $blnError = false;
 
         // Create the form
@@ -141,11 +142,13 @@ class PartnerBenefitForm extends Module
         // Add hidden fields REQUEST_TOKEN & FORM_SUBMIT
         $objForm->addContaoHiddenFields();
         $arrVisibleFields = array(
+            'memberBenefitGender',
             'memberBenefitFirstname',
             'memberBenefitLastname',
             'memberBenefitPhone',
             'memberBenefitEmail',
-            'memberBenefitCaptcha',
+            'memberBenefitAgb',
+            'memberBenefitCaptcha'
         );
 
         // Add some fields
@@ -181,10 +184,18 @@ class PartnerBenefitForm extends Module
             'eval'      => array('mandatory' => false, 'rgxp' => 'phone')
         ));
 
+        $objForm->addFormField('memberBenefitAgb', array(
+            'label'     => &$GLOBALS['TL_LANG']['MSC']['memberBenefitAgb'][0],
+            'inputType' => 'checkbox',
+            'options'   => array('1' => $GLOBALS['TL_LANG']['MSC']['memberBenefitAgbOptionText']),
+            'eval'      => array('multiple' => false, 'mandatory' => true)
+        ));
+
         $objForm->addFormField('memberBenefitCaptcha', array(
             'label'     => &$GLOBALS['TL_LANG']['MSC']['memberBenefitCaptcha'][0],
             'inputType' => 'captcha',
         ));
+
 
         $objForm->addFormField('memberBenefitSubmit', array(
             'label'     => &$GLOBALS['TL_LANG']['MSC']['memberBenefitSubmit'][0],

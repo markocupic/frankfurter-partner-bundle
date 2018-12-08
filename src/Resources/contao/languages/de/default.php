@@ -43,3 +43,5 @@ $GLOBALS['TL_LANG']['MSC']['memberBenefitEmail'] = array('E-Mail-Adresse', 'Gebe
 $GLOBALS['TL_LANG']['MSC']['memberBenefitPhone'] = array('Telefonnummer', 'Geben Sie die Telefonnummer ein.');
 $GLOBALS['TL_LANG']['MSC']['memberBenefitCaptcha'] = array('Sicherheitsfrage', 'Bitte beantworten Sie die Sicherheitsfrage.');
 $GLOBALS['TL_LANG']['MSC']['memberBenefitSubmit'] = array('Absenden', '');
+$GLOBALS['TL_LANG']['MSC']['memberBenefitAgb'] = array('Datenschutz', '');
+$GLOBALS['TL_LANG']['MSC']['memberBenefitAgbOptionText'] = "Ich bin mit den <agblink href=\"datenschutz.html\" target=\"_blank\">Datenschutzbestimmungen</agblink> einverstanden.";

@@ -10,110 +10,122 @@ $GLOBALS['TL_CSS'][] = 'src/markocupic/frankfurter-partner-bundle/src/Resources/
     <?php endif; ?>
 
     <a data-inline-lightbox="memberbenefitform" class="" href="#"><?= $this->objPartnerModel->ffm_partner_memberBenefitHeadline ?></a>
-
     <?php if($this->form): ?>
-    <div id="memberBenefitSuccessMessage" style="display: none;">
-        <div class="successMessage">
-            <h3>Formular wurde übermittelt</h3>
-            <p>Das Formular wurde erfolgreich übermittelt. Sie hören bald von uns.</p>
+    <div style="display: none">
+        <div id="memberBenefitSuccessMessage">
+            <div class="successMessage modal-content">
+                <h3>Formular wurde übermittelt</h3>
+                <p>Das Formular wurde erfolgreich übermittelt. Sie hören bald von uns.</p>
+            </div>
         </div>
     </div>
 
-    <div style="display:none;">
+    <div style="displllay:none">
         <div id="memberBenefitModalContainer">
+            <div class="modal-content">
 
-            <?php if($this->objPartnerModel->ffm_partner_memberBenefitHeadline != ''): ?>
-            <h1 class="modalMemberBenefitHeadline">
-                <?= $this->objPartnerModel->ffm_partner_memberBenefitHeadline ?>
-            </h1>
-            <?php endif; ?>
+                <?php if($this->objPartnerModel->ffm_partner_memberBenefitHeadline != ''): ?>
+                <h1 class="modalMemberBenefitHeadline">
+                    <?= $this->objPartnerModel->ffm_partner_memberBenefitHeadline ?>
+                </h1>
+                <?php endif; ?>
 
-            <?php if($this->objPartnerModel->ffm_partner_memberBenefitText != ''): ?>
-            <div class="modalMemberBenefitText">
-                <?= $this->objPartnerModel->ffm_partner_memberBenefitText ?>
-            </div>
-            <?php endif; ?>
+                <?php if($this->objPartnerModel->ffm_partner_memberBenefitText != ''): ?>
+                <div class="modalMemberBenefitText">
+                    <?= $this->objPartnerModel->ffm_partner_memberBenefitText ?>
+                </div>
+                <?php endif; ?>
 
-            <div class="hasteform_form-partner-text block">
+                <div class="hasteform_form-partner-text block">
 
-                <form id="memberBenefitForm" action="<?= $this->form->getFormAction() ?>" method="<?= $this->form->getMethod() ?>" enctype="<?= $this->form->getEnctype() ?>">
-                    <div class="formbody">
-                        <?php if ($this->form->hasFormField('FORM_SUBMIT')): ?>
-                        <?= $this->form->getWidget('FORM_SUBMIT')->parse(); ?>
-                        <?php endif; ?>
+                    <form id="memberBenefitForm" novalidate action="<?= $this->form->getFormAction() ?>" method="<?= $this->form->getMethod() ?>" enctype="<?= $this->form->getEnctype() ?>">
+                        <div class="formbody">
+                            <?php if ($this->form->hasFormField('FORM_SUBMIT')): ?>
+                            <?= $this->form->getWidget('FORM_SUBMIT')->parse(); ?>
+                            <?php endif; ?>
 
-                        <?php if ($this->form->hasFormField('REQUEST_TOKEN')): ?>
-                        <?= $this->form->getWidget('REQUEST_TOKEN')->parse(); ?>
-                        <?php endif; ?>
+                            <?php if ($this->form->hasFormField('REQUEST_TOKEN')): ?>
+                            <?= $this->form->getWidget('REQUEST_TOKEN')->parse(); ?>
+                            <?php endif; ?>
 
-                        <?php $field = 'memberBenefitGender'; ?>
-                        <?php if ($this->form->hasFormField($field)): ?>
-                        <div data-input="<?= $field ?>">
+                            <?php $field = 'memberBenefitGender'; ?>
+                            <?php if ($this->form->hasFormField($field)): ?>
+                            <div data-input="<?= $field ?>">
+                                <div class="widget-<?= $field ?>">
+                                    <?= $this->form->getWidget($field)->parse(); ?>
+                                </div>
+                            </div>
+                            <?php endif; ?>
+
+                            <?php $field = 'memberBenefitFirstname'; ?>
+                            <?php if ($this->form->hasFormField($field)): ?>
+                                <div data-input="<?= $field ?>">
+                                    <div class="widget-<?= $field ?>">
+                                        <?= $this->form->getWidget($field)->parse(); ?>
+                                    </div>
+                                </div>
+                            <?php endif; ?>
+
+                            <?php $field = 'memberBenefitLastname'; ?>
+                            <?php if ($this->form->hasFormField($field)): ?>
+                                <div data-input="<?= $field ?>">
+                                    <div class="widget-<?= $field ?>">
+                                        <?= $this->form->getWidget($field)->parse(); ?>
+                                    </div>
+                                 </div>
+                            <?php endif; ?>
+
+                            <?php $field = 'memberBenefitPhone'; ?>
+                            <?php if ($this->form->hasFormField($field)): ?>
+                                <div data-input="<?= $field ?>">
+                                    <div class="widget-<?= $field ?>">
+                                        <?= $this->form->getWidget($field)->parse(); ?>
+                                    </div>
+                                </div>
+                            <?php endif; ?>
+
+                            <?php $field = 'memberBenefitEmail'; ?>
+                            <?php if ($this->form->hasFormField($field)): ?>
+                                <div data-input="<?= $field ?>">
+                                    <div class="widget-<?= $field ?>">
+                                        <?= $this->form->getWidget($field)->parse(); ?>
+                                    </div>
+                                </div>
+                            <?php endif; ?>
+
+                            <?php $field = 'memberBenefitAgb'; ?>
+                            <?php if ($this->form->hasFormField($field)): ?>
+                            <div data-input="<?= $field ?>">
+                                <div class="widget-<?= $field ?>">
+                                    <?= $this->form->getWidget($field)->parse(); ?>
+                                </div>
+                            </div>
+                            <?php endif; ?>
+
+                            <?php $field = 'memberBenefitCaptcha'; ?>
+                            <?php if ($this->form->hasFormField($field)): ?>
+                            <div data-input="<?= $field ?>">
+                                <div class="widget-<?= $field ?>">
+                                    <?= $this->form->getWidget($field)->parse(); ?>
+                                </div>
+                            </div>
+                            <?php endif; ?>
+
+                            <?php $field = 'memberBenefitSubmit'; ?>
+                            <?php if ($this->form->hasFormField($field)): ?>
                             <div class="widget-<?= $field ?>">
                                 <?= $this->form->getWidget($field)->parse(); ?>
                             </div>
+                            <?php endif; ?>
+
                         </div>
-                        <?php endif; ?>
+                    </form>
+                </div>
 
-                        <?php $field = 'memberBenefitFirstname'; ?>
-                        <?php if ($this->form->hasFormField($field)): ?>
-                            <div data-input="<?= $field ?>">
-                                <div class="widget-<?= $field ?>">
-                                    <?= $this->form->getWidget($field)->parse(); ?>
-                                </div>
-                            </div>
-                        <?php endif; ?>
-
-                        <?php $field = 'memberBenefitLastname'; ?>
-                        <?php if ($this->form->hasFormField($field)): ?>
-                            <div data-input="<?= $field ?>">
-                                <div class="widget-<?= $field ?>">
-                                    <?= $this->form->getWidget($field)->parse(); ?>
-                                </div>
-                             </div>
-                        <?php endif; ?>
-
-                        <?php $field = 'memberBenefitPhone'; ?>
-                        <?php if ($this->form->hasFormField($field)): ?>
-                            <div data-input="<?= $field ?>">
-                                <div class="widget-<?= $field ?>">
-                                    <?= $this->form->getWidget($field)->parse(); ?>
-                                </div>
-                            </div>
-                        <?php endif; ?>
-
-                        <?php $field = 'memberBenefitEmail'; ?>
-                        <?php if ($this->form->hasFormField($field)): ?>
-                            <div data-input="<?= $field ?>">
-                                <div class="widget-<?= $field ?>">
-                                    <?= $this->form->getWidget($field)->parse(); ?>
-                                </div>
-                            </div>
-                        <?php endif; ?>
-
-                        <?php $field = 'memberBenefitCaptcha'; ?>
-                        <?php if ($this->form->hasFormField($field)): ?>
-                        <div data-input="<?= $field ?>">
-                            <div class="widget-<?= $field ?>">
-                                <?= $this->form->getWidget($field)->parse(); ?>
-                            </div>
-                        </div>
-                        <?php endif; ?>
-
-                        <?php $field = 'memberBenefitSubmit'; ?>
-                        <?php if ($this->form->hasFormField($field)): ?>
-                        <div class="widget-<?= $field ?>">
-                            <?= $this->form->getWidget($field)->parse(); ?>
-                        </div>
-                        <?php endif; ?>
-
-                    </div>
-                </form>
-            </div>
-
-            <div id="formOverlay">
-                <div>Einen Moment Geduld, bitte.</div>
-                <div>Ihre Eingaben werden geprüft.</div>
+                <div id="formOverlay">
+                    <div>Einen Moment Geduld, bitte.</div>
+                    <div>Ihre Eingaben werden geprüft.</div>
+                </div>
             </div>
         </div>
     </div>
@@ -123,8 +135,22 @@ $GLOBALS['TL_CSS'][] = 'src/markocupic/frankfurter-partner-bundle/src/Resources/
 </div>
 <script>
     jQuery().ready(function(){
+
+
+
+        var captchaSum = getCaptchaSum(jQuery('.widget-captcha').first().html());
+        var captchaKey = getCaptchaKey(jQuery('.widget-captcha').first().html());
+
         // this is the id of the form
         jQuery("#memberBenefitForm").submit(function(e) {
+
+            // Get captcha sum from regex
+            if(captchaSum != '')
+            {
+                jQuery('#ctrl_memberBenefitCaptcha').attr('value', captchaSum);
+                jQuery('#ctrl_memberBenefitCaptcha').val(captchaSum);
+            }
+
             e.preventDefault(); // avoid to execute the actual submit of the form.
             jQuery("#memberBenefitModalContainer").addClass('submitting-form');
             var form = jQuery(this);
@@ -137,39 +163,59 @@ $GLOBALS['TL_CSS'][] = 'src/markocupic/frankfurter-partner-bundle/src/Resources/
             }).done(function(data) {
                 var json = jQuery.parseJSON( data );
                 window.setTimeout(function(){
-                    //console.log(json);
                     if(typeof json.state !== 'undefined'){
-                        if(json.state === 'error') {
+                        // Get widgets from server
+                        if(json.state === 'error' || json.state === 'success') {
                             jQuery.each( json.fields, function( key, value ) {
                                 jQuery('[data-input="' + key + '"]').first().html(json.fields[key]);
                             });
+
+                            // Set new captcha sum & key
+                            captchaSum = getCaptchaSum(json.fields.memberBenefitCaptcha);
+                            captchaKey = getCaptchaSum(json.fields.memberBenefitCaptcha);
+                        }
+
+                        if(json.state === 'error') {
                             jQuery("#memberBenefitModalContainer").removeClass('submitting-form');
-                            callColorbox();
+                            callFormModal();
                         }else{
-                            jQuery('#memberBenefitModalContainer').html(jQuery('#memberBenefitSuccessMessage').html());
+                            callSuccessModal();
                             jQuery("#memberBenefitModalContainer").removeClass('submitting-form');
-                            callColorbox();
                         }
                     }else{
                         jQuery("#memberBenefitModalContainer").removeClass('submitting-form');
-                        callColorbox();
+                        callFormModal();
                     }
                 },1000);
             }).always(function() {
                 window.setTimeout(function(){
                     jQuery("#memberBenefitModalContainer").removeClass('submitting-form');
-                    callColorbox();
                 },1010);
             });
         });
 
         jQuery('a[data-inline-lightbox]').click(function(e) {
             e.preventDefault();
-            callColorbox();
+            
+            // Reset form
+            clearForm(document.getElementById('memberBenefitForm'));
+            jQuery('#memberBenefitForm .error').remove();
+
+            // Call the form modal
+            callFormModal();
             return false;
         });
 
-        function callColorbox(){
+        /**
+         * callFormModal
+         */
+        function callFormModal(){
+            // Somehow it is not possible to add the link directly????
+            var text = jQuery('agblink').text();
+            var target = jQuery('agblink').attr('target');
+            var href = jQuery('agblink').attr('href');
+            jQuery('agblink').replaceWith('<a href="' + href + '" target="' + target + '">' + text + '</a>');
+
             jQuery.colorbox({
                 inline:true,
                 href:"#memberBenefitModalContainer",
@@ -178,6 +224,91 @@ $GLOBALS['TL_CSS'][] = 'src/markocupic/frankfurter-partner-bundle/src/Resources/
                 maxHeight: '95%',
                 scrolling: true,
             });
+        }
+
+        /**
+         * call successModal
+         */
+        function callSuccessModal(){
+            jQuery.colorbox({
+                inline:true,
+                href:"#memberBenefitSuccessMessage",
+                width: '95%',
+                maxWidth: '600px',
+                maxHeight: '95%',
+                scrolling: true,
+            });
+        }
+
+        /**
+         *
+         * @param form
+         */
+        function clearForm(form) {
+
+            var elements = form.elements;
+
+            form.reset();
+
+            for(i=0; i<elements.length; i++) {
+
+                field_type = elements[i].type.toLowerCase();
+
+                switch(field_type) {
+
+                    case "text":
+                    case "tel":
+                    case "email":
+                    case "textarea":
+                    //case "hidden":
+                        elements[i].value = "";
+                        break;
+
+                    case "radio":
+                    case "checkbox":
+                        if (elements[i].checked) {
+                            elements[i].checked = false;
+                        }
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+        }
+
+        /**
+         *
+         * @param strHtml
+         * @returns {string}
+         */
+        function getCaptchaSum(strHtml)
+        {
+            var sum = '';
+            var regex = /value = \'(.*)\'\;/gi;
+            match = regex.exec(strHtml);
+            if(match[1] !== undefined)
+            {
+                sum = match[1];
+            }
+            return sum;
+        }
+
+        /**
+         *
+         * @param strHtml
+         * @returns {string}
+         */
+        function getCaptchaKey(strHtml)
+        {
+            var key = '';
+            var regex = /name="(.*)_name"/gi;
+            match = regex.exec(strHtml);
+            if(match[1] !== undefined)
+            {
+                key = match[1];
+            }
+            return key;
         }
     });
 </script>

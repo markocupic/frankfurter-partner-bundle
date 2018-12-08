@@ -1,5 +1,8 @@
 #memberBenefitModalContainer {
-    position: relative;
+    /**position: relative;**/
+}
+
+.modal-content{
     padding: 3rem;
 }
 
