@@ -134,19 +134,17 @@ $GLOBALS['TL_CSS'][] = 'src/markocupic/frankfurter-partner-bundle/src/Resources/
     </div>
 </div>
 <script>
-    jQuery().ready(function(){
-
-
-
-        var captchaSum = getCaptchaSum(jQuery('.widget-captcha').first().html());
-        var captchaKey = getCaptchaKey(jQuery('.widget-captcha').first().html());
+    /** Handle modal form **/
+    jQuery().ready(function () {
 
         // this is the id of the form
-        jQuery("#memberBenefitForm").submit(function(e) {
+        jQuery("#memberBenefitForm").submit(function (e) {
+
+            var captchaSum = getCaptchaSum(jQuery('.widget-captcha').first().html());
+            var captchaKey = getCaptchaKey(jQuery('.widget-captcha').first().html());
 
             // Get captcha sum from regex
-            if(captchaSum != '')
-            {
+            if (captchaSum != '' && captchaKey != '') {
                 jQuery('#ctrl_memberBenefitCaptcha[name="' + captchaKey + '"]').attr('value', captchaSum);
                 jQuery('#ctrl_memberBenefitCaptcha[name="' + captchaKey + '"]').val(captchaSum);
             }
@@ -160,43 +158,39 @@ $GLOBALS['TL_CSS'][] = 'src/markocupic/frankfurter-partner-bundle/src/Resources/
                 url: url,
                 data: form.serialize(), // serializes the form's elements.
                 context: document.body
-            }).done(function(data) {
-                var json = jQuery.parseJSON( data );
-                window.setTimeout(function(){
-                    if(typeof json.state !== 'undefined'){
+            }).done(function (data) {
+                var json = jQuery.parseJSON(data);
+                window.setTimeout(function () {
+                    if (typeof json.state !== 'undefined') {
                         // Get widgets from server
-                        if(json.state === 'error' || json.state === 'success') {
-                            jQuery.each( json.fields, function( key, value ) {
+                        if (json.state === 'error' || json.state === 'success') {
+                            jQuery.each(json.fields, function (key, value) {
                                 jQuery('[data-input="' + key + '"]').first().html(json.fields[key]);
                             });
-
-                            // Set new captcha sum & key
-                            captchaSum = getCaptchaSum(json.fields.memberBenefitCaptcha);
-                            captchaKey = getCaptchaSum(json.fields.memberBenefitCaptcha);
                         }
 
-                        if(json.state === 'error') {
+                        if (json.state === 'error') {
                             jQuery("#memberBenefitModalContainer").removeClass('submitting-form');
                             callFormModal();
-                        }else{
+                        } else {
                             callSuccessModal();
                             jQuery("#memberBenefitModalContainer").removeClass('submitting-form');
                         }
-                    }else{
+                    } else {
                         jQuery("#memberBenefitModalContainer").removeClass('submitting-form');
                         callFormModal();
                     }
-                },1000);
-            }).always(function() {
-                window.setTimeout(function(){
+                }, 1000);
+            }).always(function () {
+                window.setTimeout(function () {
                     jQuery("#memberBenefitModalContainer").removeClass('submitting-form');
-                },1010);
+                }, 1010);
             });
         });
 
-        jQuery('a[data-inline-lightbox]').click(function(e) {
+        jQuery('a[data-inline-lightbox]').click(function (e) {
             e.preventDefault();
-            
+
             // Reset form
             clearForm(document.getElementById('memberBenefitForm'));
             jQuery('#memberBenefitForm .error').remove();
@@ -209,7 +203,7 @@ $GLOBALS['TL_CSS'][] = 'src/markocupic/frankfurter-partner-bundle/src/Resources/
         /**
          * callFormModal
          */
-        function callFormModal(){
+        function callFormModal() {
             // Somehow it is not possible to add the link directly????
             var text = jQuery('agblink').text();
             var target = jQuery('agblink').attr('target');
@@ -217,8 +211,8 @@ $GLOBALS['TL_CSS'][] = 'src/markocupic/frankfurter-partner-bundle/src/Resources/
             jQuery('agblink').replaceWith('<a href="' + href + '" target="' + target + '">' + text + '</a>');
 
             jQuery.colorbox({
-                inline:true,
-                href:"#memberBenefitModalContainer",
+                inline: true,
+                href: "#memberBenefitModalContainer",
                 width: '95%',
                 maxWidth: '600px',
                 maxHeight: '95%',
@@ -229,10 +223,10 @@ $GLOBALS['TL_CSS'][] = 'src/markocupic/frankfurter-partner-bundle/src/Resources/
         /**
          * call successModal
          */
-        function callSuccessModal(){
+        function callSuccessModal() {
             jQuery.colorbox({
-                inline:true,
-                href:"#memberBenefitSuccessMessage",
+                inline: true,
+                href: "#memberBenefitSuccessMessage",
                 width: '95%',
                 maxWidth: '600px',
                 maxHeight: '95%',
@@ -250,17 +244,17 @@ $GLOBALS['TL_CSS'][] = 'src/markocupic/frankfurter-partner-bundle/src/Resources/
 
             form.reset();
 
-            for(i=0; i<elements.length; i++) {
+            for (i = 0; i < elements.length; i++) {
 
                 field_type = elements[i].type.toLowerCase();
 
-                switch(field_type) {
+                switch (field_type) {
 
                     case "text":
                     case "tel":
                     case "email":
                     case "textarea":
-                    //case "hidden":
+                        //case "hidden":
                         elements[i].value = "";
                         break;
 
@@ -282,16 +276,13 @@ $GLOBALS['TL_CSS'][] = 'src/markocupic/frankfurter-partner-bundle/src/Resources/
          * @param strHtml
          * @returns {string}
          */
-        function getCaptchaSum(strHtml)
-        {
+        function getCaptchaSum(strHtml) {
             var sum = '';
-            var regex = /value = \'(\d{1,2})\'\;/gi;
+            var regex = /document\.getElementById\(\'ctrl_memberBenefitCaptcha\'\)\.value = \'(\d{1,2})\'\;/gm;
             match = regex.exec(strHtml);
-            if(match[1] !== undefined)
-            {
+            if (match !== null) {
                 sum = match[1];
             }
-            console.log(sum);
             return sum;
         }
 
@@ -300,13 +291,11 @@ $GLOBALS['TL_CSS'][] = 'src/markocupic/frankfurter-partner-bundle/src/Resources/
          * @param strHtml
          * @returns {string}
          */
-        function getCaptchaKey(strHtml)
-        {
+        function getCaptchaKey(strHtml) {
             var key = '';
-            var regex = /name=\"(.*)_name\"/gi;
+            var regex = /\<input type=\"text\" name=\"(.*)_name\"/gi;
             match = regex.exec(strHtml);
-            if(match[1] !== undefined)
-            {
+            if (match !== null) {
                 key = match[1];
             }
             return key;
